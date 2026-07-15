@@ -39,7 +39,7 @@ export default function OnboardingDialog({ isOpen, onClose, availableInterests }
           어떤 편지를<br />기다리나요?
         </h2>
         
-        <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
+        <p className="text-sm text-[#2a3831] dark:text-[#d0ddd6] leading-relaxed mb-6">
           관심사 1~3개를 고르면, 먼저 볼 5개의 뉴스레터를 추천해 드릴게요.
         </p>
 
@@ -89,7 +89,7 @@ export default function OnboardingDialog({ isOpen, onClose, availableInterests }
             <button
               type="button"
               onClick={() => onClose([])}
-              className="w-full text-center text-xs text-gray-500 hover:text-ink dark:text-gray-400 dark:hover:text-white underline py-2 cursor-pointer"
+              className="w-full text-center text-xs text-[#3d4f46] dark:text-[#c5d4cb] hover:text-ink dark:text-[#5a6b62] dark:text-[#b8c9bf] dark:hover:text-white underline py-2 cursor-pointer"
             >
               건너뛰기
             </button>

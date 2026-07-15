@@ -48,7 +48,7 @@ export default function NotesHub({
             <h2 className="font-serif text-3xl md:text-5xl tracking-tight leading-tight mb-4 text-ink">
               메모하고, Gmail로 보내고,<br />원하는 곳으로 이동하기
             </h2>
-            <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+            <p className="text-sm text-[#2a3831] dark:text-[#d0ddd6] leading-relaxed">
               작성된 메모들은 브라우저 로컬 저장소에 저장되어 안전하게 유지됩니다.<br />
               지정한 이메일 주소를 사용해 클릭 한 번으로 Gmail 편지 작성 창(compose)으로 내보내거나 백업할 수 있습니다.
             </p>
@@ -72,7 +72,7 @@ export default function NotesHub({
             </button>
 
             <div className="flex flex-col gap-1 text-left">
-              <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+              <label className="text-[10px] font-bold text-[#3d4f46] dark:text-[#c5d4cb] uppercase tracking-wider">
                 나에게 보낼 Gmail 주소
               </label>
               <input
@@ -109,13 +109,13 @@ export default function NotesHub({
                       {latestNote.title || '제목 없는 메모'}
                     </h3>
 
-                    <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed mb-3">
+                    <p className="text-xs text-[#3d4f46] dark:text-[#c5d4cb] line-clamp-2 leading-relaxed mb-3">
                       {latestNote.body || '빈 메모'}
                     </p>
                   </div>
 
                   <div>
-                    <p className="text-[10px] text-gray-400 mb-3">
+                    <p className="text-[10px] text-[#5a6b62] dark:text-[#b8c9bf] mb-3">
                       {sourceList.length}개의 메모 • {new Date(latestNote.updatedAt).toLocaleDateString('ko-KR', {
                         month: 'short',
                         day: 'numeric',
@@ -147,11 +147,11 @@ export default function NotesHub({
             })
           ) : (
             <div className="col-span-full py-12 text-center bg-white/40 border border-dashed border-line-alpha p-10 flex flex-col items-center justify-center">
-              <Inbox className="w-10 h-10 text-gray-400 mb-2" />
-              <p className="text-sm font-medium text-gray-500 mb-1">
+              <Inbox className="w-10 h-10 text-[#5a6b62] dark:text-[#b8c9bf] mb-2" />
+              <p className="text-sm font-medium text-[#3d4f46] dark:text-[#c5d4cb] mb-1">
                 아직 생성된 메모가 존재하지 않습니다.
               </p>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-[#5a6b62] dark:text-[#b8c9bf]">
                 원하는 편지 카드의 [메모] 또는 상단의 [실시간 확인 작업대]에서 메모를 바로 남겨 보세요!
               </p>
             </div>

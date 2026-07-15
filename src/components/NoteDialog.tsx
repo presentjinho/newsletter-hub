@@ -190,7 +190,7 @@ export default function NoteDialog({
                   `}
                 >
                   <span className="text-xs font-bold line-clamp-1">{n.title || '제목 없음'}</span>
-                  <span className={`text-[9px] font-mono ${activeNote?.id === n.id ? 'opacity-70' : 'text-gray-400'}`}>
+                  <span className={`text-[9px] font-mono ${activeNote?.id === n.id ? 'opacity-70' : 'text-[#5a6b62] dark:text-[#b8c9bf]'}`}>
                     {new Date(n.updatedAt).toLocaleDateString('ko-KR', {
                       month: 'short',
                       day: 'numeric',
@@ -204,7 +204,7 @@ export default function NoteDialog({
           </div>
 
           <div className="pt-4 border-t border-line-alpha hidden md:block">
-            <span className="text-[10px] text-gray-400 font-bold block">현재 폴더</span>
+            <span className="text-[10px] text-[#5a6b62] dark:text-[#b8c9bf] font-bold block">현재 폴더</span>
             <span className="text-xs font-bold text-ink line-clamp-1 mt-0.5">
               {getSourceName(sourceId)}
             </span>
@@ -230,7 +230,7 @@ export default function NoteDialog({
               }}
               className="p-1.5 hover:bg-ink/5 dark:hover:bg-white/5 rounded-full cursor-pointer"
             >
-              <X className="w-5 h-5 text-gray-500" />
+              <X className="w-5 h-5 text-[#3d4f46] dark:text-[#c5d4cb]" />
             </button>
           </div>
 
@@ -321,7 +321,7 @@ export default function NoteDialog({
             <div className="flex flex-wrap gap-4 items-end justify-between mt-4 pt-4 border-t border-line-alpha">
               <div className="flex flex-wrap gap-3 items-end">
                 <div className="flex flex-col gap-1">
-                  <span className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">
+                  <span className="text-[10px] text-[#3d4f46] dark:text-[#c5d4cb] uppercase tracking-wider font-bold">
                     다른 폴더로
                   </span>
                   <select
@@ -341,7 +341,7 @@ export default function NoteDialog({
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <span className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">
+                  <span className="text-[10px] text-[#3d4f46] dark:text-[#c5d4cb] uppercase tracking-wider font-bold">
                     방식
                   </span>
                   <select

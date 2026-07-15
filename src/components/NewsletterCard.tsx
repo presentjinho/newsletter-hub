@@ -72,31 +72,31 @@ export default function NewsletterCard({
           {item.name}
         </h3>
         
-        <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-3">
+        <p className="description text-sm leading-relaxed mb-3 text-[#2a3831] dark:text-[#d0ddd6]">
           {item.description}
         </p>
 
         {/* Value promise with red border */}
-        <p className="border-l-2 border-accent-red pl-2 py-0.5 my-3 text-[11px] leading-relaxed text-gray-500 dark:text-gray-400">
+        <p className="border-l-2 border-accent-red pl-2 py-0.5 my-3 text-xs leading-relaxed text-[#3d4f46] dark:text-[#c5d4cb]">
           {valuePromises[item.category] || '내게 필요한 내용인지 빠르게 확인할 수 있어요.'}
         </p>
       </div>
 
       <div>
         {/* Core details (frequency, length, last checked) */}
-        <div className="flex gap-4 items-center text-[11px] text-gray-500 dark:text-gray-400 pt-3 border-t border-line-alpha mb-2">
+        <div className="flex gap-4 items-center text-xs text-[#3d4f46] dark:text-[#c5d4cb] pt-3 border-t border-line-alpha mb-2">
           <span>{item.frequency}</span>
           <span>•</span>
-          <span className="text-forest-green dark:text-green-300">{readingTimes[item.category] || '3분 읽기'}</span>
-          <span className="ml-auto text-[10px] font-mono">{formattedFreshness()}</span>
+          <span className="text-forest-green dark:text-[#8fd9ae] font-semibold">{readingTimes[item.category] || '3분 읽기'}</span>
+          <span className="ml-auto text-[11px] font-mono font-medium">{formattedFreshness()}</span>
         </div>
 
         {/* Average activity / unsubscribe support */}
-        <p className="text-[11px] text-forest-green dark:text-green-300 font-semibold mb-1">
+        <p className="text-xs text-forest-green dark:text-[#8fd9ae] font-semibold mb-1">
           {item.type === 'site' ? '평소 활동' : '평균 발행'} · {item.typical}
         </p>
         
-        <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-relaxed mb-3">
+        <p className="text-xs text-[#3d4f46] dark:text-[#c5d4cb] leading-relaxed mb-3">
           {unsubscribeText[item.type] || '해지 · 메일 하단 수신거부 링크 또는 설정'}
         </p>
 

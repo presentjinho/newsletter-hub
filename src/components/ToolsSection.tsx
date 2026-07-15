@@ -13,7 +13,7 @@ export default function ToolsSection() {
           <h2 className="font-serif text-3xl md:text-5xl tracking-tight leading-tight mb-4 text-ink">
             더 깊게 읽고 싶을 때<br />함께 사용하는 스택 도구들
           </h2>
-          <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+          <p className="text-sm text-[#2a3831] dark:text-[#d0ddd6] leading-relaxed">
             GitHub와 X(트위터) 커뮤니티에서 개발자와 파워 유저들이 뉴스레터 및 RSS를 관리할 때 주로 추천하는 도구 목록입니다.<br />
             본 앱은 <strong>발견과 안심 구독 및 실시간 데스크</strong>의 허브 역할을 하며, 대량의 일상 피드 수집/구동은 전문 RSS 리더와 브릿지 도구의 사용을 조화롭게 병행하는 것이 좋습니다.
           </p>
@@ -32,7 +32,7 @@ export default function ToolsSection() {
                 <h3 className="font-serif text-xl tracking-tight leading-snug mb-1 text-ink">
                   {tool.name}
                 </h3>
-                <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed mb-4">
+                <p className="text-xs text-[#3d4f46] dark:text-[#c5d4cb] leading-relaxed mb-4">
                   {tool.blurb}
                 </p>
               </div>

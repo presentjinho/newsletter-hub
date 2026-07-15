@@ -55,7 +55,7 @@ export default function PreferenceDialog({
           onClick={onClose}
           className="absolute top-4 right-4 p-1.5 hover:bg-ink/5 dark:hover:bg-white/5 rounded-full cursor-pointer"
         >
-          <X className="w-5 h-5 text-gray-500" />
+          <X className="w-5 h-5 text-[#3d4f46] dark:text-[#c5d4cb]" />
         </button>
 
         <div className="flex items-center gap-2 mb-4 text-xs font-bold tracking-wider text-forest-green dark:text-green-300">
@@ -67,7 +67,7 @@ export default function PreferenceDialog({
           받는 부담은<br />내가 정해요.
         </h2>
 
-        <p className="text-xs text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
+        <p className="text-xs text-[#3d4f46] dark:text-[#c5d4cb] mb-6 leading-relaxed">
           이 설정은 브라우저에 저장되어 추천과 정렬에만 맞춤 적용됩니다.
         </p>
 

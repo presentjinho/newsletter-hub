@@ -483,7 +483,7 @@ export default function App() {
   const totalAlive = newsletters.filter(n => n.status === 'alive').length;
 
   return (
-    <div className="relative min-h-screen selection:bg-accent-red/20 selection:text-ink">
+    <div className="relative min-h-screen text-ink selection:bg-accent-red/20 selection:text-ink">
       <div className="paper-grain" aria-hidden="true" />
 
       {/* --- SITE HEADER --- */}
@@ -546,7 +546,7 @@ export default function App() {
             <em className="text-accent-red not-italic font-bold">가볍게</em> 모으고,<br />
             편하게 읽어요.
           </h1>
-          <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-8 max-w-2xl">
+          <p className="text-base md:text-lg text-[#2a3831] dark:text-[#d0ddd6] leading-relaxed mb-8 max-w-2xl">
             수많은 뉴스레터와 공공 공개 자료원들이 어디에 있고, 오늘도 살아있는지 한곳에서 확인하세요.<br />
             남의 편지를 무단 복사하지 않고, 발행사 공식 채널로만 직접 안내하여 안심하고 구독할 수 있습니다.
           </p>
@@ -562,7 +562,7 @@ export default function App() {
 
         <div className="mt-12 text-xs flex items-center gap-2.5 z-10">
           <span className="pulse" />
-          <span className="text-gray-600 dark:text-gray-300">
+          <span className="text-[#2a3831] dark:text-[#d0ddd6]">
             현재 <strong>{totalActive}</strong>개의 엄선 채널 중, <strong>{totalAlive}</strong>개 정상 발행 상태 확인 완료
           </span>
         </div>
@@ -577,22 +577,22 @@ export default function App() {
       <section className="bg-ink dark:bg-[#121c18] text-[#f6f1e5] px-6 md:px-12 py-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
           <div className="border-l border-white/20 pl-4 py-1">
-            <span className="block text-[10px] text-gray-400 uppercase tracking-wider mb-0.5">최종 상태 점검</span>
+            <span className="block text-[10px] text-[#5a6b62] dark:text-[#b8c9bf] uppercase tracking-wider mb-0.5">최종 상태 점검</span>
             <strong className="text-sm font-semibold">2026. 07. 15</strong>
           </div>
           <div className="border-l border-white/20 pl-4 py-1">
-            <span className="block text-[10px] text-gray-400 uppercase tracking-wider mb-0.5">오늘 발행 도착</span>
+            <span className="block text-[10px] text-[#5a6b62] dark:text-[#b8c9bf] uppercase tracking-wider mb-0.5">오늘 발행 도착</span>
             <strong className="text-sm font-semibold text-[#9bcfb3]">
               {newsletters.filter(n => n.daysSince === 0).length}개 채널
             </strong>
           </div>
           <div className="border-l border-white/20 pl-4 py-1">
-            <span className="block text-[10px] text-gray-400 uppercase tracking-wider mb-0.5">상태 점검 요함</span>
+            <span className="block text-[10px] text-[#5a6b62] dark:text-[#b8c9bf] uppercase tracking-wider mb-0.5">상태 점검 요함</span>
             <strong className="text-sm font-semibold text-accent-red">
               {newsletters.filter(n => n.status !== 'alive').length}개 보류
             </strong>
           </div>
-          <div className="text-xs text-gray-400 leading-relaxed">
+          <div className="text-xs text-[#5a6b62] dark:text-[#b8c9bf] leading-relaxed">
             상태 갱신은 공개 피드 및 사이트 운영 공지를 준수하여 일 단위 점검 처리됩니다. 
             원문 확인과 메모는 실시간 작업대를 활용하세요.
           </div>
@@ -709,7 +709,7 @@ export default function App() {
           <div className="space-y-6 mb-8 bg-[#fdfaf2] dark:bg-[#203028] p-6 border border-line-alpha rounded-xs">
             {/* Search Input */}
             <div className="relative border-b border-ink/40 dark:border-white/40 focus-within:border-accent-red transition duration-200">
-              <Search className="absolute left-0 top-3 h-5 w-5 text-gray-400" />
+              <Search className="absolute left-0 top-3 h-5 w-5 text-[#5a6b62] dark:text-[#b8c9bf]" />
               <input
                 type="search"
                 value={query}
@@ -937,11 +937,11 @@ export default function App() {
             </div>
           ) : (
             <div className="py-20 text-center bg-white/40 border border-dashed border-line-alpha flex flex-col items-center justify-center p-8">
-              <Info className="w-8 h-8 text-gray-400 mb-2" />
-              <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1">
+              <Info className="w-8 h-8 text-[#5a6b62] dark:text-[#b8c9bf] mb-2" />
+              <p className="text-sm font-semibold text-gray-600 dark:text-[#5a6b62] dark:text-[#b8c9bf] mb-1">
                 검색 조건에 맞는 편지 채널이 존재하지 않습니다.
               </p>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-[#5a6b62] dark:text-[#b8c9bf]">
                 입력된 키워드 철자를 확인하거나 위의 필터 조건들을 조금 더 넓혀 보세요.
               </p>
             </div>
@@ -960,7 +960,7 @@ export default function App() {
               <h2 className="font-serif text-3xl md:text-5xl tracking-tight leading-tight text-ink">
                 내가 모아 둔 편지함
               </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-300 mt-2 leading-relaxed">
+              <p className="text-sm text-[#2a3831] dark:text-[#d0ddd6] mt-2 leading-relaxed">
                 보관해 둔 편지 목록입니다. 타 기기나 FreshRSS, NetNewsWire 등 다른 RSS 리더기로 한 번에 전송하고 싶다면 OPML 규격 파일로 내려받으세요.
               </p>
             </div>
@@ -1003,7 +1003,7 @@ export default function App() {
             </div>
           ) : (
             <div className="py-12 text-center bg-white/25 border border-dashed border-line-alpha flex flex-col items-center justify-center p-8">
-              <p className="font-serif text-lg text-gray-600 dark:text-gray-300 mb-2">
+              <p className="font-serif text-lg text-[#2a3831] dark:text-[#d0ddd6] mb-2">
                 보관된 편지가 아직 존재하지 않습니다.
               </p>
               <p className="text-xs text-gray-500 max-w-sm leading-relaxed">
@@ -1031,9 +1031,9 @@ export default function App() {
       <ToolsSection />
 
       {/* --- FOOTER --- */}
-      <footer className="py-12 text-center text-xs text-gray-500 dark:text-gray-400 bg-paper dark:bg-[#121c18] border-t border-line-alpha flex flex-col items-center justify-center gap-2">
+      <footer className="py-12 text-center text-xs text-[#3d4f46] dark:text-[#c5d4cb] bg-paper dark:bg-[#121c18] border-t border-line-alpha flex flex-col items-center justify-center gap-2">
         <p>오늘의 편지함 · 개인 정보 뉴스레터 디렉터리 및 메모작업 공간</p>
-        <p className="text-[10px] text-gray-400">
+        <p className="text-[10px] text-[#5a6b62] dark:text-[#b8c9bf]">
           모든 뉴스레터 및 기사의 저작권은 각 원천 발행 기관 및 발행사에 귀속됩니다. 원문을 무단 전재하지 않습니다.
         </p>
         <button

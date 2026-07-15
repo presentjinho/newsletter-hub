@@ -8,31 +8,25 @@
   --color-accent-red: var(--red);
   --color-forest-green: var(--green);
   --color-line-alpha: var(--line);
-  
-  --color-gray-300: var(--gray-300);
-  --color-gray-400: var(--gray-400);
-  --color-gray-500: var(--gray-500);
-  --color-gray-600: var(--gray-600);
-  --color-gray-700: var(--gray-700);
-  
+
+  /* 고정 회색 — 다크모드에서 숫자가 뒤집히면 글자가 안 보임. 유틸은 dark: 접두사로 처리 */
+  --color-muted: var(--muted);
+  --color-muted-strong: var(--muted-strong);
+
   --font-serif: "Gowun Batang", serif;
   --font-sans: "IBM Plex Sans KR", sans-serif;
 }
 
 :root {
-  --ink: #111a17;
+  --ink: #0e1613;
   --paper: #faf8f2;
-  --warm: #ebdcb9;
-  --red: #bd2c15;
-  --green: #14402f;
-  --line: rgba(17, 26, 23, 0.22);
-  
-  --gray-300: #889e93;
-  --gray-400: #4b5f54;
-  --gray-500: #374a40;
-  --gray-600: #25332c;
-  --gray-700: #111a17;
-  
+  --warm: #e8d9b8;
+  --red: #b32612;
+  --green: #0f3d2c;
+  --line: rgba(14, 22, 19, 0.2);
+  --muted: #3d4f46;
+  --muted-strong: #2a3831;
+
   --serif: 'Gowun Batang', serif;
   --sans: 'IBM Plex Sans KR', sans-serif;
 }
@@ -42,6 +36,8 @@ body {
   color: var(--ink);
   background-color: var(--paper);
   font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.65;
   transition: background-color 0.3s ease, color 0.3s ease;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -49,31 +45,36 @@ body {
 }
 
 body.dark {
-  --ink: #f5fcf8;
-  --paper: #0a100d;
+  --ink: #f3faf6;
+  --paper: #0c1210;
   --warm: #1a2822;
-  --green: #8dfcb9;
-  --line: rgba(245, 252, 248, 0.25);
-  --red: #ff8573;
-  
-  --gray-300: #8da498;
-  --gray-400: #cce3d7;
-  --gray-500: #e2f0e9;
-  --gray-600: #f5fcf8;
-  --gray-700: #ffffff;
+  --green: #8fd9ae;
+  --line: rgba(243, 250, 246, 0.22);
+  --red: #ff8a78;
+  --muted: #c5d4cb;
+  --muted-strong: #dce8e1;
 }
 
-/* Paper Grain Texture Overlay */
+/* Paper grain: 글자 위에 얹히면 흐려 보임 → 뒤로 */
 .paper-grain {
   position: fixed;
   inset: 0;
-  opacity: 0.04;
-  z-index: 100;
+  opacity: 0.035;
+  z-index: 0;
   pointer-events: none;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
 }
 
-/* Base custom classes to match the prompt's exact style */
+/* 콘텐츠는 grain 위 */
+.site-header,
+main,
+section,
+footer,
+dialog {
+  position: relative;
+  z-index: 1;
+}
+
 .brand-mark {
   color: var(--red);
   font-size: 18px;
@@ -101,6 +102,31 @@ body.dark {
   }
 }
 
+/* 가독성: Tailwind gray 유틸이 테마와 꼬일 때 대비 보정 */
+.newsletter-card .description,
+.newsletter-card p {
+  color: var(--muted-strong);
+}
+
+body.dark .newsletter-card .description,
+body.dark .newsletter-card p {
+  color: var(--muted);
+}
+
+body.dark .newsletter-card h3,
+body .newsletter-card h3 {
+  color: var(--ink);
+}
+
+/* 카드 본문 대비 강화 */
+.text-readable {
+  color: var(--muted-strong);
+}
+
+body.dark .text-readable {
+  color: var(--muted);
+}
+
 /* Large text option */
 body.large-text {
   font-size: 18px;
@@ -108,29 +134,12 @@ body.large-text {
 body.large-text .newsletter-card {
   font-size: 1.15rem;
 }
-body.large-text .newsletter-card .description {
-  font-size: 16px;
-}
-body.large-text .newsletter-card .value-promise {
-  font-size: 13px;
-}
-body.large-text .newsletter-card .delivery {
-  font-size: 13px;
-}
-body.large-text .newsletter-card .unsubscribe-help {
-  font-size: 13px;
-}
-body.large-text .text-\[11px\] {
-  font-size: 13px !important;
-}
-body.large-text .text-\[10px\] {
-  font-size: 12px !important;
-}
-body.large-text .text-\[9px\] {
-  font-size: 11px !important;
+body.large-text .newsletter-card p {
+  font-size: 1rem;
+  line-height: 1.7;
 }
 
-/* Status indicator dot */
+/* Status indicator */
 .status-dot::before {
   content: '';
   display: inline-block;
@@ -145,7 +154,6 @@ body.large-text .text-\[9px\] {
   background-color: #b5a892;
 }
 
-/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -161,8 +169,29 @@ body.large-text .text-\[9px\] {
   background: var(--green);
 }
 
-/* Dialog backdrops */
 dialog::backdrop {
-  background: rgba(23, 33, 29, 0.55);
+  background: rgba(14, 22, 19, 0.6);
   backdrop-filter: blur(4px);
+}
+
+/* 필터 버튼: 비활성 글자 대비 */
+.filter-chip {
+  color: var(--ink);
+  border: 1px solid var(--line);
+  background: transparent;
+}
+.filter-chip.active {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+body.dark .filter-chip.active {
+  background: var(--ink);
+  color: #0c1210;
+}
+
+/* select option 가독성 */
+select option {
+  background: var(--paper);
+  color: var(--ink);
 }
