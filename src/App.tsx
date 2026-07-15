@@ -788,23 +788,23 @@ export default function App() {
       <section className="hero max-w-7xl mx-auto px-6 md:px-12 py-16 md:py-24 relative overflow-hidden flex flex-col justify-between" id="top">
         <div className="max-w-3xl z-10">
           <p className="text-xs font-bold tracking-widest text-forest-green dark:text-[var(--green)] mb-4">
-            KOREAN NEWSLETTER DIRECTORY · 매일 오전 7시 갱신
+            정보 디렉터리 · 국가·산업별 안정 출처 · 뉴스레터는 선택 표시
           </p>
           <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl tracking-tight leading-tight mb-6">
-            좋아하는 이야기는<br />
+            세계 곳곳의 정보를<br />
             <em className="text-accent-red not-italic font-bold">가볍게</em> 모으고,<br />
             편하게 읽어요.
           </h1>
           <p className="text-base md:text-lg text-secondary leading-relaxed mb-8 max-w-2xl">
-            수많은 뉴스레터와 공공 공개 자료원들이 어디에 있고, 오늘도 살아있는지 한곳에서 확인하세요.<br />
-            남의 편지를 무단 복사하지 않고, 발행사 공식 채널로만 직접 안내하여 안심하고 구독할 수 있습니다.
+            공영·기관·전문 매체의 정보를 국가·산업별로 모아 보여 줍니다.<br />
+            이메일 뉴스레터는 기본 목록에서 빼고, 필요할 때만 필터로 볼 수 있습니다.
           </p>
 
           <a
             href="#find"
             className="inline-flex items-center gap-12 font-bold text-base text-ink no-underline border-b border-ink dark:border-white pb-2 hover:border-accent-red hover:text-accent-red transition-all duration-200"
           >
-            <span>뉴스레터 지도 보러가기</span>
+            <span>정보 지도 보러가기</span>
             <span className="text-lg text-accent-red">↓</span>
           </a>
         </div>
