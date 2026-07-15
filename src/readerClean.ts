@@ -1,97 +1,232 @@
 /**
- * 리더 추출 텍스트에서 마크다운·잡음을 제거하고
- * 본문 + 선택적 링크 목록으로 나눈다.
+ * 리더 추출 텍스트 정리:
+ * - 본문: 마크다운·URL·잡기호 제거한 순수 문장
+ * - 링크: 이미지/트래킹/CDN 잡링크 제외, 읽을 만한 페이지만 짧은 제목으로
  */
+
+export type ReaderLink = {
+  label: string;
+  url: string;
+  host: string;
+  kind: 'article' | 'video' | 'social' | 'other';
+};
 
 export type CleanedReader = {
   title: string;
   body: string;
-  links: { label: string; url: string }[];
+  links: ReaderLink[];
 };
 
 const URL_RE = /https?:\/\/[^\s<>"')\]]+/gi;
 
+const IMAGE_EXT = /\.(avif|bmp|gif|jpe?g|png|svg|webp|ico|tiff?)(\?|#|$)/i;
+const ASSET_EXT = /\.(css|js|mjs|map|woff2?|ttf|eot|otf|mp3|mp4|webm|m4a|wav|pdf)(\?|#|$)/i;
+
+/** 호스트/경로가 이미지·CDN·광고·트래킹이면 버림 */
+const JUNK_HOST = [
+  'doubleclick', 'googlesyndication', 'googleadservices', 'google-analytics', 'googletagmanager',
+  'facebook.com/tr', 'fbcdn', 'analytics', 'scorecardresearch', 'chartbeat', 'hotjar',
+  'segment.io', 'mixpanel', 'newrelic', 'sentry.io', 'cookiebot', 'onetrust',
+  'cloudfront.net', 'akamaihd', 'fastly', 'imgix', 'cloudinary', 'imagekit',
+  'twimg.com', 'cdninstagram', 'pinimg', 'staticflickr',
+  'wp-content/uploads', 'wp-includes', 'media.guim', 'i.guim', 'assets.',
+  'gravatar', 'disqus', 'outbrain', 'taboola', 'criteo', 'amazon-adsystem',
+  'fonts.g', 'typekit', 'gstatic.com', 'ggpht.com',
+  'sprite', 'favicon', 'logo.', '/logo', 'pixel.', '1x1', 'tracking',
+  'data:image', 'blob:',
+];
+
+const SOCIAL_HOST = ['twitter.com', 'x.com', 'facebook.com', 'instagram.com', 'linkedin.com', 't.me', 'youtube.com', 'youtu.be', 'tiktok.com', 'reddit.com'];
+
 function normalizeUrl(raw: string): string {
-  return raw.replace(/[),.;!?]+$/g, '');
+  let u = raw.trim();
+  u = u.replace(/[),.;!?'"\]]+$/g, '');
+  // trailing markdown junk
+  u = u.replace(/\)+$/g, '');
+  try {
+    const parsed = new URL(u);
+    // strip common tracking params
+    const drop = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid', 'gclid', 'mc_cid', 'mc_eid', 'ref', 'ref_src'];
+    drop.forEach(k => parsed.searchParams.delete(k));
+    // drop empty search
+    const s = parsed.searchParams.toString();
+    parsed.search = s ? `?${s}` : '';
+    // remove hash noise
+    if (parsed.hash && parsed.hash.length > 40) parsed.hash = '';
+    return parsed.toString();
+  } catch {
+    return u;
+  }
 }
 
-/** jina / raw markdown → 읽기용 순수 문장 */
+function isJunkUrl(url: string, label = ''): boolean {
+  const lower = url.toLowerCase();
+  const lab = (label || '').toLowerCase();
+  if (!lower.startsWith('http')) return true;
+  if (IMAGE_EXT.test(lower) || ASSET_EXT.test(lower)) return true;
+  if (JUNK_HOST.some(j => lower.includes(j))) return true;
+  if (/\/(images?|img|static|assets|media|uploads?|thumb|thumbs|icons?|sprites?)\//i.test(lower)) {
+    // allow if looks like article path after media — but most are assets
+    if (IMAGE_EXT.test(lower) || /\/\d+x\d+\//.test(lower) || /format=auto|quality=\d|w=\d{2,4}/i.test(lower)) return true;
+    if (!/\/(news|article|story|post|blog|20\d{2})\//i.test(lower)) return true;
+  }
+  // data-heavy query image CDNs
+  if (/[?&](w|h|width|height|fit|crop|auto)=/i.test(lower) && /cdn|image|img|media/i.test(lower)) return true;
+  // label is clearly image
+  if (/^(image|img|photo|thumbnail|icon|logo|banner|avatar)$/i.test(lab.trim())) return true;
+  // extremely long query strings usually trackers/CDN
+  try {
+    const u = new URL(url);
+    if (u.search.length > 180) return true;
+    if (u.pathname.length > 200 && /%2F|%3A/i.test(u.pathname)) return true;
+  } catch {
+    return true;
+  }
+  return false;
+}
+
+function hostOf(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '');
+  } catch {
+    return '';
+  }
+}
+
+function kindOf(url: string): ReaderLink['kind'] {
+  const h = hostOf(url).toLowerCase();
+  if (SOCIAL_HOST.some(s => h === s || h.endsWith('.' + s))) {
+    if (h.includes('youtube') || h.includes('youtu.be')) return 'video';
+    return 'social';
+  }
+  if (/youtube|youtu\.be|vimeo|dailymotion/.test(h)) return 'video';
+  return 'article';
+}
+
+/** URL → 짧은 읽기 제목 (전체 URL 노출 안 함) */
+export function prettyLinkLabel(url: string, hint = ''): string {
+  const cleanHint = hint
+    .replace(/https?:\/\/\S+/gi, '')
+    .replace(/[#*_`]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  if (cleanHint && cleanHint.length >= 3 && cleanHint.length <= 90 && !/^https?:/i.test(cleanHint)) {
+    // hint가 의미 있으면 우선
+    if (!/^(link|url|here|click|source|image|img|photo)$/i.test(cleanHint)) {
+      return cleanHint;
+    }
+  }
+
+  try {
+    const u = new URL(url);
+    const host = u.hostname.replace(/^www\./, '');
+    let path = decodeURIComponent(u.pathname).replace(/\/+$/, '');
+    const segs = path.split('/').filter(Boolean);
+    // 마지막 의미 있는 세그먼트
+    let last = segs[segs.length - 1] || '';
+    last = last.replace(/\.(html?|php|aspx?)$/i, '');
+    last = last.replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim();
+    // slug가 너무 길거나 해시면 호스트만
+    if (!last || last.length < 2 || /^[a-f0-9]{12,}$/i.test(last) || last.length > 60) {
+      return host;
+    }
+    // 숫자 id만이면 호스트
+    if (/^\d+$/.test(last)) return host;
+    // Title Case-ish
+    const title = last.length > 48 ? `${last.slice(0, 48)}…` : last;
+    return `${title} · ${host}`;
+  } catch {
+    return cleanHint || '링크';
+  }
+}
+
+function pushLink(
+  bag: ReaderLink[],
+  seen: Set<string>,
+  label: string,
+  url: string
+) {
+  const u = normalizeUrl(url);
+  if (isJunkUrl(u, label)) return;
+  // canonical key without trailing slash
+  const key = u.replace(/\/$/, '').toLowerCase();
+  if (seen.has(key)) return;
+  seen.add(key);
+  bag.push({
+    label: prettyLinkLabel(u, label),
+    url: u,
+    host: hostOf(u),
+    kind: kindOf(u)
+  });
+}
+
+/** jina / raw → 읽기용 순수 문장 + 정제 링크 */
 export function cleanReaderText(raw: string): CleanedReader {
   let text = raw || '';
-  const links: { label: string; url: string }[] = [];
+  const links: ReaderLink[] = [];
   const seen = new Set<string>();
 
-  const pushLink = (label: string, url: string) => {
-    const u = normalizeUrl(url);
-    if (!u.startsWith('http') || seen.has(u)) return;
-    seen.add(u);
-    const lab = (label || u).replace(/\s+/g, ' ').trim().slice(0, 80);
-    links.push({ label: lab || u, url: u });
-  };
-
-  // jina 메타 블록 제거
+  // jina 메타
   text = text
     .replace(/^Title:\s*.+$/gim, '')
     .replace(/^URL Source:\s*.+$/gim, '')
     .replace(/^Published Time:\s*.+$/gim, '')
     .replace(/^Markdown Content:\s*/gim, '')
-    .replace(/^Warning:\s*.+$/gim, '');
+    .replace(/^Warning:\s*.+$/gim, '')
+    .replace(/^Warning\s*.+$/gim, '');
 
-  // 이미지 ![alt](url)
-  text = text.replace(/!\[([^\]]*)\]\((https?:[^)\s]+)\)/g, (_, alt: string, url: string) => {
-    pushLink(alt || '이미지', url);
-    return '';
-  });
+  // 이미지 마크다운 — 본문·링크 목록 모두에서 제외
+  text = text.replace(/!\[([^\]]*)\]\((https?:[^)\s]+)\)/g, '');
 
-  // 마크다운 링크 [label](url)
+  // HTML img
+  text = text.replace(/<img[^>]*>/gi, '');
+
+  // 마크다운 링크 → 라벨만 본문, 좋은 링크만 목록
   text = text.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, (_, label: string, url: string) => {
-    pushLink(label, url);
+    pushLink(links, seen, label, url);
     return label;
   });
 
-  // 레퍼런스 링크 [1]: url
+  // 레퍼런스 정의는 본문에서 삭제, 링크만 검토
   text = text.replace(/^\s*\[[^\]]+\]:\s*(https?:\/\/\S+)\s*$/gim, (_, url: string) => {
-    pushLink('참고 링크', url);
+    pushLink(links, seen, '', url);
     return '';
   });
 
-  // 자동 링크 <https://...>
   text = text.replace(/<(https?:\/\/[^>]+)>/g, (_, url: string) => {
-    pushLink(url, url);
+    pushLink(links, seen, '', url);
     return '';
   });
 
-  // 남은 맨 URL → 링크로 빼고 본문에서 제거
+  // 남은 bare URL
   text = text.replace(URL_RE, (url: string) => {
-    pushLink(url, url);
+    pushLink(links, seen, '', url);
     return '';
   });
 
-  // 헤딩 # ## ### → 제목 느낌의 줄 (기호 제거)
+  // 헤딩/강조/목록
   text = text.replace(/^\s{0,3}#{1,6}\s*/gm, '');
-
-  // 강조 *bold* **bold** _em_ __em__
   text = text.replace(/\*\*([^*]+)\*\*/g, '$1');
   text = text.replace(/\*([^*]+)\*/g, '$1');
   text = text.replace(/__([^_]+)__/g, '$1');
   text = text.replace(/_([^_]+)_/g, '$1');
   text = text.replace(/~~([^~]+)~~/g, '$1');
   text = text.replace(/`([^`]+)`/g, '$1');
-
-  // 인용 >
   text = text.replace(/^\s*>+\s?/gm, '');
-
-  // 리스트 기호
   text = text.replace(/^\s*[-*+]\s+/gm, '· ');
   text = text.replace(/^\s*\d+\.\s+/gm, '· ');
-
-  // 수평선
   text = text.replace(/^\s*([-*_]){3,}\s*$/gm, '');
-
-  // HTML 잔여
   text = text.replace(/<[^>]+>/g, ' ');
 
-  // 공백 정리
+  // 빈 괄호·깨진 마크다운 잔재
+  text = text
+    .replace(/!\[[^\]]*\]/g, '')
+    .replace(/\[[^\]]*\]\([^)]*\)/g, '')
+    .replace(/\[\]/g, '')
+    .replace(/\(\s*\)/g, '')
+    .replace(/【[^】]*】/g, '');
+
   text = text
     .replace(/\u00a0/g, ' ')
     .replace(/[ \t]+\n/g, '\n')
@@ -99,21 +234,33 @@ export function cleanReaderText(raw: string): CleanedReader {
     .replace(/[ \t]{2,}/g, ' ')
     .trim();
 
-  // 첫 줄을 제목 후보
-  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
-  let title = '';
-  if (lines.length) {
-    title = lines[0].slice(0, 120);
-    // 짧은 첫 줄이면 제목으로 쓰고 본문에서 유지 (중복 OK)
-  }
+  // 거의 URL만 남은 줄 제거
+  const lines = text
+    .split('\n')
+    .map(l => l.trim())
+    .filter(l => {
+      if (!l) return false;
+      if (/^https?:\/\//i.test(l)) return false;
+      if (l.length < 2) return false;
+      // 점·기호만
+      if (/^[\s·\-–—*•|#]+$/.test(l)) return false;
+      return true;
+    });
 
-  // 너무 짧은 줄바꿈 문장 합치기 약간
+  const title = lines[0] ? lines[0].slice(0, 120) : '';
   const body = lines.join('\n\n');
 
-  return { title, body, links: links.slice(0, 40) };
+  // 링크 정렬: article 먼저, 같은 호스트 묶음
+  const ranked = [...links].sort((a, b) => {
+    const order = { article: 0, video: 1, social: 2, other: 3 };
+    if (order[a.kind] !== order[b.kind]) return order[a.kind] - order[b.kind];
+    return a.host.localeCompare(b.host) || a.label.localeCompare(b.label, 'ko');
+  });
+
+  // 최대 개수 제한 (UI 깔끔)
+  return { title, body, links: ranked.slice(0, 20) };
 }
 
-/** 한국어가 거의 없으면 번역 대상 */
 export function likelyNeedsKorean(text: string, languageHint?: string): boolean {
   if (languageHint && /한국어/.test(languageHint) && !/영어|일본|중국|독|프|다국어|아랍/.test(languageHint)) {
     return false;
@@ -128,19 +275,16 @@ export function likelyNeedsKorean(text: string, languageHint?: string): boolean 
 
 async function translateChunk(text: string, signal: AbortSignal): Promise<string> {
   const q = encodeURIComponent(text);
-  // MyMemory free (CORS OK, 길이 제한 ~500)
   const url = `https://api.mymemory.translated.net/get?q=${q}&langpair=autodetect|ko`;
   const res = await fetch(url, { signal });
   if (!res.ok) throw new Error(`translate ${res.status}`);
   const data = await res.json();
   const out = data?.responseData?.translatedText;
   if (!out || typeof out !== 'string') throw new Error('empty translation');
-  // quota 메시지 필터
   if (/MYMEMORY WARNING/i.test(out)) throw new Error('quota');
   return out;
 }
 
-/** 긴 본문을 쪼개 한국어로 번역 (실패 시 원문 일부 유지) */
 export async function translateToKorean(
   text: string,
   signal: AbortSignal,
@@ -161,19 +305,16 @@ export async function translateToKorean(
     rest = rest.slice(cut).trim();
   }
 
-  // 너무 많으면 앞부분만 (무료 API 한도)
   const limited = chunks.slice(0, 24);
   const out: string[] = [];
   for (let i = 0; i < limited.length; i++) {
     if (signal.aborted) throw new DOMException('Aborted', 'AbortError');
     try {
-      const t = await translateChunk(limited[i], signal);
-      out.push(t);
+      out.push(await translateChunk(limited[i], signal));
     } catch {
       out.push(limited[i]);
     }
     onProgress?.(Math.round(((i + 1) / limited.length) * 100));
-    // rate limit 완화
     await new Promise(r => setTimeout(r, 120));
   }
   if (chunks.length > limited.length) {

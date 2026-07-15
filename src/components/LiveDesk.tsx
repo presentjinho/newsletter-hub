@@ -439,7 +439,7 @@ export default function LiveDesk({
                         ))}
                       </div>
 
-                      {/* 링크는 접어 두고 궁금할 때만 */}
+                      {/* 정제된 읽을 링크만 (이미지·CDN·트래킹 제외) */}
                       {cleaned.links.length > 0 && (
                         <div className="mt-8 border border-white/15 rounded-sm overflow-hidden">
                           <button
@@ -449,21 +449,30 @@ export default function LiveDesk({
                           >
                             <span className="text-xs font-bold flex items-center gap-2">
                               <Link2 className="w-3.5 h-3.5 live-accent" />
-                              원문에 있던 링크 {cleaned.links.length}개 · 궁금하면 열기
+                              관련 페이지 {cleaned.links.length}개 · 이미지·광고 링크는 숨김
                             </span>
                             {showLinks ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                           </button>
                           {showLinks && (
-                            <ul className="m-0 p-3 list-none space-y-2 bg-black/20">
+                            <ul className="m-0 p-2 list-none space-y-1.5 bg-black/20">
                               {cleaned.links.map((l, i) => (
                                 <li key={i}>
                                   <a
                                     href={l.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-xs live-accent underline break-all leading-relaxed"
+                                    className="flex flex-col gap-0.5 px-3 py-2 rounded-sm hover:bg-white/5 no-underline"
+                                    title={l.url}
                                   >
-                                    {l.label}
+                                    <span className="text-sm font-semibold text-[var(--live-fg)] leading-snug">
+                                      {l.label}
+                                    </span>
+                                    <span className="text-[10px] text-[var(--live-muted)] flex items-center gap-2">
+                                      <span className="live-accent font-bold uppercase tracking-wide">
+                                        {l.kind === 'article' ? '기사·페이지' : l.kind === 'video' ? '영상' : l.kind === 'social' ? '소셜' : '기타'}
+                                      </span>
+                                      <span>{l.host}</span>
+                                    </span>
                                   </a>
                                 </li>
                               ))}
