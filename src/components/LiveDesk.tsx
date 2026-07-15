@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   RefreshCw,
   ExternalLink,
@@ -11,10 +11,19 @@ import {
   BookOpen,
   Loader2,
   AlertCircle,
-  Globe2
+  Globe2,
+  Link2,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { Newsletter, Note } from '../types';
 import { canAttemptIframe } from '../embedPolicy';
+import {
+  cleanReaderText,
+  likelyNeedsKorean,
+  translateToKorean,
+  type CleanedReader
+} from '../readerClean';
 
 interface LiveDeskProps {
   newsletters: Newsletter[];
@@ -29,9 +38,6 @@ interface LiveDeskProps {
 
 type ViewMode = 'reader' | 'iframe';
 
-/** 앱 안에 ‘진짜 브라우저’를 넣는 건 GH Pages 웹에서는 불가.
- *  iframe 차단 사이트는 리더 추출(텍스트)로 앱 내 열람 + 확대.
- */
 async function fetchReadable(url: string, signal: AbortSignal): Promise<string> {
   const endpoints = [
     `https://r.jina.ai/${url}`,
@@ -42,13 +48,10 @@ async function fetchReadable(url: string, signal: AbortSignal): Promise<string> 
     try {
       const res = await fetch(endpoint, {
         signal,
-        headers: endpoint.includes('jina')
-          ? { Accept: 'text/plain' }
-          : undefined
+        headers: endpoint.includes('jina') ? { Accept: 'text/plain' } : undefined
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       let text = await res.text();
-      // HTML이 오면 태그 대충 제거
       if (/<html[\s>]/i.test(text) || /<body[\s>]/i.test(text)) {
         text = text
           .replace(/<script[\s\S]*?<\/script>/gi, '')
@@ -59,7 +62,6 @@ async function fetchReadable(url: string, signal: AbortSignal): Promise<string> 
       }
       text = text.trim();
       if (text.length < 40) throw new Error('내용이 너무 짧음');
-      // 과도한 길이 컷
       if (text.length > 80000) text = `${text.slice(0, 80000)}\n\n…(이하 생략 — 전체는 새 탭 원문)`;
       return text;
     } catch (e) {
@@ -82,9 +84,15 @@ export default function LiveDesk({
 }: LiveDeskProps) {
   const [timeStr, setTimeStr] = useState('');
   const [viewMode, setViewMode] = useState<ViewMode>('reader');
-  const [readerText, setReaderText] = useState('');
+  const [rawText, setRawText] = useState('');
   const [readerLoading, setReaderLoading] = useState(false);
   const [readerError, setReaderError] = useState('');
+  const [showLinks, setShowLinks] = useState(false);
+  const [showKo, setShowKo] = useState(false);
+  const [koText, setKoText] = useState('');
+  const [koLoading, setKoLoading] = useState(false);
+  const [koError, setKoError] = useState('');
+  const [koProgress, setKoProgress] = useState(0);
   const [zoom, setZoom] = useState(() => {
     const z = Number(localStorage.getItem('letter-reader-zoom') || '125');
     return Number.isFinite(z) ? Math.min(200, Math.max(100, z)) : 125;
@@ -112,18 +120,30 @@ export default function LiveDesk({
 
   const activeNewsletter = newsletters.find(n => n.id === activeSourceId);
   const sourceNotes = activeSourceId ? getNotesForSource(activeSourceId) : [];
-
   const siteOf = (n: Newsletter) => n.siteUrl || n.url;
   const subOf = (n: Newsletter) => n.subscribeUrl;
+
+  const cleaned: CleanedReader = useMemo(
+    () => cleanReaderText(rawText),
+    [rawText]
+  );
+
+  const needsKo = useMemo(() => {
+    if (!activeNewsletter || !cleaned.body) return false;
+    return likelyNeedsKorean(cleaned.body, activeNewsletter.language);
+  }, [cleaned.body, activeNewsletter]);
 
   const loadReader = useCallback(async (url: string) => {
     const ctrl = new AbortController();
     setReaderLoading(true);
     setReaderError('');
-    setReaderText('');
+    setRawText('');
+    setKoText('');
+    setShowKo(false);
+    setKoError('');
     try {
       const text = await fetchReadable(url, ctrl.signal);
-      setReaderText(text);
+      setRawText(text);
     } catch (e) {
       if ((e as Error).name !== 'AbortError') {
         setReaderError(
@@ -133,13 +153,16 @@ export default function LiveDesk({
     } finally {
       setReaderLoading(false);
     }
-    return () => ctrl.abort();
   }, []);
 
   useEffect(() => {
     setViewMode('reader');
+    setShowLinks(false);
+    setShowKo(false);
+    setKoText('');
+    setKoError('');
     if (!activeNewsletter) {
-      setReaderText('');
+      setRawText('');
       setReaderError('');
       return;
     }
@@ -149,15 +172,13 @@ export default function LiveDesk({
     (async () => {
       setReaderLoading(true);
       setReaderError('');
-      setReaderText('');
+      setRawText('');
       try {
         const text = await fetchReadable(target, ctrl.signal);
-        if (!cancelled) setReaderText(text);
+        if (!cancelled) setRawText(text);
       } catch (e) {
         if (!cancelled && (e as Error).name !== 'AbortError') {
-          setReaderError(
-            '앱 안 리더로 불러오지 못했습니다. 새 탭에서 원문을 열어 주세요.'
-          );
+          setReaderError('앱 안 리더로 불러오지 못했습니다. 새 탭에서 원문을 열어 주세요.');
         }
       } finally {
         if (!cancelled) setReaderLoading(false);
@@ -169,16 +190,37 @@ export default function LiveDesk({
     };
   }, [activeNewsletter?.id, activeNewsletter?.siteUrl, activeNewsletter?.url]);
 
+  const runTranslate = async () => {
+    if (!cleaned.body) return;
+    if (koText) {
+      setShowKo(true);
+      return;
+    }
+    const ctrl = new AbortController();
+    setKoLoading(true);
+    setKoError('');
+    setKoProgress(0);
+    try {
+      const t = await translateToKorean(cleaned.body, ctrl.signal, setKoProgress);
+      setKoText(t);
+      setShowKo(true);
+    } catch (e) {
+      if ((e as Error).name !== 'AbortError') {
+        setKoError('자동 번역에 실패했습니다. 아래 “번역 탭”으로 원문 페이지를 열어 주세요.');
+      }
+    } finally {
+      setKoLoading(false);
+    }
+  };
+
   const openOriginal = () => {
     if (activeNewsletter) window.open(siteOf(activeNewsletter), '_blank', 'noopener,noreferrer');
   };
-
   const openSubscribe = () => {
     if (!activeNewsletter) return;
     const sub = subOf(activeNewsletter);
     if (sub) window.open(sub, '_blank', 'noopener,noreferrer');
   };
-
   const openTranslate = () => {
     if (!activeNewsletter) return;
     const u = `https://translate.google.com/translate?sl=auto&tl=ko&u=${encodeURIComponent(siteOf(activeNewsletter))}`;
@@ -189,21 +231,20 @@ export default function LiveDesk({
   const zoomOut = () => setZoom(z => Math.max(100, z - 10));
   const zoomReset = () => setZoom(125);
 
+  const displayBody = showKo && koText ? koText : cleaned.body;
+
   return (
     <section className="live-desk p-8 md:p-14 border-b border-white/15" id="live">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-6">
           <div className="lg:col-span-7">
-            <p className="text-xs font-bold tracking-widest live-accent mb-2">
-              LIVE DESK · 앱 안 리더
-            </p>
+            <p className="text-xs font-bold tracking-widest live-accent mb-2">LIVE DESK · 앱 안 리더</p>
             <h2 className="font-serif text-3xl md:text-5xl tracking-tight leading-tight mb-3 text-[var(--live-fg)]">
-              원문을 안에서 읽고<br />바로 메모해요
+              원문만 깨끗하게<br />읽고 메모해요
             </h2>
             <p className="text-sm text-[var(--live-muted)] leading-relaxed max-w-2xl">
-              일반 웹사이트는 보안 때문에 iframe(페이지 끼워 넣기)을 막습니다.
-              그래서 <strong className="text-[var(--live-fg)]">앱 안 리더</strong>로 본문 텍스트를 불러와 크게 읽고,
-              전체 UI가 필요하면 새 탭을 씁니다. (크롬을 통째로 넣는 건 웹 호스팅에선 불가)
+              #·마크다운·URL 표기는 숨기고 <strong className="text-[var(--live-fg)]">문장만</strong> 보여 줍니다.
+              링크는 접어 두고 궁금할 때만 엽니다. 외국어는 <strong className="text-[var(--live-fg)]">한국어 번역</strong>을 켤 수 있습니다.
             </p>
             <p className="text-xs live-accent mt-2">
               지금 {timeStr} · {linkSyncStatus}
@@ -212,9 +253,7 @@ export default function LiveDesk({
 
           <div className="lg:col-span-5 flex flex-col gap-3">
             <div className="flex flex-col gap-1.5">
-              <span className="text-[11px] text-[var(--live-muted)] font-bold uppercase tracking-wider">
-                출처 선택
-              </span>
+              <span className="text-[11px] text-[var(--live-muted)] font-bold uppercase tracking-wider">출처 선택</span>
               <select
                 value={activeSourceId}
                 onChange={e => onSelectSource(e.target.value)}
@@ -230,104 +269,45 @@ export default function LiveDesk({
             </div>
 
             <div className="flex flex-wrap gap-2 items-center">
-              <button
-                type="button"
-                onClick={onRefreshLinkStatus}
-                className="px-3 py-2 bg-white/10 hover:bg-white/15 text-xs font-bold live-accent border border-white/15 rounded-sm cursor-pointer flex items-center gap-1.5"
-              >
-                <RefreshCw className="w-3.5 h-3.5" />
-                상태 동기화
+              <button type="button" onClick={onRefreshLinkStatus} className="px-3 py-2 bg-white/10 text-xs font-bold live-accent border border-white/15 rounded-sm cursor-pointer flex items-center gap-1.5">
+                <RefreshCw className="w-3.5 h-3.5" /> 상태
               </button>
               {activeNewsletter && (
                 <>
-                  <button
-                    type="button"
-                    onClick={openOriginal}
-                    className="px-3 py-2 bg-white/10 text-xs font-bold text-[var(--live-fg)] border border-white/20 rounded-sm cursor-pointer flex items-center gap-1.5"
-                  >
-                    <ExternalLink className="w-3.5 h-3.5 live-accent" />
-                    사이트 열기
+                  <button type="button" onClick={openOriginal} className="px-3 py-2 bg-white/10 text-xs font-bold text-[var(--live-fg)] border border-white/20 rounded-sm cursor-pointer flex items-center gap-1.5">
+                    <ExternalLink className="w-3.5 h-3.5 live-accent" /> 사이트
                   </button>
                   {subOf(activeNewsletter) && (
-                    <button
-                      type="button"
-                      onClick={openSubscribe}
-                      className="px-3 py-2 bg-[#cf4f39]/90 text-xs font-bold text-[var(--live-fg)] rounded-sm cursor-pointer flex items-center gap-1.5"
-                    >
+                    <button type="button" onClick={openSubscribe} className="px-3 py-2 bg-[#cf4f39]/90 text-xs font-bold text-[var(--live-fg)] rounded-sm cursor-pointer">
                       구독 페이지
                     </button>
                   )}
-                  {activeNewsletter.origin === '글로벌' && (
-                    <button
-                      type="button"
-                      onClick={openTranslate}
-                      className="px-3 py-2 bg-white/10 text-xs font-bold text-[var(--live-fg)] border border-white/20 rounded-sm cursor-pointer flex items-center gap-1.5"
-                    >
-                      <Languages className="w-3.5 h-3.5" />
-                      번역 탭
-                    </button>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => onOpenNote(activeNewsletter.id)}
-                    className="px-3 py-2 bg-white/10 text-xs font-bold text-[var(--live-fg)] border border-white/20 rounded-sm cursor-pointer flex items-center gap-1.5"
-                  >
-                    <FileText className="w-3.5 h-3.5" />
-                    메모
+                  <button type="button" onClick={openTranslate} className="px-3 py-2 bg-white/10 text-xs font-bold text-[var(--live-fg)] border border-white/20 rounded-sm cursor-pointer flex items-center gap-1.5">
+                    <Languages className="w-3.5 h-3.5" /> 번역 탭
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => onQuickGmail(activeNewsletter.id)}
-                    className="px-3 py-2 bg-[#cf4f39] text-xs font-bold text-[var(--live-fg)] rounded-sm cursor-pointer flex items-center gap-1.5"
-                  >
-                    <Mail className="w-3.5 h-3.5" />
-                    Gmail
+                  <button type="button" onClick={() => onOpenNote(activeNewsletter.id)} className="px-3 py-2 bg-white/10 text-xs font-bold text-[var(--live-fg)] border border-white/20 rounded-sm cursor-pointer flex items-center gap-1.5">
+                    <FileText className="w-3.5 h-3.5" /> 메모
+                  </button>
+                  <button type="button" onClick={() => onQuickGmail(activeNewsletter.id)} className="px-3 py-2 bg-[#cf4f39] text-xs font-bold text-[var(--live-fg)] rounded-sm cursor-pointer flex items-center gap-1.5">
+                    <Mail className="w-3.5 h-3.5" /> Gmail
                   </button>
                 </>
               )}
             </div>
 
-            {/* Zoom controls */}
             <div className="flex flex-wrap items-center gap-2 p-2 bg-black/30 border border-white/15 rounded-sm">
-              <span className="text-[11px] font-bold text-[var(--live-muted)] uppercase tracking-wider mr-1">
-                글자 확대
-              </span>
-              <button
-                type="button"
-                onClick={zoomOut}
-                className="p-2 bg-white/10 border border-white/20 rounded-sm cursor-pointer text-[var(--live-fg)]"
-                aria-label="축소"
-              >
+              <span className="text-[11px] font-bold text-[var(--live-muted)] uppercase tracking-wider mr-1">글자 확대</span>
+              <button type="button" onClick={zoomOut} className="p-2 bg-white/10 border border-white/20 rounded-sm cursor-pointer text-[var(--live-fg)]" aria-label="축소">
                 <ZoomOut className="w-4 h-4" />
               </button>
-              <span className="text-sm font-bold text-[var(--live-fg)] min-w-[3.5rem] text-center tabular-nums">
-                {zoom}%
-              </span>
-              <button
-                type="button"
-                onClick={zoomIn}
-                className="p-2 bg-white/10 border border-white/20 rounded-sm cursor-pointer text-[var(--live-fg)]"
-                aria-label="확대"
-              >
+              <span className="text-sm font-bold text-[var(--live-fg)] min-w-[3.5rem] text-center tabular-nums">{zoom}%</span>
+              <button type="button" onClick={zoomIn} className="p-2 bg-white/10 border border-white/20 rounded-sm cursor-pointer text-[var(--live-fg)]" aria-label="확대">
                 <ZoomIn className="w-4 h-4" />
               </button>
-              <button
-                type="button"
-                onClick={zoomReset}
-                className="text-xs underline live-accent cursor-pointer bg-transparent border-0 font-bold"
-              >
-                기본(125%)
+              <button type="button" onClick={zoomReset} className="text-xs underline live-accent cursor-pointer bg-transparent border-0 font-bold">
+                기본
               </button>
-              <input
-                type="range"
-                min={100}
-                max={200}
-                step={5}
-                value={zoom}
-                onChange={e => setZoom(Number(e.target.value))}
-                className="flex-1 min-w-[100px] accent-[#9fe0b8]"
-                aria-label="읽기 배율"
-              />
+              <input type="range" min={100} max={200} step={5} value={zoom} onChange={e => setZoom(Number(e.target.value))} className="flex-1 min-w-[100px] accent-[#9fe0b8]" aria-label="읽기 배율" />
             </div>
           </div>
         </div>
@@ -335,46 +315,26 @@ export default function LiveDesk({
         {activeNewsletter && (
           <div className="p-3 bg-black/25 border border-white/15 text-sm text-[var(--live-muted)] mb-4 flex flex-wrap gap-x-4 gap-y-2 items-center rounded-sm">
             <span className="font-bold text-[var(--live-fg)]">{activeNewsletter.name}</span>
-            <span className="opacity-40">•</span>
-            <span className={activeNewsletter.status === 'alive' ? 'live-accent' : 'text-[#c4b8a0]'}>
-              {activeNewsletter.status === 'alive' ? '발행 중' : '확인 필요'}
-            </span>
-            <span className="opacity-40">•</span>
             <div className="flex gap-2">
               <button
                 type="button"
                 onClick={() => setViewMode('reader')}
                 className={`px-2.5 py-1 text-xs font-bold rounded-sm border cursor-pointer flex items-center gap-1 ${
-                  viewMode === 'reader'
-                    ? 'bg-[#9fe0b8] text-[#0a100e] border-[#9fe0b8]'
-                    : 'bg-transparent text-[var(--live-fg)] border-white/25'
+                  viewMode === 'reader' ? 'bg-[#9fe0b8] text-[#0a100e] border-[#9fe0b8]' : 'bg-transparent text-[var(--live-fg)] border-white/25'
                 }`}
               >
-                <BookOpen className="w-3.5 h-3.5" />
-                앱 안 리더
+                <BookOpen className="w-3.5 h-3.5" /> 앱 안 리더
               </button>
               <button
                 type="button"
                 onClick={() => setViewMode('iframe')}
                 className={`px-2.5 py-1 text-xs font-bold rounded-sm border cursor-pointer flex items-center gap-1 ${
-                  viewMode === 'iframe'
-                    ? 'bg-[#9fe0b8] text-[#0a100e] border-[#9fe0b8]'
-                    : 'bg-transparent text-[var(--live-fg)] border-white/25'
+                  viewMode === 'iframe' ? 'bg-[#9fe0b8] text-[#0a100e] border-[#9fe0b8]' : 'bg-transparent text-[var(--live-fg)] border-white/25'
                 }`}
-                title={canAttemptIframe(siteOf(activeNewsletter)) ? '일부 사이트만 가능' : '대부분 차단됨'}
               >
-                <Eye className="w-3.5 h-3.5" />
-                페이지 끼워보기
+                <Eye className="w-3.5 h-3.5" /> 페이지 끼워보기
               </button>
             </div>
-            <a
-              href={siteOf(activeNewsletter)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline live-accent break-all text-xs ml-auto"
-            >
-              {siteOf(activeNewsletter)}
-            </a>
           </div>
         )}
 
@@ -384,8 +344,7 @@ export default function LiveDesk({
               <div className="flex-1 flex flex-col items-center justify-center p-10">
                 <Globe2 className="w-10 h-10 live-accent mb-3 opacity-80" />
                 <p className="text-base text-[var(--live-muted)] text-center max-w-md leading-relaxed">
-                  출처를 고르면 <strong className="text-[var(--live-fg)]">앱 안 리더</strong>로 본문을 불러옵니다.
-                  글자 확대로 가독성을 올리세요.
+                  출처를 고르면 본문만 정리해서 보여 줍니다. 외국어는 한국어 번역을 켤 수 있습니다.
                 </p>
               </div>
             ) : viewMode === 'iframe' ? (
@@ -397,40 +356,52 @@ export default function LiveDesk({
                   referrerPolicy="no-referrer"
                   className="w-full flex-1 min-h-[480px] border-0 bg-white"
                 />
-                <div className="p-3 text-xs text-[var(--live-muted)] bg-black/50 flex flex-wrap gap-3 justify-between items-center">
-                  <span>
-                    연결 거부 화면이 보이면 정상입니다. <strong className="text-[var(--live-fg)]">앱 안 리더</strong>로 전환하세요.
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setViewMode('reader')}
-                    className="underline live-accent font-bold cursor-pointer bg-transparent border-0"
-                  >
-                    리더로 돌아가기
+                <div className="p-3 text-xs text-[var(--live-muted)] bg-black/50 flex justify-between">
+                  <span>연결 거부 시 정상입니다. 리더로 전환하세요.</span>
+                  <button type="button" onClick={() => setViewMode('reader')} className="underline live-accent font-bold cursor-pointer bg-transparent border-0">
+                    리더로
                   </button>
                 </div>
               </div>
             ) : (
               <div className="flex flex-col flex-1 min-h-[520px]">
-                <div className="flex items-center justify-between gap-2 px-4 py-2 border-b border-white/10 bg-black/30">
+                <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2 border-b border-white/10 bg-black/30">
                   <span className="text-xs font-bold live-accent flex items-center gap-1.5">
                     <BookOpen className="w-3.5 h-3.5" />
-                    앱 안 리더 · 본문 추출
+                    원문 보기 · 기호·링크 정리됨
                   </span>
-                  <button
-                    type="button"
-                    disabled={readerLoading}
-                    onClick={() => activeNewsletter && loadReader(siteOf(activeNewsletter))}
-                    className="text-xs font-bold text-[var(--live-fg)] underline cursor-pointer bg-transparent border-0 disabled:opacity-50"
-                  >
-                    다시 불러오기
-                  </button>
+                  <div className="flex flex-wrap gap-2 items-center">
+                    {needsKo && (
+                      <button
+                        type="button"
+                        disabled={koLoading || readerLoading}
+                        onClick={() => {
+                          if (showKo) setShowKo(false);
+                          else runTranslate();
+                        }}
+                        className="px-2.5 py-1 text-xs font-bold rounded-sm border border-[#9fe0b8]/50 live-accent bg-black/20 cursor-pointer flex items-center gap-1 disabled:opacity-50"
+                      >
+                        <Languages className="w-3.5 h-3.5" />
+                        {koLoading ? `번역 중 ${koProgress}%` : showKo ? '원문 보기' : '한국어로 번역'}
+                      </button>
+                    )}
+                    {!needsKo && activeNewsletter.origin === '글로벌' && (
+                      <button type="button" onClick={openTranslate} className="px-2.5 py-1 text-xs font-bold rounded-sm border border-white/20 text-[var(--live-fg)] cursor-pointer flex items-center gap-1">
+                        <Languages className="w-3.5 h-3.5" /> 페이지 번역 탭
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      disabled={readerLoading}
+                      onClick={() => activeNewsletter && loadReader(siteOf(activeNewsletter))}
+                      className="text-xs font-bold text-[var(--live-fg)] underline cursor-pointer bg-transparent border-0 disabled:opacity-50"
+                    >
+                      다시 불러오기
+                    </button>
+                  </div>
                 </div>
 
-                <div
-                  className="flex-1 overflow-y-auto p-5 md:p-8 bg-[#0c1210]"
-                  style={{ fontSize: `${zoom}%` }}
-                >
+                <div className="flex-1 overflow-y-auto p-5 md:p-8 bg-[#0c1210]" style={{ fontSize: `${zoom}%` }}>
                   {readerLoading && (
                     <div className="flex flex-col items-center justify-center py-20 gap-3 text-[var(--live-muted)]">
                       <Loader2 className="w-8 h-8 animate-spin live-accent" />
@@ -441,38 +412,68 @@ export default function LiveDesk({
                     <div className="flex flex-col items-center justify-center py-16 gap-4 text-center max-w-md mx-auto">
                       <AlertCircle className="w-8 h-8 text-[#ff9a8a]" />
                       <p className="text-sm text-[var(--live-muted)] leading-relaxed">{readerError}</p>
-                      <div className="flex flex-wrap gap-2 justify-center">
-                        <button type="button" onClick={openOriginal} className="px-4 py-2 btn-mint text-sm rounded-sm cursor-pointer flex items-center gap-2">
-                          <ExternalLink className="w-4 h-4" />
-                          새 탭 원문
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => onOpenNote(activeNewsletter.id)}
-                          className="px-4 py-2 bg-white/10 text-[var(--live-fg)] text-sm font-bold border border-white/20 rounded-sm cursor-pointer"
-                        >
-                          메모만 쓰기
-                        </button>
-                      </div>
+                      <button type="button" onClick={openOriginal} className="px-4 py-2 btn-mint text-sm rounded-sm cursor-pointer flex items-center gap-2">
+                        <ExternalLink className="w-4 h-4" /> 새 탭 원문
+                      </button>
                     </div>
                   )}
-                  {!readerLoading && !readerError && readerText && (
+                  {!readerLoading && !readerError && displayBody && (
                     <article className="max-w-3xl mx-auto">
-                      <h3
-                        className="font-serif text-[var(--live-fg)] tracking-tight mb-4 leading-snug"
-                        style={{ fontSize: '1.35em' }}
+                      {cleaned.title && (
+                        <h3 className="font-serif text-[var(--live-fg)] tracking-tight mb-5 leading-snug" style={{ fontSize: '1.35em' }}>
+                          {cleaned.title}
+                        </h3>
+                      )}
+                      {showKo && (
+                        <p className="text-[0.65em] live-accent mb-4 font-bold">한국어 번역 표시 중 · 품질은 자동 번역 수준입니다</p>
+                      )}
+                      {koError && <p className="text-[0.7em] text-[#ff9a8a] mb-3">{koError}</p>}
+                      <div
+                        className="text-[var(--live-fg)] leading-relaxed space-y-4"
+                        style={{ fontSize: '0.95em', lineHeight: 1.8 }}
                       >
-                        {activeNewsletter.name}
-                      </h3>
-                      <pre
-                        className="whitespace-pre-wrap break-words font-sans text-[var(--live-fg)] leading-relaxed opacity-95"
-                        style={{ fontSize: '0.95em', lineHeight: 1.75 }}
-                      >
-                        {readerText}
-                      </pre>
-                      <p className="mt-8 pt-4 border-t border-white/10 text-[0.7em] text-[var(--live-muted)] leading-relaxed">
-                        리더는 열람 편의를 위한 요약·추출이며, 저작권은 원 발행사에 있습니다.
-                        레이아웃·이미지는 새 탭 원문에서 확인하세요.
+                        {displayBody.split(/\n{2,}/).map((para, i) => (
+                          <p key={i} className="m-0 whitespace-pre-wrap break-words">
+                            {para}
+                          </p>
+                        ))}
+                      </div>
+
+                      {/* 링크는 접어 두고 궁금할 때만 */}
+                      {cleaned.links.length > 0 && (
+                        <div className="mt-8 border border-white/15 rounded-sm overflow-hidden">
+                          <button
+                            type="button"
+                            onClick={() => setShowLinks(v => !v)}
+                            className="w-full flex items-center justify-between gap-2 px-4 py-3 bg-black/40 text-left cursor-pointer border-0 text-[var(--live-fg)]"
+                          >
+                            <span className="text-xs font-bold flex items-center gap-2">
+                              <Link2 className="w-3.5 h-3.5 live-accent" />
+                              원문에 있던 링크 {cleaned.links.length}개 · 궁금하면 열기
+                            </span>
+                            {showLinks ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                          </button>
+                          {showLinks && (
+                            <ul className="m-0 p-3 list-none space-y-2 bg-black/20">
+                              {cleaned.links.map((l, i) => (
+                                <li key={i}>
+                                  <a
+                                    href={l.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-xs live-accent underline break-all leading-relaxed"
+                                  >
+                                    {l.label}
+                                  </a>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      )}
+
+                      <p className="mt-8 pt-4 border-t border-white/10 text-[0.65em] text-[var(--live-muted)] leading-relaxed">
+                        본문은 열람용으로 정리한 것이며 저작권은 발행사에 있습니다. 레이아웃·이미지는 사이트 열기로 확인하세요.
                       </p>
                     </article>
                   )}
@@ -481,7 +482,6 @@ export default function LiveDesk({
             )}
           </div>
 
-          {/* Notes sidebar */}
           <div className="lg:col-span-4 border border-white/20 bg-black/25 p-5 flex flex-col rounded-sm">
             <h3 className="text-xs font-bold uppercase tracking-widest live-accent mb-4">
               이 출처 최근 메모 ({sourceNotes.length})
@@ -496,22 +496,14 @@ export default function LiveDesk({
                       onClick={() => onOpenNote(activeSourceId, note.id)}
                       className="w-full text-left p-3 border border-white/15 hover:border-[#a8e0c0] hover:bg-white/5 transition rounded-sm flex flex-col gap-1 cursor-pointer"
                     >
-                      <strong className="text-sm text-[var(--live-fg)] font-bold line-clamp-1">
-                        {note.title || '제목 없는 메모'}
-                      </strong>
-                      <p className="text-xs text-[var(--live-muted)] line-clamp-2 leading-relaxed">
-                        {note.body || '메모 내용이 비어 있습니다.'}
-                      </p>
+                      <strong className="text-sm text-[var(--live-fg)] font-bold line-clamp-1">{note.title || '제목 없는 메모'}</strong>
+                      <p className="text-xs text-[var(--live-muted)] line-clamp-2 leading-relaxed">{note.body || '메모 내용이 비어 있습니다.'}</p>
                     </button>
                   ))
                 ) : (
                   <div className="flex-1 flex flex-col items-center justify-center py-10 text-center">
                     <p className="text-sm text-[var(--live-muted)] mb-3">아직 이 출처 메모가 없습니다.</p>
-                    <button
-                      type="button"
-                      onClick={() => onOpenNote(activeSourceId)}
-                      className="px-4 py-2 btn-mint text-sm rounded-sm cursor-pointer"
-                    >
+                    <button type="button" onClick={() => onOpenNote(activeSourceId)} className="px-4 py-2 btn-mint text-sm rounded-sm cursor-pointer">
                       첫 메모 작성하기
                     </button>
                   </div>
@@ -519,9 +511,7 @@ export default function LiveDesk({
               </div>
             ) : (
               <div className="flex-1 flex items-center justify-center text-center">
-                <p className="text-sm text-[var(--live-muted)] max-w-[220px] leading-relaxed">
-                  출처를 고르면 메모가 여기 정렬됩니다.
-                </p>
+                <p className="text-sm text-[var(--live-muted)] max-w-[220px] leading-relaxed">출처를 고르면 메모가 여기 정렬됩니다.</p>
               </div>
             )}
           </div>
