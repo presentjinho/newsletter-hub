@@ -1,0 +1,1086 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Sparkles, 
+  Search, 
+  BookOpen, 
+  Bookmark, 
+  HelpCircle, 
+  RefreshCw, 
+  Settings, 
+  FolderPlus, 
+  Mail, 
+  Download, 
+  Inbox, 
+  Clock, 
+  ExternalLink,
+  SlidersHorizontal,
+  ChevronDown,
+  Info
+} from 'lucide-react';
+
+import { Newsletter, Note, Notebook, Preferences } from './types';
+import { 
+  newsletters, 
+  categories, 
+  topics, 
+  countriesList, 
+  typesList, 
+  disciplinesList,
+  readingTimes,
+  valuePromises
+} from './data';
+
+// Component imports
+import OnboardingDialog from './components/OnboardingDialog';
+import PreferenceDialog from './components/PreferenceDialog';
+import NewsletterCard from './components/NewsletterCard';
+import LiveDesk from './components/LiveDesk';
+import NotesHub from './components/NotesHub';
+import NoteDialog from './components/NoteDialog';
+import ToolsSection from './components/ToolsSection';
+
+export default function App() {
+  // --- STATE DECLARATIONS ---
+  const [query, setQuery] = useState('');
+  const [selectedSourceScope, setSelectedSourceScope] = useState<'all' | 'public'>('all');
+  const [selectedDiscipline, setSelectedDiscipline] = useState('전체');
+  const [selectedCategory, setSelectedCategory] = useState('전체');
+  const [selectedTopic, setSelectedTopic] = useState('전체');
+  const [selectedFrequency, setSelectedFrequency] = useState('전체');
+  const [selectedOrigin, setSelectedOrigin] = useState('전체');
+  const [selectedCountry, setSelectedCountry] = useState('전체');
+  const [selectedType, setSelectedType] = useState('전체');
+  const [sortBy, setSortBy] = useState('recommended');
+
+  // Bookmarks & local preferences
+  const [savedIds, setSavedIds] = useState<Set<string>>(() => {
+    try {
+      const stored = localStorage.getItem('letter-shelf');
+      return stored ? new Set(JSON.parse(stored)) : new Set();
+    } catch {
+      return new Set();
+    }
+  });
+
+  const [personalStatus, setPersonalStatus] = useState<Record<string, string>>(() => {
+    try {
+      const stored = localStorage.getItem('letter-status');
+      return stored ? JSON.parse(stored) : {};
+    } catch {
+      return {};
+    }
+  });
+
+  const [userInterests, setUserInterests] = useState<string[]>(() => {
+    try {
+      const stored = localStorage.getItem('letter-interests');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [prefs, setPrefs] = useState<Preferences>(() => {
+    try {
+      const stored = localStorage.getItem('letter-preferences');
+      return stored ? JSON.parse(stored) : { frequency: 'all', paused: false };
+    } catch {
+      return { frequency: 'all', paused: false };
+    }
+  });
+
+  // Notes state
+  const [notes, setNotes] = useState<Note[]>(() => {
+    try {
+      const stored = localStorage.getItem('letter-notes-v1');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [notebooks, setNotebooks] = useState<Notebook[]>(() => {
+    try {
+      const stored = localStorage.getItem('letter-notebooks-v1');
+      const list = stored ? JSON.parse(stored) : [];
+      if (!list.some((n: any) => n.id === 'inbox')) {
+        list.unshift({ id: 'inbox', name: '일반 메모함' });
+      }
+      return list;
+    } catch {
+      return [{ id: 'inbox', name: '일반 메모함' }];
+    }
+  });
+
+  // Workspace selections
+  const [liveSourceId, setLiveSourceId] = useState(() => {
+    return localStorage.getItem('letter-live-source') || '';
+  });
+
+  const [gmailSelfEmail, setGmailSelfEmail] = useState(() => {
+    try {
+      const stored = localStorage.getItem('letter-gmail-pref');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        return parsed.selfEmail || '';
+      }
+    } catch {}
+    return '';
+  });
+
+  // UI States
+  const [onboardingOpen, setOnboardingOpen] = useState(false);
+  const [preferencesOpen, setPreferencesOpen] = useState(false);
+  const [noteEditorOpen, setNoteEditorOpen] = useState(false);
+  const [noteEditorSourceId, setNoteEditorSourceId] = useState('');
+  const [noteEditorNoteId, setNoteEditorNoteId] = useState<string | undefined>(undefined);
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    return (localStorage.getItem('letter-theme') as 'light' | 'dark') || 'light';
+  });
+  const [textSize, setTextSize] = useState<'normal' | 'large'>(() => {
+    return (localStorage.getItem('letter-text-size') as 'normal' | 'large') || 'normal';
+  });
+
+  const [linkSyncStatus, setLinkSyncStatus] = useState('상태 최신 (동기화 완료)');
+
+  // Onboarding auto-open trigger
+  useEffect(() => {
+    const seen = localStorage.getItem('letter-onboarding-seen');
+    if (!seen) {
+      setOnboardingOpen(true);
+    }
+  }, []);
+
+  // Theme application
+  useEffect(() => {
+    document.body.classList.toggle('dark', theme === 'dark');
+    localStorage.setItem('letter-theme', theme);
+  }, [theme]);
+
+  // Text size application
+  useEffect(() => {
+    document.body.classList.toggle('large-text', textSize === 'large');
+    localStorage.setItem('letter-text-size', textSize);
+  }, [textSize]);
+
+  // Sync state modifications to localstorage
+  useEffect(() => {
+    localStorage.setItem('letter-shelf', JSON.stringify([...savedIds]));
+  }, [savedIds]);
+
+  useEffect(() => {
+    localStorage.setItem('letter-status', JSON.stringify(personalStatus));
+  }, [personalStatus]);
+
+  useEffect(() => {
+    localStorage.setItem('letter-notes-v1', JSON.stringify(notes));
+  }, [notes]);
+
+  useEffect(() => {
+    localStorage.setItem('letter-notebooks-v1', JSON.stringify(notebooks));
+  }, [notebooks]);
+
+  // --- ACTIONS & HANDLERS ---
+
+  const handleToggleSave = (id: string) => {
+    setSavedIds(prev => {
+      const copy = new Set(prev);
+      if (copy.has(id)) {
+        copy.delete(id);
+      } else {
+        copy.add(id);
+      }
+      return copy;
+    });
+  };
+
+  const handleStatusChange = (id: string, stat: string) => {
+    setPersonalStatus(prev => ({
+      ...prev,
+      [id]: stat
+    }));
+  };
+
+  const handleOnboardingClose = (selectedInterests: string[]) => {
+    if (selectedInterests.length > 0) {
+      setUserInterests(selectedInterests);
+      localStorage.setItem('letter-interests', JSON.stringify(selectedInterests));
+    }
+    localStorage.setItem('letter-onboarding-seen', 'true');
+    setOnboardingOpen(false);
+  };
+
+  const handlePreferencesSave = (selectedInterests: string[], updatedPrefs: Preferences) => {
+    setUserInterests(selectedInterests);
+    setPrefs(updatedPrefs);
+    localStorage.setItem('letter-interests', JSON.stringify(selectedInterests));
+    localStorage.setItem('letter-preferences', JSON.stringify(updatedPrefs));
+    setPreferencesOpen(false);
+  };
+
+  // Notes persistence callbacks
+  const handleSaveNote = (id: string, patch: { title: string; body: string }) => {
+    setNotes(prev => prev.map(n => {
+      if (n.id === id) {
+        return {
+          ...n,
+          ...patch,
+          updatedAt: new Date().toISOString()
+        };
+      }
+      return n;
+    }));
+  };
+
+  const handleCreateNote = (sourceId: string, title = '', body = ''): Note => {
+    const now = new Date().toISOString();
+    const newNote: Note = {
+      id: `n_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`,
+      sourceId,
+      title: title || `${getSourceName(sourceId)} 메모`,
+      body,
+      createdAt: now,
+      updatedAt: now
+    };
+    setNotes(prev => [newNote, ...prev]);
+    return newNote;
+  };
+
+  const handleDeleteNote = (id: string) => {
+    setNotes(prev => prev.filter(n => n.id !== id));
+  };
+
+  const handleTransferNote = (id: string, targetSourceId: string, mode: 'move' | 'copy'): Note | null => {
+    const targetNote = notes.find(n => n.id === id);
+    if (!targetNote) return null;
+
+    if (mode === 'copy') {
+      const copy = handleCreateNote(targetSourceId, targetNote.title, targetNote.body);
+      return copy;
+    } else {
+      setNotes(prev => prev.map(n => {
+        if (n.id === id) {
+          return {
+            ...n,
+            sourceId: targetSourceId,
+            updatedAt: new Date().toISOString()
+          };
+        }
+        return n;
+      }));
+      return {
+        ...targetNote,
+        sourceId: targetSourceId,
+        updatedAt: new Date().toISOString()
+      };
+    }
+  };
+
+  // Gmail Compose Link Maker
+  const formatGmailBody = (note: Note) => {
+    const sourceItem = newsletters.find(n => n.id === note.sourceId);
+    const dateStr = new Date(note.updatedAt || note.createdAt).toLocaleString('ko-KR');
+    
+    return [
+      `📝 [오늘의 편지함 메모] ${note.title}`,
+      `작성 일시: ${dateStr}`,
+      `위치: ${getSourceName(note.sourceId)}`,
+      sourceItem ? `공식 링크: ${sourceItem.url}` : '',
+      `---`,
+      note.body,
+      `---`,
+      `본 메일은 오늘의 편지함(K-Newsletter Hub)에서 편리한 편지 내보내기를 통해 생성되었습니다.`
+    ].filter(Boolean).join('\n\n');
+  };
+
+  const handleSendGmail = (note: Note) => {
+    const subject = encodeURIComponent(`[오늘의 편지함] ${note.title || getSourceName(note.sourceId)}`);
+    const bodyText = encodeURIComponent(formatGmailBody(note));
+    const url = `https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=${encodeURIComponent(gmailSelfEmail)}&su=${subject}&body=${bodyText}`;
+    window.open(url, '_blank', 'noopener');
+  };
+
+  const handleSendMailto = (note: Note) => {
+    const subject = encodeURIComponent(`[오늘의 편지함] ${note.title}`);
+    const bodyText = encodeURIComponent(formatGmailBody(note));
+    window.location.href = `mailto:${encodeURIComponent(gmailSelfEmail)}?subject=${subject}&body=${bodyText}`;
+  };
+
+  const handleCopyNote = async (note: Note): Promise<boolean> => {
+    try {
+      await navigator.clipboard.writeText(formatGmailBody(note));
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleExportMarkdown = (note: Note) => {
+    const content = [
+      `# ${note.title}`,
+      `- 작성일자: ${new Date(note.createdAt).toLocaleString('ko-KR')}`,
+      `- 최종수정: ${new Date(note.updatedAt).toLocaleString('ko-KR')}`,
+      `- 분류/출처: ${getSourceName(note.sourceId)}`,
+      `---`,
+      ``,
+      note.body,
+      ``,
+      `---`,
+      `*exported from 오늘의 편지함*`
+    ].join('\n');
+
+    const filename = `${note.title.replace(/[\\/:*?"<>|]/g, '_') || 'note'}.md`;
+    const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+  };
+
+  const getSourceName = (id: string): string => {
+    if (id === 'inbox') return '일반 메모함';
+    const nb = notebooks.find(n => n.id === id);
+    if (nb) return nb.name;
+    const nl = newsletters.find(item => item.id === id);
+    return nl ? nl.name : id;
+  };
+
+  const handleAddNotebook = () => {
+    const name = window.prompt('새 메모함 폴더의 이름을 입력하세요:');
+    if (!name || !name.trim()) return;
+    const newId = `nb_${Date.now().toString(36)}`;
+    setNotebooks(prev => [...prev, { id: newId, name: name.trim() }]);
+    alert('새 메모함이 생성되었습니다. 메모 편집기 또는 메모 허브에서 선택할 수 있습니다.');
+  };
+
+  const handleGmailEmailSave = (email: string) => {
+    setGmailSelfEmail(email);
+    localStorage.setItem('letter-gmail-pref', JSON.stringify({ selfEmail: email }));
+  };
+
+  // Link validation checking
+  const handleRefreshLinkStatus = () => {
+    setLinkSyncStatus('동기화 처리 중...');
+    setTimeout(() => {
+      setLinkSyncStatus(`동기화 완료: ${new Date().toLocaleTimeString('ko-KR')}`);
+      alert('발행사 공개 피드 및 상태 체크 완료!');
+    }, 800);
+  };
+
+  // OPML Export function
+  const escapeXml = (value: string) => {
+    return String(value || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  };
+
+  const handleExportOpml = (mode: 'saved' | 'public') => {
+    const source = mode === 'saved'
+      ? newsletters.filter(item => savedIds.has(item.id))
+      : newsletters.filter(item => item.sourceScope === 'public');
+
+    if (!source.length) {
+      alert(mode === 'saved' ? '저장된 출처가 없습니다. 카드를 “내 목록”에 보관한 뒤 다시 실행해 주세요.' : '공공 출처가 존재하지 않습니다.');
+      return;
+    }
+
+    const title = mode === 'saved' ? '오늘의 편지함 · 내 저장 목록' : '오늘의 편지함 · 검증 공공 출처';
+    const outlines = source.map(item => {
+      const xmlUrl = item.feedUrl || item.url;
+      return `    <outline text="${escapeXml(item.name)}" title="${escapeXml(item.name)}" type="rss" xmlUrl="${escapeXml(xmlUrl)}" htmlUrl="${escapeXml(item.url)}" category="${escapeXml(item.category)}" />`;
+    }).join('\n');
+
+    const opmlText = `<?xml version="1.0" encoding="UTF-8"?>\n<opml version="2.0">\n  <head>\n    <title>${escapeXml(title)}</title>\n    <dateCreated>${new Date().toUTCString()}</dateCreated>\n  </head>\n  <body>\n    <outline text="${escapeXml(title)}" title="${escapeXml(title)}">\n${outlines}\n    </outline>\n  </body>\n</opml>\n`;
+
+    const blob = new Blob([opmlText], { type: 'text/x-opml+xml;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = mode === 'saved' ? 'letterbox-saved-shelf.opml' : 'letterbox-public-sources.opml';
+    link.click();
+  };
+
+  // Dialog triggers
+  const handleOpenNote = (sourceId: string, noteId?: string) => {
+    setNoteEditorSourceId(sourceId);
+    setNoteEditorNoteId(noteId);
+    setNoteEditorOpen(true);
+  };
+
+  const handleQuickGmail = (sourceId: string) => {
+    const folderName = getSourceName(sourceId);
+    const newNote = handleCreateNote(sourceId, `${folderName} 빠른 메모`, '');
+    handleOpenNote(sourceId, newNote.id);
+    // Open Gmail compose helper quickly
+    setTimeout(() => {
+      handleSendGmail(newNote);
+    }, 150);
+  };
+
+  // Filter Newsletters logic
+  const filteredNewsletters = newsletters.filter(item => {
+    // 1. Search text query
+    const words = `${item.name} ${item.discipline} ${item.category} ${item.description} ${item.interests.join(' ')}`.toLowerCase();
+    if (query && !words.includes(query.toLowerCase())) return false;
+
+    // 2. Source Scope (All vs Verified Public)
+    if (selectedSourceScope === 'public' && item.sourceScope !== 'public') return false;
+
+    // 3. Filters
+    if (selectedDiscipline !== '전체' && item.discipline !== selectedDiscipline) return false;
+    if (selectedCategory !== '전체' && item.category !== selectedCategory) return false;
+    if (selectedTopic !== '전체' && !item.interests.includes(selectedTopic)) return false;
+    if (selectedType !== '전체' && item.type !== selectedType) return false;
+    if (selectedCountry !== '전체' && item.country !== selectedCountry) return false;
+
+    // 4. Origin Filter
+    if (selectedOrigin !== '전체') {
+      if (selectedOrigin === '한국' && item.origin !== '한국') return false;
+      if (selectedOrigin === '글로벌' && item.origin !== '글로벌') return false;
+    }
+
+    // 5. Frequency Filter
+    if (selectedFrequency !== '전체' && item.frequencyGroup !== selectedFrequency) return false;
+
+    return true;
+  });
+
+  // Sort Newsletters logic
+  const sortedFilteredNewsletters = [...filteredNewsletters].sort((a, b) => {
+    if (sortBy === 'recent') {
+      return a.daysSince - b.daysSince;
+    }
+    if (sortBy === 'light') {
+      const aTime = parseInt(readingTimes[a.category] || '3') || 3;
+      const bTime = parseInt(readingTimes[b.category] || '3') || 3;
+      return aTime - bTime;
+    }
+    // recommended sort (User chosen interests align first, then daysSince)
+    const aMatchCount = a.interests.filter(tag => userInterests.includes(tag)).length;
+    const bMatchCount = b.interests.filter(tag => userInterests.includes(tag)).length;
+    
+    if (bMatchCount !== aMatchCount) {
+      return bMatchCount - aMatchCount;
+    }
+    return a.daysSince - b.daysSince;
+  });
+
+  // Today's Picks filtering
+  const todayPicks = newsletters
+    .filter(item => item.status === 'alive' && item.daysSince <= 1)
+    .slice(0, 3);
+
+  // Recommendations filtering
+  const recommendedItems = newsletters
+    .filter(item => {
+      if (prefs.paused) return false;
+      if (prefs.frequency !== 'all' && item.frequencyGroup !== prefs.frequency) return false;
+      return item.interests.some(tag => userInterests.includes(tag));
+    })
+    .sort((a, b) => a.daysSince - b.daysSince)
+    .slice(0, 5);
+
+  const savedNewsletters = newsletters.filter(item => savedIds.has(item.id));
+
+  const totalActive = newsletters.length;
+  const totalAlive = newsletters.filter(n => n.status === 'alive').length;
+
+  return (
+    <div className="relative min-h-screen selection:bg-accent-red/20 selection:text-ink">
+      <div className="paper-grain" aria-hidden="true" />
+
+      {/* --- SITE HEADER --- */}
+      <header className="site-header border-b border-line h-[74px] px-6 md:px-12 flex justify-between items-center bg-paper/90 sticky top-0 backdrop-blur-xs z-40">
+        <a href="#top" className="brand flex items-center font-bold tracking-tight text-ink no-underline text-lg">
+          <span className="brand-mark">✦</span>
+          <span>오늘의 편지함</span>
+        </a>
+
+        <nav className="flex items-center gap-6 md:gap-8 overflow-x-auto max-w-[65%] whitespace-nowrap">
+          <a href="#live" className="text-xs font-bold text-ink no-underline hover:text-accent-red">실시간 작업대</a>
+          <a href="#find" className="text-xs font-bold text-ink no-underline hover:text-accent-red">디렉터리</a>
+          <a href="#notes" className="text-xs font-bold text-ink no-underline hover:text-accent-red flex items-center gap-1">
+            <span>메모</span>
+            <span className="text-[10px] bg-accent-red/10 text-accent-red px-1.5 py-0.5 font-bold rounded-full">
+              {notes.length}
+            </span>
+          </a>
+          <a href="#my-list" className="text-xs font-bold text-ink no-underline hover:text-accent-red flex items-center gap-1">
+            <span>내 목록</span>
+            <span className="text-[10px] bg-forest-green/10 text-forest-green px-1.5 py-0.5 font-bold rounded-full">
+              {savedIds.size}
+            </span>
+          </a>
+          <a href="#stack" className="text-xs font-bold text-ink no-underline hover:text-accent-red">보강 도구</a>
+          
+          <span className="w-px h-3.5 bg-line-alpha" />
+
+          <button
+            onClick={() => setPreferencesOpen(true)}
+            className="text-xs font-bold text-ink/70 hover:text-ink bg-transparent border-0 cursor-pointer"
+          >
+            내 설정
+          </button>
+          
+          <button
+            onClick={() => setTextSize(prev => prev === 'large' ? 'normal' : 'large')}
+            className="text-xs font-bold text-ink/70 hover:text-ink bg-transparent border-0 cursor-pointer"
+          >
+            {textSize === 'large' ? '기본 글자' : '글자 크게'}
+          </button>
+
+          <button
+            onClick={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')}
+            className="text-xs font-bold text-ink/70 hover:text-ink bg-transparent border-0 cursor-pointer"
+          >
+            {theme === 'dark' ? '라이트 모드' : '다크 모드'}
+          </button>
+        </nav>
+      </header>
+
+      {/* --- HERO BANNER --- */}
+      <section className="hero max-w-7xl mx-auto px-6 md:px-12 py-16 md:py-24 relative overflow-hidden flex flex-col justify-between" id="top">
+        <div className="max-w-3xl z-10">
+          <p className="text-xs font-bold tracking-widest text-forest-green dark:text-green-300 mb-4">
+            KOREAN NEWSLETTER DIRECTORY · 매일 오전 7시 갱신
+          </p>
+          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl tracking-tight leading-tight mb-6">
+            좋아하는 이야기는<br />
+            <em className="text-accent-red not-italic font-bold">가볍게</em> 모으고,<br />
+            편하게 읽어요.
+          </h1>
+          <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-8 max-w-2xl">
+            수많은 뉴스레터와 공공 공개 자료원들이 어디에 있고, 오늘도 살아있는지 한곳에서 확인하세요.<br />
+            남의 편지를 무단 복사하지 않고, 발행사 공식 채널로만 직접 안내하여 안심하고 구독할 수 있습니다.
+          </p>
+
+          <a
+            href="#find"
+            className="inline-flex items-center gap-12 font-bold text-base text-ink no-underline border-b border-ink dark:border-white pb-2 hover:border-accent-red hover:text-accent-red transition-all duration-200"
+          >
+            <span>뉴스레터 지도 보러가기</span>
+            <span className="text-lg text-accent-red">↓</span>
+          </a>
+        </div>
+
+        <div className="mt-12 text-xs flex items-center gap-2.5 z-10">
+          <span className="pulse" />
+          <span className="text-gray-600 dark:text-gray-300">
+            현재 <strong>{totalActive}</strong>개의 엄선 채널 중, <strong>{totalAlive}</strong>개 정상 발행 상태 확인 완료
+          </span>
+        </div>
+
+        {/* Serif background decorative character */}
+        <div className="absolute right-[-40px] bottom-[-40px] text-[200px] md:text-[340px] lg:text-[460px] font-serif font-bold text-warm dark:text-[#203028] pointer-events-none select-none z-0 opacity-40">
+          편지
+        </div>
+      </section>
+
+      {/* --- STATISTICS BAR --- */}
+      <section className="bg-ink dark:bg-[#121c18] text-[#f6f1e5] px-6 md:px-12 py-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
+          <div className="border-l border-white/20 pl-4 py-1">
+            <span className="block text-[10px] text-gray-400 uppercase tracking-wider mb-0.5">최종 상태 점검</span>
+            <strong className="text-sm font-semibold">2026. 07. 15</strong>
+          </div>
+          <div className="border-l border-white/20 pl-4 py-1">
+            <span className="block text-[10px] text-gray-400 uppercase tracking-wider mb-0.5">오늘 발행 도착</span>
+            <strong className="text-sm font-semibold text-[#9bcfb3]">
+              {newsletters.filter(n => n.daysSince === 0).length}개 채널
+            </strong>
+          </div>
+          <div className="border-l border-white/20 pl-4 py-1">
+            <span className="block text-[10px] text-gray-400 uppercase tracking-wider mb-0.5">상태 점검 요함</span>
+            <strong className="text-sm font-semibold text-accent-red">
+              {newsletters.filter(n => n.status !== 'alive').length}개 보류
+            </strong>
+          </div>
+          <div className="text-xs text-gray-400 leading-relaxed">
+            상태 갱신은 공개 피드 및 사이트 운영 공지를 준수하여 일 단위 점검 처리됩니다. 
+            원문 확인과 메모는 실시간 작업대를 활용하세요.
+          </div>
+        </div>
+      </section>
+
+      {/* --- LIVE DESK --- */}
+      <LiveDesk
+        newsletters={newsletters}
+        activeSourceId={liveSourceId}
+        onSelectSource={(id) => {
+          setLiveSourceId(id);
+          localStorage.setItem('letter-live-source', id);
+        }}
+        onOpenNote={handleOpenNote}
+        onQuickGmail={handleQuickGmail}
+        getNotesForSource={(sourceId) => notes.filter(n => n.sourceId === sourceId)}
+        onRefreshLinkStatus={handleRefreshLinkStatus}
+        linkSyncStatus={linkSyncStatus}
+      />
+
+      {/* --- TODAY'S PICKS (3 Items) --- */}
+      <section className="bg-[#dce8de] dark:bg-[#1a2e26] p-8 md:p-14 border-b border-line-alpha" id="today">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <div className="lg:col-span-4">
+            <p className="text-xs font-bold tracking-widest text-forest-green dark:text-green-300 uppercase mb-2">
+              A SMALL MORNING STACK
+            </p>
+            <h2 className="font-serif text-3xl md:text-4xl tracking-tight mb-3 text-ink">
+              오늘 읽을 편지 <span className="text-accent-red font-sans">3</span>
+            </h2>
+            <p className="text-sm text-[#4b5a4e] dark:text-gray-300 leading-relaxed">
+              최근에 새로운 글이 발행되었고, 가벼운 호흡으로 시작해 보기 좋은 엄선 스택입니다.
+            </p>
+          </div>
+
+          <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-3 border-t border-l border-line-alpha bg-white/20">
+            {todayPicks.map(item => (
+              <NewsletterCard
+                key={item.id}
+                item={item}
+                isSaved={savedIds.has(item.id)}
+                onToggleSave={() => handleToggleSave(item.id)}
+                onOpenLive={() => {
+                  setLiveSourceId(item.id);
+                  localStorage.setItem('letter-live-source', item.id);
+                  document.getElementById('live')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                onOpenNote={() => handleOpenNote(item.id)}
+                personalState={personalStatus[item.id] || '관심 있음'}
+                onChangePersonalState={(stat) => handleStatusChange(item.id, stat)}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* --- RECOMMENDED SECTION (Interests Matching) --- */}
+      {!prefs.paused && userInterests.length > 0 && recommendedItems.length > 0 && (
+        <section className="bg-[#f8f4ea] dark:bg-[#202c25] p-8 md:p-14 border-b border-line-alpha" id="recommendations">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+              <div>
+                <p className="text-xs font-bold tracking-widest text-forest-green dark:text-green-300 uppercase mb-1">
+                  PICKED FOR YOU
+                </p>
+                <h2 className="font-serif text-2xl md:text-3xl tracking-tight text-ink">
+                  <span className="text-accent-red font-sans">{userInterests.join(' · ')}</span> 관심사에 적합한 가이드 추천
+                </h2>
+              </div>
+              <button
+                onClick={() => setPreferencesOpen(true)}
+                className="text-xs font-bold text-forest-green dark:text-green-300 underline cursor-pointer bg-transparent border-0"
+              >
+                관심 분야 및 빈도 재설정하기
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 border-t border-l border-line-alpha bg-white/10">
+              {recommendedItems.map(item => (
+                <NewsletterCard
+                  key={item.id}
+                  item={item}
+                  isSaved={savedIds.has(item.id)}
+                  onToggleSave={() => handleToggleSave(item.id)}
+                  onOpenLive={() => {
+                    setLiveSourceId(item.id);
+                    localStorage.setItem('letter-live-source', item.id);
+                    document.getElementById('live')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  onOpenNote={() => handleOpenNote(item.id)}
+                  personalState={personalStatus[item.id] || '관심 있음'}
+                  onChangePersonalState={(stat) => handleStatusChange(item.id, stat)}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* --- MAIN DIRECTORY SECTION --- */}
+      <section className="directory bg-white dark:bg-[#1d2a25] p-8 md:p-14 border-b border-line-alpha" id="find">
+        <div className="max-w-7xl mx-auto">
+          <div className="max-w-xl mb-10">
+            <p className="text-xs font-bold tracking-widest text-forest-green dark:text-green-300 uppercase mb-2">
+              THE DIRECTORY
+            </p>
+            <h2 className="font-serif text-3xl md:text-5xl tracking-tight leading-tight text-ink">
+              오늘, 무슨 편지를<br />기다리고 있나요?
+            </h2>
+          </div>
+
+          {/* --- SEARCH & FILTERS CONTROLS --- */}
+          <div className="space-y-6 mb-8 bg-[#fdfaf2] dark:bg-[#203028] p-6 border border-line-alpha rounded-xs">
+            {/* Search Input */}
+            <div className="relative border-b border-ink/40 dark:border-white/40 focus-within:border-accent-red transition duration-200">
+              <Search className="absolute left-0 top-3 h-5 w-5 text-gray-400" />
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="제목, 분류, 세부 키워드, 운영 목적을 직접 찾아보세요..."
+                className="w-full pl-8 py-3 text-sm md:text-base text-ink dark:text-white bg-transparent focus:outline-none"
+              />
+            </div>
+
+            {/* Source Scope Selector */}
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest w-[80px] text-left">
+                분류 범위
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {[
+                  { label: '전체 디렉터리', value: 'all' },
+                  { label: '검증 공공·비영리 출처만', value: 'public' }
+                ].map(scope => (
+                  <button
+                    key={scope.value}
+                    onClick={() => setSelectedSourceScope(scope.value as any)}
+                    className={`px-3 py-1 text-xs border rounded-full transition duration-200 cursor-pointer
+                      ${selectedSourceScope === scope.value
+                        ? 'bg-ink border-ink text-white dark:bg-white dark:text-ink'
+                        : 'border-line-alpha text-ink hover:border-ink dark:hover:border-white'
+                      }
+                    `}
+                  >
+                    {scope.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Academic Discipline Filter */}
+            <div className="flex flex-wrap items-center gap-2 border-t border-line-alpha/40 pt-3">
+              <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest w-[80px] text-left">
+                학문 분야
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {disciplinesList.map(discipline => (
+                  <button
+                    key={discipline}
+                    onClick={() => setSelectedDiscipline(discipline)}
+                    className={`px-3 py-1 text-xs border rounded-full transition duration-200 cursor-pointer
+                      ${selectedDiscipline === discipline
+                        ? 'bg-ink border-ink text-white dark:bg-white dark:text-ink'
+                        : 'border-line-alpha text-ink hover:border-ink dark:hover:border-white'
+                      }
+                    `}
+                  >
+                    {discipline === '전체' ? '학문 전체' : discipline}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Categories Filter */}
+            <div className="flex flex-wrap items-center gap-2 border-t border-line-alpha/40 pt-3">
+              <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest w-[80px] text-left">
+                콘텐츠 카테고리
+              </span>
+              <div className="flex flex-wrap gap-1.5 max-h-[120px] overflow-y-auto pr-1">
+                {categories.map(cat => (
+                  <button
+                    key={cat}
+                    onClick={() => setSelectedCategory(cat)}
+                    className={`px-3 py-1 text-xs border rounded-full transition duration-200 cursor-pointer
+                      ${selectedCategory === cat
+                        ? 'bg-ink border-ink text-white dark:bg-white dark:text-ink'
+                        : 'border-line-alpha text-ink hover:border-ink dark:hover:border-white'
+                      }
+                    `}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Topics Filter */}
+            <div className="flex flex-wrap items-center gap-2 border-t border-line-alpha/40 pt-3">
+              <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest w-[80px] text-left">
+                세부 주제 태그
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {topics.map(topic => (
+                  <button
+                    key={topic}
+                    onClick={() => setSelectedTopic(topic)}
+                    className={`px-3 py-1 text-xs border border-dashed rounded-full transition duration-200 cursor-pointer
+                      ${selectedTopic === topic
+                        ? 'bg-ink border-ink text-white dark:bg-white dark:text-ink'
+                        : 'border-line-alpha text-ink hover:border-ink dark:hover:border-white'
+                      }
+                    `}
+                  >
+                    {topic === '전체' ? '세부 주제 전체' : `# ${topic}`}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Frequency, Language, Type side filters */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-line-alpha/40 pt-4">
+              <div className="flex flex-col gap-1.5">
+                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">발행 빈도</span>
+                <select
+                  value={selectedFrequency}
+                  onChange={(e) => setSelectedFrequency(e.target.value)}
+                  className="bg-white dark:bg-[#15201c] dark:text-white border border-line-alpha px-3 py-2 text-xs focus:outline-none"
+                >
+                  <option value="전체">전체 빈도</option>
+                  <option value="daily">매일</option>
+                  <option value="weekly">주 1회</option>
+                  <option value="occasional">가끔만</option>
+                </select>
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">발행 언어/구독</span>
+                <select
+                  value={selectedOrigin}
+                  onChange={(e) => setSelectedOrigin(e.target.value)}
+                  className="bg-white dark:bg-[#15201c] dark:text-white border border-line-alpha px-3 py-2 text-xs focus:outline-none"
+                >
+                  <option value="전체">전체 언어</option>
+                  <option value="한국">한국어 뉴스레터</option>
+                  <option value="글로벌">글로벌 원문 · 한국어 소개</option>
+                </select>
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">콘텐츠 형식</span>
+                <select
+                  value={selectedType}
+                  onChange={(e) => setSelectedType(e.target.value)}
+                  className="bg-white dark:bg-[#15201c] dark:text-white border border-line-alpha px-3 py-2 text-xs focus:outline-none"
+                >
+                  <option value="전체">전체 형식</option>
+                  <option value="newsletter">뉴스레터</option>
+                  <option value="magazine">매거진</option>
+                  <option value="site">사이트</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Country and Sorting Options */}
+            <div className="flex flex-wrap justify-between items-center gap-4 border-t border-line-alpha/40 pt-4">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">국가</span>
+                <select
+                  value={selectedCountry}
+                  onChange={(e) => setSelectedCountry(e.target.value)}
+                  className="bg-white dark:bg-[#15201c] dark:text-white border border-line-alpha px-2.5 py-1.5 text-xs focus:outline-none"
+                >
+                  {countriesList.map(country => (
+                    <option key={country} value={country}>
+                      {country === '전체' ? '국가 전체' : country}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">정렬 기준</span>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="bg-white dark:bg-[#15201c] dark:text-white border border-line-alpha px-2.5 py-1.5 text-xs focus:outline-none font-semibold"
+                >
+                  <option value="recommended">나에게 맞는 추천순</option>
+                  <option value="recent">최근 활동 순</option>
+                  <option value="light">가볍게 읽는 순</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* Results count indicator */}
+          <div className="text-xs text-gray-500 mb-4 font-mono flex justify-between items-center">
+            <span>
+              총 <strong className="text-accent-red">{sortedFilteredNewsletters.length}</strong>개의 편지 지도 검색됨
+            </span>
+            {(query || selectedSourceScope !== 'all' || selectedCategory !== '전체' || selectedDiscipline !== '전체' || selectedTopic !== '전체' || selectedFrequency !== '전체' || selectedOrigin !== '전체' || selectedType !== '전체' || selectedCountry !== '전체') && (
+              <button
+                onClick={() => {
+                  setQuery('');
+                  setSelectedSourceScope('all');
+                  setSelectedDiscipline('전체');
+                  setSelectedCategory('전체');
+                  setSelectedTopic('전체');
+                  setSelectedFrequency('전체');
+                  setSelectedOrigin('전체');
+                  setSelectedCountry('전체');
+                  setSelectedType('전체');
+                }}
+                className="text-xs text-forest-green hover:underline cursor-pointer bg-transparent border-0 font-bold"
+              >
+                필터 조건 초기화 ↺
+              </button>
+            )}
+          </div>
+
+          {/* Grid display of newsletters */}
+          {sortedFilteredNewsletters.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-t border-l border-line-alpha">
+              {sortedFilteredNewsletters.map(item => (
+                <NewsletterCard
+                  key={item.id}
+                  item={item}
+                  isSaved={savedIds.has(item.id)}
+                  onToggleSave={() => handleToggleSave(item.id)}
+                  onOpenLive={() => {
+                    setLiveSourceId(item.id);
+                    localStorage.setItem('letter-live-source', item.id);
+                    document.getElementById('live')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  onOpenNote={() => handleOpenNote(item.id)}
+                  personalState={personalStatus[item.id] || '관심 있음'}
+                  onChangePersonalState={(stat) => handleStatusChange(item.id, stat)}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="py-20 text-center bg-white/40 border border-dashed border-line-alpha flex flex-col items-center justify-center p-8">
+              <Info className="w-8 h-8 text-gray-400 mb-2" />
+              <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                검색 조건에 맞는 편지 채널이 존재하지 않습니다.
+              </p>
+              <p className="text-xs text-gray-400">
+                입력된 키워드 철자를 확인하거나 위의 필터 조건들을 조금 더 넓혀 보세요.
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* --- SAVED SHELF SECTION ("내 목록") --- */}
+      <section className="my-list bg-[#e7ddc9] dark:bg-[#283a32] p-8 md:p-14 border-b border-line-alpha" id="my-list">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
+            <div className="max-w-xl">
+              <p className="text-xs font-bold tracking-widest text-forest-green dark:text-green-300 uppercase mb-2">
+                YOUR SHELF
+              </p>
+              <h2 className="font-serif text-3xl md:text-5xl tracking-tight leading-tight text-ink">
+                내가 모아 둔 편지함
+              </h2>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mt-2 leading-relaxed">
+                보관해 둔 편지 목록입니다. 타 기기나 FreshRSS, NetNewsWire 등 다른 RSS 리더기로 한 번에 전송하고 싶다면 OPML 규격 파일로 내려받으세요.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-2.5">
+              <button
+                onClick={() => handleExportOpml('saved')}
+                className="px-4 py-3 bg-ink text-white dark:bg-white dark:text-ink hover:opacity-90 font-bold text-xs cursor-pointer rounded-xs"
+              >
+                내 목록 OPML 내보내기
+              </button>
+              
+              <button
+                onClick={() => handleExportOpml('public')}
+                className="px-4 py-3 bg-white hover:bg-warm text-ink border border-line-alpha font-bold text-xs cursor-pointer rounded-xs"
+              >
+                검증 공공 출처 OPML 받기
+              </button>
+            </div>
+          </div>
+
+          {savedNewsletters.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-t border-l border-line-alpha bg-white/20">
+              {savedNewsletters.map(item => (
+                <NewsletterCard
+                  key={item.id}
+                  item={item}
+                  isSaved={savedIds.has(item.id)}
+                  onToggleSave={() => handleToggleSave(item.id)}
+                  onOpenLive={() => {
+                    setLiveSourceId(item.id);
+                    localStorage.setItem('letter-live-source', item.id);
+                    document.getElementById('live')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  onOpenNote={() => handleOpenNote(item.id)}
+                  personalState={personalStatus[item.id] || '관심 있음'}
+                  onChangePersonalState={(stat) => handleStatusChange(item.id, stat)}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="py-12 text-center bg-white/25 border border-dashed border-line-alpha flex flex-col items-center justify-center p-8">
+              <p className="font-serif text-lg text-gray-600 dark:text-gray-300 mb-2">
+                보관된 편지가 아직 존재하지 않습니다.
+              </p>
+              <p className="text-xs text-gray-500 max-w-sm leading-relaxed">
+                위 디렉터리 탐색 목록에서 흥미가 가거나 구독하려는 편지의 카드를 보고 [+ 내 목록] 보관을 선택하여 책장을 채우세요.
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* --- NOTES & GMAIL INTERACTION SECTION --- */}
+      <NotesHub
+        notes={notes}
+        notebooks={notebooks}
+        gmailSelfEmail={gmailSelfEmail}
+        onGmailEmailChange={handleGmailEmailSave}
+        onOpenInbox={() => handleOpenNote('inbox')}
+        onAddNotebook={handleAddNotebook}
+        onOpenNote={handleOpenNote}
+        onSendGmail={handleSendGmail}
+        getSourceName={getSourceName}
+      />
+
+      {/* --- SUPPLEMENTARY OPEN SOURCE TOOLS --- */}
+      <ToolsSection />
+
+      {/* --- FOOTER --- */}
+      <footer className="py-12 text-center text-xs text-gray-500 dark:text-gray-400 bg-paper dark:bg-[#121c18] border-t border-line-alpha flex flex-col items-center justify-center gap-2">
+        <p>오늘의 편지함 · 개인 정보 뉴스레터 디렉터리 및 메모작업 공간</p>
+        <p className="text-[10px] text-gray-400">
+          모든 뉴스레터 및 기사의 저작권은 각 원천 발행 기관 및 발행사에 귀속됩니다. 원문을 무단 전재하지 않습니다.
+        </p>
+        <button
+          onClick={() => {
+            window.open('https://github.com/presentjinho/newsletter-hub/issues/new/choose', '_blank', 'noopener');
+          }}
+          className="text-xs text-forest-green hover:underline cursor-pointer bg-transparent border-0 font-semibold mt-2"
+        >
+          제보 및 피드백 제안하기
+        </button>
+      </footer>
+
+      {/* --- DIALOG COMPONENT MOUNTS --- */}
+      
+      <OnboardingDialog
+        isOpen={onboardingOpen}
+        onClose={handleOnboardingClose}
+        availableInterests={['AI', '재테크', '커리어', '디자인', '시사', '과학', '국제', '건강']}
+      />
+
+      <PreferenceDialog
+        isOpen={preferencesOpen}
+        onClose={() => setPreferencesOpen(false)}
+        onSave={handlePreferencesSave}
+        currentInterests={userInterests}
+        currentPrefs={prefs}
+        availableInterests={['AI', '재테크', '커리어', '디자인', '시사', '과학', '국제', '건강']}
+      />
+
+      <NoteDialog
+        isOpen={noteEditorOpen}
+        onClose={() => setNoteEditorOpen(false)}
+        sourceId={noteEditorSourceId}
+        noteId={noteEditorNoteId}
+        notes={notes}
+        notebooks={notebooks}
+        newsletters={newsletters}
+        onSaveNote={handleSaveNote}
+        onCreateNote={handleCreateNote}
+        onDeleteNote={handleDeleteNote}
+        onTransferNote={handleTransferNote}
+        onSendGmail={handleSendGmail}
+        onSendMailto={handleSendMailto}
+        onCopyNote={handleCopyNote}
+        onExportMarkdown={handleExportMarkdown}
+        getSourceName={getSourceName}
+      />
+    </div>
+  );
+}

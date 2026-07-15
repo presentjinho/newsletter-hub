@@ -1,6 +1,6 @@
 {
-  "checkedAt": "2026-07-15T03:30:13.647Z",
-  "count": 61,
+  "checkedAt": "2026-07-15T06:38:08.573Z",
+  "count": 90,
   "results": [
     {
       "id": "newneek",
@@ -363,6 +363,179 @@
     {
       "id": "eduinnews",
       "url": "https://www.eduinnews.co.kr/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "bbc-news",
+      "url": "https://www.bbc.com/news",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "dw-news",
+      "url": "https://www.dw.com/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "france-24",
+      "url": "https://www.france24.com/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "al-jazeera",
+      "url": "https://www.aljazeera.com/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "nhk-world",
+      "url": "https://www3.nhk.or.jp/nhkworld/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "abc-australia",
+      "url": "https://www.abc.net.au/news",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "cbc-news",
+      "url": "https://www.cbc.ca/news",
+      "status": "needs-review"
+    },
+    {
+      "id": "agencia-brasil",
+      "url": "https://agenciabrasil.ebc.com.br/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "cna",
+      "url": "https://www.channelnewsasia.com/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "library-of-congress",
+      "url": "https://www.loc.gov/rss/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "smithsonian-natural-history",
+      "url": "https://naturalhistory.si.edu/join-us/sign-up-newsletter",
+      "status": "reachable",
+      "httpStatus": 403
+    },
+    {
+      "id": "nasa-official",
+      "url": "https://www.nasa.gov/newsletters/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "noaa-ocean-service",
+      "url": "https://oceanservice.noaa.gov/rss.html",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "usgs-news",
+      "url": "https://www.usgs.gov/news/get-our-news/",
+      "status": "reachable",
+      "httpStatus": 403
+    },
+    {
+      "id": "nist-rss",
+      "url": "https://www.nist.gov/coo/nist-rss-feeds",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "nih-niehs",
+      "url": "https://www.niehs.nih.gov/rssfeed",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "jaxa-rss",
+      "url": "https://www.jaxa.jp/public_j.html",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "esa-rss",
+      "url": "https://www.esa.int/Services/RSS_Feeds",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "eurostat-rss",
+      "url": "https://ec.europa.eu/eurostat/web/rss",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "eea-rss",
+      "url": "https://www.eea.europa.eu/en/newsroom/rss-feeds",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "ec-digital-newsletter",
+      "url": "https://digital-strategy.ec.europa.eu/en/newsletters",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "kbs-world-rss",
+      "url": "https://world.kbs.co.kr/service/about_rss.htm?lang=k",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "kdca-health",
+      "url": "https://health.kdca.go.kr/healthinfo/biz/health/intrcnYard/histMain.do",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "korea-policy-briefing",
+      "url": "https://m.korea.kr/etc/noticeList.do",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "bank-of-japan-rss",
+      "url": "https://www.boj.or.jp/en/tips.htm",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "japan-energy-newsletter",
+      "url": "https://www.enecho.meti.go.jp/about/mailmagazine/index.html",
+      "status": "reachable",
+      "httpStatus": 403
+    },
+    {
+      "id": "xinhua-rss",
+      "url": "https://english.news.cn/rss/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "china-daily-rss",
+      "url": "https://europe.chinadaily.com.cn/rss.html",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "cgtn-rss",
+      "url": "https://www.cgtn.com/subscribe/rss.html",
       "status": "reachable",
       "httpStatus": 200
     }

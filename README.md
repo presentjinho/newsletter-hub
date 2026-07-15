@@ -1,40 +1,74 @@
-# 오늘의 편지함
+# 오늘의 편지함 (newsletter-hub)
 
-한국 뉴스레터를 분야별로 모아 보고, 발행 여부를 가볍게 확인하는 정적 GitHub Pages 사이트입니다.
+뉴스레터·공개 정보를 분야별로 찾고, 발행 감각을 보고, 메모·Gmail 작성 창으로 이어 쓰는 개인용 디렉터리.
 
-전 세계 확장·검증·자가 호스팅 도구 선택은 [운영 모델](docs/OPERATING_MODEL.md)을 참고하세요.
+- **공개 URL (GitHub Pages):** https://presentjinho.github.io/newsletter-hub/
+- **저장소:** https://github.com/presentjinho/newsletter-hub
+- **AI Studio 초안 앱:** https://ai.studio/apps/3dafecac-2363-4267-839c-1da3400d7625
 
-## 현재 가능한 것
+## 스택
 
-- 분야·키워드 검색, 형식(뉴스레터/매거진/사이트/X 계정) 필터
-- 발행 중/확인 중 상태 표시
-- 원문 구독·팔로우 페이지로 이동
-- `내 목록` 저장: 브라우저 `localStorage` 사용
+- React + Vite + TypeScript + Tailwind (AI Studio Build export)
+- 개인 데이터: 브라우저 `localStorage`
+- Gmail: 공식 compose URL (API 키 없이 작성 창 연동)
+- 배포: GitHub Pages (`main` push → Actions)
 
-## 형식(타입) 안내
+## 로컬 실행
 
-- `뉴스레터`: 이메일로 받아보는 정기 발행물
-- `매거진`: 웹·앱 기반 정기 콘텐츠(요금제가 있을 수 있음)
-- `사이트`: 뉴스레터 형식은 아니지만 꾸준히 갱신되는 정보 플랫폼(커뮤니티, 전문지, 아카이브 등)
+```bash
+npm install
+npm run dev
+```
 
-개인 X(트위터) 계정은 개명·비활성화가 잦아 신뢰도를 담보하기 어려워 목록에서 제외했습니다. 공식 발행 주체가 있는 뉴스레터·매거진·사이트만 다룹니다.
+브라우저: http://localhost:3000/
 
-## GitHub Pages 배포
+Gemini 키는 선택. 현재 UI는 디렉터리·메모·Gmail compose 중심이며 `@google/genai`는 이후 AI 기능용 자리.
 
-1. 이 폴더를 새 GitHub 저장소에 올립니다.
-2. GitHub `Settings → Pages → Deploy from a branch`를 열어 `main` / `root`를 선택합니다.
-3. 발급된 URL에서 바로 확인합니다.
+```bash
+# 선택
+cp .env.example .env.local
+# GEMINI_API_KEY=...
+```
 
-별도 서버·DB가 없어 무료입니다.
+## GitHub Pages
 
-## 실제 서비스로 키우기
+1. 이 repo Settings → **Pages** → Source: **GitHub Actions**
+2. `main`에 push 하면 `deploy-pages.yml`이 빌드·배포
+3. base path: `/newsletter-hub/` (`vite.config.ts`)
 
-GitHub Pages는 정적 호스팅이라 외부 뉴스레터의 이메일 구독/해지를 대신 실행할 수 없습니다. 원문 발행사의 구독·해지 URL로 연결하는 것이 안전합니다. `app.js`의 목록을 JSON으로 분리하고, 각 발행사의 RSS/공개 아카이브를 확인하는 GitHub Actions를 하루 한 번 실행하면 발행 상태를 자동 갱신할 수 있습니다. 로그인 동기화나 통합 이메일 관리까지 하려면 Supabase/Firebase 같은 별도 무료 백엔드와 각 서비스의 명시적 연동 권한이 필요합니다.
+로컬에서 Pages와 같은 base로 미리보기:
 
-## 배포 전 한 줄 설정
+```bash
+set VITE_BASE=/newsletter-hub/
+npm run build
+npm run preview
+```
 
-`app.js` 맨 위의 `OWNER/REPOSITORY`를 실제 GitHub 저장소 경로로 바꾸면, 카드의 `정보 수정·제보`와 푸터의 제보 버튼이 GitHub Issue 양식으로 연결됩니다.
+## AI Studio → 여기 고치기 워크플로
 
-## 해외 뉴스레터의 한국어 안내
+1. **AI Studio**에서 초안·실험 (UI/Gmail 아이디어)
+2. **Export / Download** ZIP
+3. 이 폴더에 덮어쓴 뒤 말해 주기 (또는 `E:\untitled.zip`처럼 경로)
+4. 여기서 충돌 정리 · Pages 빌드 · 커밋
+5. push → github.io 반영
 
-해외 뉴스레터는 제목·분야·소개·구독/해지 안내를 한국어로 제공합니다. 카드의 `한국어로 읽기`는 Google Translate로 공식 페이지를 새 창에서 열어, 원문을 복제·저장하지 않고 번역본을 볼 수 있게 합니다. 로그인·유료 본문·일부 동적 페이지는 번역이 제한될 수 있습니다.
+소스 of truth: **이 GitHub repo**  
+Studio: **초안 공장**
+
+## 스크립트
+
+```bash
+npm run check-links   # public/data/link-status.json 갱신
+npm run build
+npm run lint
+```
+
+## 문서
+
+- [docs/NOTES_GMAIL.md](docs/NOTES_GMAIL.md) — 메모·Gmail
+- [docs/GITHUB_X_RESEARCH.md](docs/GITHUB_X_RESEARCH.md) — 조사 노트
+- [docs/FREE_PUBLIC_SOURCES.md](docs/FREE_PUBLIC_SOURCES.md) — 공개 출처
+
+## 라이선스
+
+개인 프로젝트. 원문 복제 없이 공식 링크·자체 소개만 제공.

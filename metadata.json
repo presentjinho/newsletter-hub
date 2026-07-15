@@ -1,0 +1,6 @@
+{
+  "name": "오늘의 편지함",
+  "description": "세상에 널린 뉴스레터·공개 정보를 한곳에서 쉽게 찾고, 안심하고 구독/해지하고, 실시간으로 확인하면서 메모·Gmail까지 이어 쓰는 개인용 정보 편지함 디렉터리",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

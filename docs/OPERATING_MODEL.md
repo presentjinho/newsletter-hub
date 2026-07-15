@@ -46,3 +46,27 @@
 - Keila: https://github.com/pentacent/keila
 - kill-the-news: https://kill-the.news/
 - FreshRSS: https://github.com/FreshRSS/FreshRSS
+- Miniflux: https://github.com/miniflux/v2
+- NetNewsWire: https://github.com/Ranchero-Software/NetNewsWire
+- FeedMe: https://github.com/Seanium/feedme
+- awesome-newsletters: https://github.com/zudochkin/awesome-newsletters
+- awesome-rss-feeds: https://github.com/plenaryapp/awesome-rss-feeds
+- ALL-about-RSS: https://github.com/AboutRSS/ALL-about-RSS
+
+## 읽기 스택 권장 흐름
+
+1. 이 사이트에서 발견·필터·내 목록 저장
+2. **내 목록 OPML** 또는 **검증 공공 출처 OPML** 내려받기
+3. NetNewsWire / FreshRSS / Miniflux로 import
+4. 이메일 뉴스레터만 필요하면 kill-the-news로 개인 RSS 브릿지 (선택)
+5. 발송이 필요하면 Listmonk/Keila — 디렉터리 역할과 분리
+
+조사 메모: [GITHUB_X_RESEARCH.md](GITHUB_X_RESEARCH.md)
+## 재사용 등급 필드
+
+공개 카탈로그의 각 항목에는 다음을 추가한다.
+
+- `reuseLevel`: `A`(공식 링크와 자체 소개만), `B`(개별 콘텐츠 조건부 재사용), `C`(명시 오픈 라이선스·퍼블릭 도메인)
+- `licenseUrl`: B/C 등급의 공식 라이선스 또는 재게시 정책 URL
+
+기본값은 `A`다. 무료 공개라는 이유만으로 B/C를 부여하지 않는다. 상세 기준은 [REUSE_POLICY.md](REUSE_POLICY.md)를 따른다.

@@ -1,0 +1,57 @@
+name: 출처 추가·수정 요청
+description: 공영·비영리·오픈 라이선스 출처를 증거와 함께 제보합니다.
+title: "[출처] "
+labels: ["source-review"]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: 출처명
+    validations:
+      required: true
+  - type: input
+    id: official_url
+    attributes:
+      label: 공식 사이트 또는 공식 발행 페이지 URL
+    validations:
+      required: true
+  - type: input
+    id: feed_url
+    attributes:
+      label: 공식 RSS 또는 뉴스레터 구독 URL
+      description: 둘 중 하나는 필수입니다.
+    validations:
+      required: true
+  - type: dropdown
+    id: reuse_level
+    attributes:
+      label: 모음집 재사용 등급
+      options:
+        - A - 외부 링크와 자체 소개만
+        - B - 개별 콘텐츠 조건부 재사용
+        - C - 명시 오픈 라이선스 또는 퍼블릭 도메인
+    validations:
+      required: true
+  - type: input
+    id: license_url
+    attributes:
+      label: 라이선스 또는 재게시 정책 URL
+      description: B/C 등급이면 필수입니다. 없으면 A로 제출하세요.
+  - type: input
+    id: country
+    attributes:
+      label: 국가·주 운영 지역
+    validations:
+      required: true
+  - type: input
+    id: category
+    attributes:
+      label: 분야
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 최신 발행·갱신 증거와 간단한 이유
+    validations:
+      required: true
