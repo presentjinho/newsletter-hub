@@ -237,6 +237,14 @@ body.large-text .newsletter-card p {
   line-height: 1.7;
 }
 
+/* 전체 UI 확대 (헤더 토글) */
+body.ui-zoom-lg {
+  font-size: 17.5px;
+}
+body.ui-zoom-xl {
+  font-size: 19px;
+}
+
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: var(--paper); }
 ::-webkit-scrollbar-thumb { background: var(--warm); border-radius: 4px; }

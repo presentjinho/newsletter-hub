@@ -142,8 +142,10 @@ export default function App() {
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     return (localStorage.getItem('letter-theme') as 'light' | 'dark') || 'light';
   });
-  const [textSize, setTextSize] = useState<'normal' | 'large'>(() => {
-    return (localStorage.getItem('letter-text-size') as 'normal' | 'large') || 'normal';
+  const [textSize, setTextSize] = useState<'normal' | 'large' | 'xl'>(() => {
+    const v = localStorage.getItem('letter-text-size');
+    if (v === 'large' || v === 'xl' || v === 'normal') return v;
+    return 'normal';
   });
 
   const [linkSyncStatus, setLinkSyncStatus] = useState('상태 파일 대기');
@@ -210,9 +212,11 @@ export default function App() {
     localStorage.setItem('letter-theme', theme);
   }, [theme]);
 
-  // Text size application
+  // Text size application (사이트 전체 글자)
   useEffect(() => {
     document.body.classList.toggle('large-text', textSize === 'large');
+    document.body.classList.toggle('ui-zoom-lg', textSize === 'large');
+    document.body.classList.toggle('ui-zoom-xl', textSize === 'xl');
     localStorage.setItem('letter-text-size', textSize);
   }, [textSize]);
 
@@ -716,10 +720,13 @@ export default function App() {
           </button>
           
           <button
-            onClick={() => setTextSize(prev => prev === 'large' ? 'normal' : 'large')}
+            onClick={() =>
+              setTextSize(prev => (prev === 'normal' ? 'large' : prev === 'large' ? 'xl' : 'normal'))
+            }
             className="text-xs font-bold text-ink/70 hover:text-ink bg-transparent border-0 cursor-pointer"
+            title="사이트 전체 글자 크기 순환"
           >
-            {textSize === 'large' ? '기본 글자' : '글자 크게'}
+            {textSize === 'normal' ? '글자 크게' : textSize === 'large' ? '글자 더크게' : '기본 글자'}
           </button>
 
           <button
