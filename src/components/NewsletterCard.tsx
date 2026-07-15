@@ -40,7 +40,9 @@ export default function NewsletterCard({
     return `${item.daysSince}일째 새 글 없음`;
   };
 
-  const googleTranslateUrl = `https://translate.google.com/translate?sl=auto&tl=ko&u=${encodeURIComponent(item.url)}`;
+  const site = item.siteUrl || item.url;
+  const sub = item.subscribeUrl;
+  const googleTranslateUrl = `https://translate.google.com/translate?sl=auto&tl=ko&u=${encodeURIComponent(site)}`;
 
   return (
     <article className="newsletter-card bg-[var(--surface)] border-r border-b border-line-alpha p-6 flex flex-col justify-between transition-all duration-200 hover:bg-paper dark:hover:bg-[#22332b]">
@@ -123,23 +125,45 @@ export default function NewsletterCard({
               검증 공공 출처
             </span>
           )}
+          {item.stability === 'high' && (
+            <span className="text-[9px] px-1.5 py-0.5 border border-forest-green/20 text-forest-green dark:text-[var(--green)] font-bold">
+              안정성 높음
+            </span>
+          )}
+          {item.industry && (
+            <span className="text-[9px] px-1.5 py-0.5 bg-[var(--green-soft)] text-[var(--green)] font-bold">
+              산업·{item.industry}
+            </span>
+          )}
           <span className="text-[9px] px-1.5 py-0.5 border border-forest-green/20 text-forest-green dark:text-[var(--green)]">
             {reuseLabels[item.reuseLevel]}
           </span>
         </div>
 
-        {/* Buttons and Actions */}
-        <div className="flex items-center justify-between gap-2 mt-4 pt-3 border-t border-line-alpha">
+        {/* 사이트 방문 vs 구독 페이지 분리 */}
+        <div className="flex flex-wrap items-center gap-2 mt-4 pt-3 border-t border-line-alpha">
           <a
-            href={item.url}
+            href={site}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs font-bold text-ink hover:underline flex items-center gap-1"
+            className="text-xs font-bold px-2.5 py-1.5 bg-ink text-paper rounded-sm hover:opacity-90 flex items-center gap-1 no-underline"
           >
-            <span>{item.type === 'newsletter' ? '구독 · 원문' : '방문하기 · 원문'}</span>
-            <ExternalLink className="w-3.5 h-3.5 text-accent-red" />
+            <span>사이트 열기</span>
+            <ExternalLink className="w-3.5 h-3.5" />
           </a>
-
+          {sub ? (
+            <a
+              href={sub}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-bold px-2.5 py-1.5 border border-accent-red text-accent-red rounded-sm hover:bg-accent-red/10 flex items-center gap-1 no-underline"
+            >
+              <span>구독 페이지</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+          ) : (
+            <span className="text-[10px] text-secondary">구독 전용 링크 없음 · 사이트에서 확인</span>
+          )}
           {item.origin === '글로벌' && (
             <a
               href={googleTranslateUrl}
@@ -151,10 +175,9 @@ export default function NewsletterCard({
               <span>한국어 번역</span>
             </a>
           )}
-
           <button
             onClick={onToggleSave}
-            className={`text-xs font-bold transition-all duration-200 cursor-pointer ${isSaved ? 'text-accent-red' : 'text-forest-green dark:text-[var(--green)]'}`}
+            className={`ml-auto text-xs font-bold transition-all duration-200 cursor-pointer bg-transparent border-0 ${isSaved ? 'text-accent-red' : 'text-forest-green dark:text-[var(--green)]'}`}
           >
             {isSaved ? '저장됨 ✓' : '+ 내 목록'}
           </button>

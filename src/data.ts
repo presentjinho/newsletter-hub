@@ -1,4 +1,21 @@
 import { Newsletter } from './types';
+import { industryRaw, industryList as industryListSeed } from './industryCatalog';
+
+/** 기존 카드: url이 구독 페이지인 경우 분리 힌트 */
+const subscribeHints: Record<string, { siteUrl: string; subscribeUrl: string }> = {
+  tldr: { siteUrl: 'https://tldr.tech/', subscribeUrl: 'https://tldr.tech/signup' },
+  'the-hustle': { siteUrl: 'https://thehustle.co/', subscribeUrl: 'https://thehustle.co/join' },
+  'morning-brew': { siteUrl: 'https://www.morningbrew.com/', subscribeUrl: 'https://www.morningbrew.com/daily' },
+  'rundown-ai': { siteUrl: 'https://www.therundown.ai/', subscribeUrl: 'https://www.therundown.ai/' },
+  'hbr-tip': { siteUrl: 'https://hbr.org/', subscribeUrl: 'https://hbr.org/email-newsletters' },
+  maeburi: { siteUrl: 'https://www.booding.co/', subscribeUrl: 'https://page.stibee.com/subscriptions/110950' },
+  goodlawcat: { siteUrl: 'https://www.lawtimes.co.kr/', subscribeUrl: 'https://goodlawcat.stibee.com/' },
+  dallem: { siteUrl: 'https://dallem.com/', subscribeUrl: 'https://dallem.stibee.com/' },
+  'munhak-newsletter': { siteUrl: 'https://munhak.com/', subscribeUrl: 'https://munhak.com/newsletter' },
+  'ec-digital-newsletter': { siteUrl: 'https://digital-strategy.ec.europa.eu/en', subscribeUrl: 'https://digital-strategy.ec.europa.eu/en/newsletters' },
+  'nasa-official': { siteUrl: 'https://www.nasa.gov/', subscribeUrl: 'https://www.nasa.gov/newsletters/' },
+  'smithsonian-natural-history': { siteUrl: 'https://naturalhistory.si.edu/', subscribeUrl: 'https://naturalhistory.si.edu/join-us/sign-up-newsletter' },
+};
 
 export const rawNewsletters: Partial<Newsletter>[] = [
   { id: 'newneek', name: '뉴닉', category: '시사', frequency: '매일', frequencyGroup: 'daily', description: '세상이 궁금한 사람들을 위한 쉽고 친절한 뉴스.', url: 'https://newneek.co/', daysSince: 0, typical: '평일 아침', status: 'alive', interests: ['시사', '재테크'], trust: ['최근 30일 발행', '공식 구독 링크 확인'] },
@@ -119,7 +136,13 @@ export const publicSourceIds = new Set([
   'bbc-news', 'dw-news', 'france-24', 'al-jazeera', 'nhk-world', 'abc-australia', 'cbc-news', 'agencia-brasil', 'cna',
   'library-of-congress', 'smithsonian-natural-history', 'nasa-official', 'noaa-ocean-service', 'usgs-news', 'nist-rss', 'nih-niehs', 'jaxa-rss', 'esa-rss', 'eurostat-rss', 'eea-rss', 'ec-digital-newsletter',
   'kbs-world-rss', 'kdca-health', 'korea-policy-briefing', 'bank-of-japan-rss', 'japan-energy-newsletter', 'xinhua-rss', 'china-daily-rss', 'cgtn-rss',
-  'un-news', 'who-news', 'imf-blogs', 'our-world-in-data', 'world-bank-open-data', 'quanta-magazine', 'the-conversation', 'propublica', 'internet-archive', 'github-blog', 'yaleclimate'
+  'un-news', 'who-news', 'imf-blogs', 'our-world-in-data', 'world-bank-open-data', 'quanta-magazine', 'the-conversation', 'propublica', 'internet-archive', 'github-blog', 'yaleclimate',
+  // industryCatalog public
+  'ind-semi-nl-asml-news', 'ind-fin-ch-snb', 'ind-ene-us-eia', 'ind-ene-no-ssb', 'ind-ene-de-bundesnetz', 'ind-ene-ca-cer',
+  'ind-ai-uk-bbc-tech', 'ind-pharma-us-fda', 'ind-pharma-ch-swissmedic', 'ind-pharma-de-pei', 'ind-pharma-uk-mhra',
+  'ind-space-us-nasa', 'ind-space-fr-esa', 'ind-space-jp-jaxa', 'ind-space-in-isro', 'ind-space-ca-csa',
+  'ind-media-us-npr', 'ind-media-de-dw', 'ind-media-fr-france24', 'ind-media-br-agencia', 'ind-media-au-abc',
+  'ind-ag-us-usda', 'ind-ag-br-embrapa', 'ind-ag-nl-wageningen', 'ind-ag-in-icar', 'ind-ag-fr-inrae'
 ]);
 
 export const readingTimes: Record<string, string> = {
@@ -133,7 +156,7 @@ export const valuePromises: Record<string, string> = {
 export const disciplineByCategory: Record<string, string> = {
   '시사': '인문·사회과학', '비즈니스': '인문·사회과학', '재테크': '인문·사회과학', '커리어': '인문·사회과학', '법률': '인문·사회과학', 'HR': '인문·사회과학', '세무': '인문·사회과학', '교육': '인문·사회과학', '국제': '인문·사회과학',
   '과학': '자연과학', '환경': '자연과학', '건강': '자연과학', '의료': '자연과학', '농업': '자연과학', '반려동물': '자연과학',
-  '테크': '공학·기술', 'AI': '공학·기술', '스타트업': '공학·기술', '자동차': '공학·기술', '로봇공학': '공학·기술', '반도체': '공학·기술', '크립토': '공학·기술',
+  '테크': '공학·기술', 'AI': '공학·기술', '스타트업': '공학·기술', '자동차': '공학·기술', '로봇공학': '공학·기술', '반도체': '공학·기술', '크립토': '공학·기술', '리더십': '인문·사회과학', '자기계발': '인문·사회과학',
   '디자인': '예술·체육·생활', '문화': '예술·체육·생활', '사진': '예술·체육·생활', '게임': '예술·체육·생활', '패션': '예술·체육·생활', '스포츠': '예술·체육·생활', '음식': '예술·체육·생활', '여행': '예술·체육·생활', '라이프': '예술·체육·생활', '육아': '예술·체육·생활', '부동산': '예술·체육·생활', '마케팅': '예술·체육·생활'
 };
 
@@ -154,27 +177,34 @@ export const stackTools = [
   { name: 'Listmonk', blurb: '자가 호스팅 발송 도구. 외부 구독 대행용이 아님.', url: 'https://github.com/knadh/listmonk', kind: '발송' }
 ];
 
-export const newsletters: Newsletter[] = rawNewsletters.map(item => {
-  const isPublic = publicSourceIds.has(item.id || '');
+function normalizeItem(item: Partial<Newsletter>): Newsletter {
+  const id = item.id || '';
+  const isPublic = publicSourceIds.has(id) || item.sourceScope === 'public';
   const origin = item.origin || '한국';
-  const country = item.country || (origin === '글로벌' ? (globalCountries[item.id || ''] || '미국') : '대한민국');
+  const country = item.country || (origin === '글로벌' ? (globalCountries[id] || '미국') : '대한민국');
   const type = item.type || 'newsletter';
   const category = item.category || '시사';
   const discipline = item.discipline || disciplineByCategory[category] || '기타·융합';
-  
+  const hint = subscribeHints[id];
+  const siteUrl = item.siteUrl || hint?.siteUrl || item.url || '';
+  const subscribeUrl = item.subscribeUrl || hint?.subscribeUrl;
+  const url = siteUrl || item.url || '';
+
   return {
-    id: item.id || '',
+    id,
     name: item.name || '',
     category,
     frequency: item.frequency || '매일',
     frequencyGroup: item.frequencyGroup || 'daily',
     description: item.description || '',
-    url: item.url || '',
+    siteUrl: siteUrl || url,
+    subscribeUrl: subscribeUrl && subscribeUrl !== siteUrl ? subscribeUrl : subscribeUrl,
+    url,
     daysSince: item.daysSince !== undefined ? item.daysSince : 0,
     typical: item.typical || '매일 오전',
     status: item.status || 'alive',
     interests: item.interests || [],
-    trust: item.trust || ['공식 구독 링크 확인'],
+    trust: item.trust || ['공식 링크 확인'],
     origin,
     language: item.language || (origin === '글로벌' ? '영어 · 소개 한국어' : '한국어'),
     country,
@@ -184,14 +214,36 @@ export const newsletters: Newsletter[] = rawNewsletters.map(item => {
     licenseUrl: item.licenseUrl || '',
     feedUrl: item.feedUrl,
     sourceScope: isPublic ? 'public' : 'general',
-  } as Newsletter;
-});
+    stability: item.stability || (isPublic ? 'high' : 'medium'),
+    industry: item.industry,
+  };
+}
+
+// 기존 + 산업별 상위국 카탈로그 (id 중복 시 industry 쪽이 덮어씀)
+const mergedRaw = (() => {
+  const map = new Map<string, Partial<Newsletter>>();
+  for (const row of rawNewsletters) {
+    if (row.id) map.set(row.id, row);
+  }
+  for (const row of industryRaw) {
+    if (!row.id) continue;
+    // industry 전용 id는 추가, 동일 id면 industry 필드로 보강
+    const prev = map.get(row.id);
+    map.set(row.id, prev ? { ...prev, ...row } : row);
+  }
+  return [...map.values()];
+})();
+
+export const newsletters: Newsletter[] = mergedRaw.map(normalizeItem);
 
 export const categories = ['전체', ...new Set(newsletters.map(n => n.category))];
 export const topics = ['전체', ...new Set(newsletters.flatMap(n => n.interests))];
 export const countriesList = ['전체', ...new Set(newsletters.map(n => n.country))];
 export const typesList = ['전체', ...new Set(newsletters.map(n => n.type))];
 export const disciplinesList = ['전체', ...new Set(newsletters.map(n => n.discipline))];
+export const industryList = industryListSeed.length > 1
+  ? industryListSeed
+  : ['전체', ...new Set(newsletters.map(n => n.industry).filter(Boolean) as string[])];
 export const unsubscribeText: Record<string, string> = {
   newsletter: '해지 · 원문 메일 하단 수신거부 링크 또는 계정 설정',
   magazine: '해지 · 구독 관리 페이지 또는 메일 하단 링크',

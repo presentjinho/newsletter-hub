@@ -1,0 +1,121 @@
+import { Newsletter } from './types';
+
+/**
+ * 산업별 영향력 상위권 국가의 안정 출처 (공영·기관·장기 매체 위주).
+ * siteUrl = 사이트 방문, subscribeUrl = 구독/뉴스레터(있을 때만).
+ * 원문 복제 없음. A등급 링크+소개.
+ */
+type Seed = Partial<Newsletter> & {
+  id: string;
+  name: string;
+  category: string;
+  siteUrl: string;
+  country: string;
+  industry: string;
+};
+
+const seed: Seed[] = [
+  // —— 반도체·전자 (한국, 대만, 미국, 일본, 네덜란드) ——
+  { id: 'ind-semi-kr-etnews', name: '전자신문', category: '반도체', siteUrl: 'https://www.etnews.com/', country: '대한민국', industry: '반도체', type: 'site', frequency: '매일', frequencyGroup: 'daily', description: '한국 전자·반도체·IT 산업 전문지. 산업 현장 뉴스.', stability: 'high', origin: '한국', language: '한국어', interests: ['반도체', '테크'] },
+  { id: 'ind-semi-tw-taipeitimes', name: 'Taipei Times', category: '시사', siteUrl: 'https://www.taipeitimes.com/', country: '대만', industry: '반도체', type: 'site', frequency: '매일', frequencyGroup: 'daily', description: '대만 영자 일간. 반도체·양안·경제 맥락을 영문으로.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['시사', '반도체'] },
+  { id: 'ind-semi-us-semiengineering', name: 'Semiconductor Engineering', category: '반도체', siteUrl: 'https://semiengineering.com/', subscribeUrl: 'https://semiengineering.com/subscribe/', country: '미국', industry: '반도체', type: 'site', frequency: '매일', frequencyGroup: 'daily', description: '공정·설계·패키징 등 반도체 엔지니어링 심층.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['반도체', '테크'] },
+  { id: 'ind-semi-jp-nikkei-asia', name: 'Nikkei Asia', category: '비즈니스', siteUrl: 'https://asia.nikkei.com/', subscribeUrl: 'https://asia.nikkei.com/User/Subscribe', country: '일본', industry: '반도체', type: 'magazine', frequency: '매일', frequencyGroup: 'daily', description: '일본·아시아 경제. 반도체·공급망 보도 강점.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['재테크', '반도체'] },
+  { id: 'ind-semi-nl-asml-news', name: 'ASML Newsroom', category: '반도체', siteUrl: 'https://www.asml.com/en/news', country: '네덜란드', industry: '반도체', type: 'site', frequency: '수시', frequencyGroup: 'occasional', description: 'EUV 장비 선도 기업 공식 뉴스룸. 산업 최전선 발표.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['반도체', '테크'], sourceScope: 'public' },
+
+  // —— 자동차 (독일, 일본, 미국, 한국, 중국) ——
+  { id: 'ind-auto-de-spiegel-auto', name: 'SPIEGEL (Mobility)', category: '자동차', siteUrl: 'https://www.spiegel.de/auto/', country: '독일', industry: '자동차', type: 'magazine', frequency: '매일', frequencyGroup: 'daily', description: '독일 대표 시사지 자동차·모빌리티 섹션.', stability: 'high', origin: '글로벌', language: '독일어 · 소개 한국어', interests: ['자동차', '시사'] },
+  { id: 'ind-auto-jp-response', name: 'Response.jp', category: '자동차', siteUrl: 'https://response.jp/', country: '일본', industry: '자동차', type: 'site', frequency: '매일', frequencyGroup: 'daily', description: '일본 자동차 산업·신차·기술 전문 미디어.', stability: 'high', origin: '글로벌', language: '일본어 · 소개 한국어', interests: ['자동차', '테크'] },
+  { id: 'ind-auto-us-carscoops', name: 'Carscoops', category: '자동차', siteUrl: 'https://www.carscoops.com/', country: '미국', industry: '자동차', type: 'site', frequency: '매일', frequencyGroup: 'daily', description: '글로벌 신차·스파이샷·EV 소식을 빠르게.', stability: 'medium', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['자동차'] },
+  { id: 'ind-auto-kr-motorgraph', name: '모터그래프', category: '자동차', siteUrl: 'https://www.motorgraph.com/', country: '대한민국', industry: '자동차', type: 'site', frequency: '매일', frequencyGroup: 'daily', description: '한국 자동차 전문 미디어. 시승·산업 동향.', stability: 'high', origin: '한국', language: '한국어', interests: ['자동차', '테크'] },
+  { id: 'ind-auto-cn-gasgoo', name: 'Gasgoo', category: '자동차', siteUrl: 'https://autonews.gasgoo.com/', country: '중국', industry: '자동차', type: 'site', frequency: '매일', frequencyGroup: 'daily', description: '중국 자동차·신에너지차 산업 영문 뉴스.', stability: 'medium', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['자동차', '중국'] },
+
+  // —— 금융·경제 (미국, 영국, 스위스, 싱가포르, 홍콩) ——
+  { id: 'ind-fin-us-wsj', name: 'Wall Street Journal', category: '재테크', siteUrl: 'https://www.wsj.com/', subscribeUrl: 'https://www.wsj.com/newsletters', country: '미국', industry: '금융', type: 'magazine', frequency: '매일', frequencyGroup: 'daily', description: '미국 대표 금융·경제 일간. 뉴스레터 다수.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['재테크', '시사'] },
+  { id: 'ind-fin-uk-ft', name: 'Financial Times', category: '재테크', siteUrl: 'https://www.ft.com/', subscribeUrl: 'https://www.ft.com/newsletters', country: '영국', industry: '금융', type: 'magazine', frequency: '매일', frequencyGroup: 'daily', description: '글로벌 금융·정치경제 심층. FT 뉴스레터 허브.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['재테크', '국제'] },
+  { id: 'ind-fin-ch-snb', name: 'Swiss National Bank', category: '재테크', siteUrl: 'https://www.snb.ch/en/', country: '스위스', industry: '금융', type: 'site', frequency: '수시', frequencyGroup: 'occasional', description: '스위스 중앙은행 공식. 통화·금융안정 발표.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['재테크'], sourceScope: 'public' },
+  { id: 'ind-fin-sg-straitstimes', name: 'The Straits Times', category: '시사', siteUrl: 'https://www.straitstimes.com/', subscribeUrl: 'https://www.straitstimes.com/newsletters', country: '싱가포르', industry: '금융', type: 'site', frequency: '매일', frequencyGroup: 'daily', description: '싱가포르·동남아 대표 영자 매체. 금융 허브 시각.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['시사', '재테크'] },
+  { id: 'ind-fin-hk-scmp', name: 'South China Morning Post', category: '시사', siteUrl: 'https://www.scmp.com/', subscribeUrl: 'https://www.scmp.com/newsletters', country: '홍콩', industry: '금융', type: 'magazine', frequency: '매일', frequencyGroup: 'daily', description: '홍콩·중화권·아시아 비즈니스 영문 매체.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['시사', '국제'] },
+
+  // —— 에너지·기후 (미국, 노르웨이, 사우디, 독일, 캐나다) ——
+  { id: 'ind-ene-us-eia', name: 'U.S. EIA', category: '환경', siteUrl: 'https://www.eia.gov/', subscribeUrl: 'https://www.eia.gov/tools/emailupdates/', country: '미국', industry: '에너지', type: 'site', frequency: '수시', frequencyGroup: 'occasional', description: '미국 에너지정보청. 통계·전망 공식 배포.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['환경', '재테크'], sourceScope: 'public' },
+  { id: 'ind-ene-no-ssb', name: 'Statistics Norway', category: '재테크', siteUrl: 'https://www.ssb.no/en', country: '노르웨이', industry: '에너지', type: 'site', frequency: '수시', frequencyGroup: 'occasional', description: '노르웨이 통계청. 에너지·경제 공식 데이터.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['재테크', '환경'], sourceScope: 'public' },
+  { id: 'ind-ene-sa-argaam', name: 'Argaam', category: '재테크', siteUrl: 'https://www.argaam.com/en', country: '사우디아라비아', industry: '에너지', type: 'site', frequency: '매일', frequencyGroup: 'daily', description: '사우디·걸프 자본시장·에너지 영문 보도.', stability: 'medium', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['재테크', '에너지'] },
+  { id: 'ind-ene-de-bundesnetz', name: 'Bundesnetzagentur', category: '환경', siteUrl: 'https://www.bundesnetzagentur.de/EN/Home/home_node.html', country: '독일', industry: '에너지', type: 'site', frequency: '수시', frequencyGroup: 'occasional', description: '독일 연방망청. 전력·통신 규제 공식 정보.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['환경', '정책'], sourceScope: 'public' },
+  { id: 'ind-ene-ca-cer', name: 'Canada Energy Regulator', category: '환경', siteUrl: 'https://www.cer-rec.gc.ca/en/index.html', country: '캐나다', industry: '에너지', type: 'site', frequency: '수시', frequencyGroup: 'occasional', description: '캐나다 에너지 규제 기관 공식 사이트.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['환경'], sourceScope: 'public' },
+
+  // —— AI·테크 (미국, 중국, 영국, 이스라엘, 한국, 인도) ——
+  { id: 'ind-ai-us-openai-blog', name: 'OpenAI Blog', category: 'AI', siteUrl: 'https://openai.com/blog', country: '미국', industry: 'AI', type: 'site', frequency: '수시', frequencyGroup: 'occasional', description: 'OpenAI 공식 블로그. 연구·제품 발표.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['AI', '테크'] },
+  { id: 'ind-ai-cn-jiqizhixin', name: '机器之心 (SyncTalk EN)', category: 'AI', siteUrl: 'https://www.jiqizhixin.com/', country: '중국', industry: 'AI', type: 'site', frequency: '매일', frequencyGroup: 'daily', description: '중국 AI 미디어. 연구·산업 동향(중문 중심).', stability: 'medium', origin: '글로벌', language: '중국어 · 소개 한국어', interests: ['AI'] },
+  { id: 'ind-ai-uk-bbc-tech', name: 'BBC Technology', category: '테크', siteUrl: 'https://www.bbc.com/news/technology', country: '영국', industry: 'AI', type: 'site', frequency: '매일', frequencyGroup: 'daily', description: 'BBC 테크 섹션. 공영 시각의 기술·AI 뉴스.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['AI', '시사'], sourceScope: 'public' },
+  { id: 'ind-ai-il-calcalist-tech', name: 'Calcalist Tech', category: '테크', siteUrl: 'https://www.calcalistech.com/', country: '이스라엘', industry: 'AI', type: 'site', frequency: '매일', frequencyGroup: 'daily', description: '이스라엘 스타트업·테크 영문 창.', stability: 'medium', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['스타트업', 'AI'] },
+  { id: 'ind-ai-in-thehindu-sci', name: 'The Hindu Science', category: '과학', siteUrl: 'https://www.thehindu.com/sci-tech/', country: '인도', industry: 'AI', type: 'site', frequency: '매일', frequencyGroup: 'daily', description: '인도 영자 일간 과학·테크 섹션.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['과학', '테크'] },
+
+  // —— 패션·럭셔리 (프랑스, 이탈리아, 미국, 영국, 일본) ——
+  { id: 'ind-fash-fr-vogue-fr', name: 'Vogue France', category: '패션', siteUrl: 'https://www.vogue.fr/', country: '프랑스', industry: '패션', type: 'magazine', frequency: '매일', frequencyGroup: 'daily', description: '프랑스 보그. 패션·문화 트렌드.', stability: 'high', origin: '글로벌', language: '프랑스어 · 소개 한국어', interests: ['패션', '문화'] },
+  { id: 'ind-fash-it-vogue-it', name: 'Vogue Italia', category: '패션', siteUrl: 'https://www.vogue.it/', country: '이탈리아', industry: '패션', type: 'magazine', frequency: '매일', frequencyGroup: 'daily', description: '이탈리아 보그. 하이패션 시각.', stability: 'high', origin: '글로벌', language: '이탈리아어 · 소개 한국어', interests: ['패션'] },
+  { id: 'ind-fash-us-bof', name: 'The Business of Fashion', category: '패션', siteUrl: 'https://www.businessoffashion.com/', subscribeUrl: 'https://www.businessoffashion.com/newsletters/', country: '미국', industry: '패션', type: 'magazine', frequency: '매일', frequencyGroup: 'daily', description: '패션 비즈니스 분석. 뉴스레터 강세.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['패션', '비즈니스'] },
+  { id: 'ind-fash-uk-drapers', name: 'Drapers', category: '패션', siteUrl: 'https://www.drapersonline.com/', country: '영국', industry: '패션', type: 'site', frequency: '매일', frequencyGroup: 'daily', description: '영국 패션 리테일 산업지.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['패션'] },
+  { id: 'ind-fash-jp-wwdj', name: 'WWDJAPAN', category: '패션', siteUrl: 'https://www.wwdjapan.com/', country: '일본', industry: '패션', type: 'magazine', frequency: '매일', frequencyGroup: 'daily', description: '일본 WWD. 패션 비즈니스 뉴스.', stability: 'high', origin: '글로벌', language: '일본어 · 소개 한국어', interests: ['패션'] },
+
+  // —— 제약·바이오 (미국, 스위스, 독일, 영국, 일본, 덴마크) ——
+  { id: 'ind-pharma-us-fda', name: 'U.S. FDA News', category: '의료', siteUrl: 'https://www.fda.gov/news-events', subscribeUrl: 'https://www.fda.gov/about-fda/contact-fda/get-email-updates', country: '미국', industry: '바이오', type: 'site', frequency: '수시', frequencyGroup: 'occasional', description: 'FDA 공식 뉴스·승인 정보.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['의료', '건강'], sourceScope: 'public' },
+  { id: 'ind-pharma-ch-swissmedic', name: 'Swissmedic', category: '의료', siteUrl: 'https://www.swissmedic.ch/swissmedic/en/home.html', country: '스위스', industry: '바이오', type: 'site', frequency: '수시', frequencyGroup: 'occasional', description: '스위스 의약품 규제 당국.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['의료'], sourceScope: 'public' },
+  { id: 'ind-pharma-de-pei', name: 'Paul-Ehrlich-Institut', category: '의료', siteUrl: 'https://www.pei.de/EN/home/home-node.html', country: '독일', industry: '바이오', type: 'site', frequency: '수시', frequencyGroup: 'occasional', description: '독일 백신·바이오의약품 연방기관.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['의료'], sourceScope: 'public' },
+  { id: 'ind-pharma-uk-mhra', name: 'MHRA', category: '의료', siteUrl: 'https://www.gov.uk/government/organisations/medicines-and-healthcare-products-regulatory-agency', country: '영국', industry: '바이오', type: 'site', frequency: '수시', frequencyGroup: 'occasional', description: '영국 의약품·의료기기 규제 기관.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['의료'], sourceScope: 'public' },
+  { id: 'ind-pharma-dk-novonordisk-news', name: 'Novo Nordisk News', category: '의료', siteUrl: 'https://www.novonordisk.com/news-and-media.html', country: '덴마크', industry: '바이오', type: 'site', frequency: '수시', frequencyGroup: 'occasional', description: '덴마크 글로벌 제약사 공식 뉴스.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['의료', '건강'] },
+
+  // —— 항공우주 (미국, 프랑스/EU, 일본, 인도, 캐나다) ——
+  { id: 'ind-space-us-nasa', name: 'NASA', category: '과학', siteUrl: 'https://www.nasa.gov/', subscribeUrl: 'https://www.nasa.gov/newsletters/', country: '미국', industry: '항공우주', type: 'site', frequency: '매일', frequencyGroup: 'daily', description: 'NASA 공식. 뉴스레터·미션 업데이트.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['과학', '우주'], sourceScope: 'public' },
+  { id: 'ind-space-fr-esa', name: 'ESA', category: '과학', siteUrl: 'https://www.esa.int/', subscribeUrl: 'https://www.esa.int/Services/RSS_Feeds', country: '프랑스', industry: '항공우주', type: 'site', frequency: '수시', frequencyGroup: 'occasional', description: '유럽우주국 (본부 파리 인근). RSS·뉴스.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['과학', '우주'], sourceScope: 'public' },
+  { id: 'ind-space-jp-jaxa', name: 'JAXA', category: '과학', siteUrl: 'https://www.jaxa.jp/', country: '일본', industry: '항공우주', type: 'site', frequency: '수시', frequencyGroup: 'occasional', description: '일본 우주항공연구개발기구.', stability: 'high', origin: '글로벌', language: '일본어·영어 · 소개 한국어', interests: ['과학', '우주'], sourceScope: 'public' },
+  { id: 'ind-space-in-isro', name: 'ISRO', category: '과학', siteUrl: 'https://www.isro.gov.in/', country: '인도', industry: '항공우주', type: 'site', frequency: '수시', frequencyGroup: 'occasional', description: '인도우주연구기구 공식.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['과학', '우주'], sourceScope: 'public' },
+  { id: 'ind-space-ca-csa', name: 'Canadian Space Agency', category: '과학', siteUrl: 'https://www.asc-csa.gc.ca/eng/', country: '캐나다', industry: '항공우주', type: 'site', frequency: '수시', frequencyGroup: 'occasional', description: '캐나다 우주청 공식.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['과학'], sourceScope: 'public' },
+
+  // —— 미디어·시사 (미국, 영국, 독일, 프랑스, 일본, 브라질, 호주) ——
+  { id: 'ind-media-us-npr', name: 'NPR', category: '시사', siteUrl: 'https://www.npr.org/', subscribeUrl: 'https://www.npr.org/newsletter/', country: '미국', industry: '미디어', type: 'site', frequency: '매일', frequencyGroup: 'daily', description: '미국 공영 라디오. 뉴스레터 다수.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['시사'], sourceScope: 'public' },
+  { id: 'ind-media-uk-guardian', name: 'The Guardian', category: '시사', siteUrl: 'https://www.theguardian.com/international', subscribeUrl: 'https://www.theguardian.com/email-newsletters', country: '영국', industry: '미디어', type: 'site', frequency: '매일', frequencyGroup: 'daily', description: '영국 가디언. 국제·환경 강점. 뉴스레터 허브.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['시사', '환경'] },
+  { id: 'ind-media-de-dw', name: 'Deutsche Welle', category: '국제', siteUrl: 'https://www.dw.com/', country: '독일', industry: '미디어', type: 'site', frequency: '매일', frequencyGroup: 'daily', description: '독일 국제공영. 다국어 뉴스.', stability: 'high', origin: '글로벌', language: '다국어 · 소개 한국어', interests: ['국제', '시사'], sourceScope: 'public' },
+  { id: 'ind-media-fr-france24', name: 'France 24', category: '국제', siteUrl: 'https://www.france24.com/', country: '프랑스', industry: '미디어', type: 'site', frequency: '매일', frequencyGroup: 'daily', description: '프랑스 국제 뉴스 채널 사이트.', stability: 'high', origin: '글로벌', language: '영어·프랑스어 · 소개 한국어', interests: ['국제'], sourceScope: 'public' },
+  { id: 'ind-media-br-agencia', name: 'Agência Brasil', category: '시사', siteUrl: 'https://agenciabrasil.ebc.com.br/', country: '브라질', industry: '미디어', type: 'site', frequency: '매일', frequencyGroup: 'daily', description: '브라질 공영 통신사.', stability: 'high', origin: '글로벌', language: '포르투갈어 · 소개 한국어', interests: ['시사', '국제'], sourceScope: 'public' },
+  { id: 'ind-media-au-abc', name: 'ABC News Australia', category: '시사', siteUrl: 'https://www.abc.net.au/news', country: '호주', industry: '미디어', type: 'site', frequency: '매일', frequencyGroup: 'daily', description: '호주 공영방송 뉴스.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['시사'], sourceScope: 'public' },
+
+  // —— 게임 (미국, 일본, 한국, 중국, 스웨덴) ——
+  { id: 'ind-game-us-ign', name: 'IGN', category: '게임', siteUrl: 'https://www.ign.com/', country: '미국', industry: '게임', type: 'magazine', frequency: '매일', frequencyGroup: 'daily', description: '글로벌 게임·엔터 매체.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['게임'] },
+  { id: 'ind-game-jp-famitsu', name: 'ファミ通.com', category: '게임', siteUrl: 'https://www.famitsu.com/', country: '일본', industry: '게임', type: 'site', frequency: '매일', frequencyGroup: 'daily', description: '일본 대표 게임 매체 파미통.', stability: 'high', origin: '글로벌', language: '일본어 · 소개 한국어', interests: ['게임'] },
+  { id: 'ind-game-kr-thisisgame', name: '디스이즈게임', category: '게임', siteUrl: 'https://www.thisisgame.com/', country: '대한민국', industry: '게임', type: 'site', frequency: '매일', frequencyGroup: 'daily', description: '한국 게임 전문 미디어.', stability: 'high', origin: '한국', language: '한국어', interests: ['게임'] },
+  { id: 'ind-game-cn-gameres', name: 'GameRes', category: '게임', siteUrl: 'https://www.gameres.com/', country: '중국', industry: '게임', type: 'site', frequency: '매일', frequencyGroup: 'daily', description: '중국 게임 산업·개발 커뮤니티 미디어.', stability: 'medium', origin: '글로벌', language: '중국어 · 소개 한국어', interests: ['게임'] },
+  { id: 'ind-game-se-pocketgamer', name: 'Pocket Gamer', category: '게임', siteUrl: 'https://www.pocketgamer.com/', country: '스웨덴', industry: '게임', type: 'site', frequency: '매일', frequencyGroup: 'daily', description: '모바일 게임 전문 (유럽 기반 매체).', stability: 'medium', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['게임'] },
+
+  // —— 농업·식량 (미국, 브라질, 네덜란드, 인도, 프랑스) ——
+  { id: 'ind-ag-us-usda', name: 'USDA', category: '농업', siteUrl: 'https://www.usda.gov/', subscribeUrl: 'https://www.usda.gov/media/email-updates', country: '미국', industry: '농업', type: 'site', frequency: '수시', frequencyGroup: 'occasional', description: '미국 농무부 공식.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['농업'], sourceScope: 'public' },
+  { id: 'ind-ag-br-embrapa', name: 'Embrapa', category: '농업', siteUrl: 'https://www.embrapa.br/en', country: '브라질', industry: '농업', type: 'site', frequency: '수시', frequencyGroup: 'occasional', description: '브라질 농업연구공사. 열대농업 연구.', stability: 'high', origin: '글로벌', language: '영어·포르투갈어 · 소개 한국어', interests: ['농업', '과학'], sourceScope: 'public' },
+  { id: 'ind-ag-nl-wageningen', name: 'Wageningen University & Research', category: '농업', siteUrl: 'https://www.wur.nl/en.htm', country: '네덜란드', industry: '농업', type: 'site', frequency: '수시', frequencyGroup: 'occasional', description: '네덜란드 농업·식품 연구 대학.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['농업', '과학'], sourceScope: 'public' },
+  { id: 'ind-ag-in-icar', name: 'ICAR', category: '농업', siteUrl: 'https://icar.org.in/', country: '인도', industry: '농업', type: 'site', frequency: '수시', frequencyGroup: 'occasional', description: '인도 농업연구협의회.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['농업'], sourceScope: 'public' },
+  { id: 'ind-ag-fr-inrae', name: 'INRAE', category: '농업', siteUrl: 'https://www.inrae.fr/en', country: '프랑스', industry: '농업', type: 'site', frequency: '수시', frequencyGroup: 'occasional', description: '프랑스 농업·환경·식품 국립연구소.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['농업', '환경'], sourceScope: 'public' },
+
+  // —— 안정 글로벌 뉴스레터 (구독 URL 분리) ——
+  { id: 'ind-nl-us-morning-brew', name: 'Morning Brew', category: '비즈니스', siteUrl: 'https://www.morningbrew.com/', subscribeUrl: 'https://www.morningbrew.com/daily/subscribe', country: '미국', industry: '미디어', type: 'newsletter', frequency: '평일', frequencyGroup: 'daily', description: '비즈니스 데일리. 사이트와 구독 페이지 분리.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['재테크', '커리어'] },
+  { id: 'ind-nl-us-tldr', name: 'TLDR', category: '테크', siteUrl: 'https://tldr.tech/', subscribeUrl: 'https://tldr.tech/signup', country: '미국', industry: 'AI', type: 'newsletter', frequency: '매일', frequencyGroup: 'daily', description: '테크 링크 요약. 홈과 가입 페이지 분리.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['AI', '테크'] },
+  { id: 'ind-nl-us-platformer', name: 'Platformer', category: '테크', siteUrl: 'https://www.platformer.news/', subscribeUrl: 'https://www.platformer.news/', country: '미국', industry: '미디어', type: 'newsletter', frequency: '주 수회', frequencyGroup: 'weekly', description: '플랫폼·정책 분석 뉴스레터 (Casey Newton).', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['테크', '시사'] },
+  { id: 'ind-nl-uk-the-browser', name: 'The Browser', category: '문화', siteUrl: 'https://thebrowser.com/', subscribeUrl: 'https://thebrowser.com/', country: '영국', industry: '미디어', type: 'newsletter', frequency: '평일', frequencyGroup: 'daily', description: '큐레이션 뉴스레터. 읽기 좋은 링크 선별.', stability: 'high', origin: '글로벌', language: '영어 · 소개 한국어', interests: ['문화', '시사'] },
+];
+
+export const industryRaw: Partial<Newsletter>[] = seed.map(s => ({
+  ...s,
+  url: s.siteUrl,
+  daysSince: s.daysSince ?? 1,
+  typical: s.typical ?? (s.frequencyGroup === 'daily' ? '매일' : s.frequencyGroup === 'weekly' ? '주간' : '수시'),
+  status: s.status ?? 'alive',
+  interests: s.interests ?? [s.category],
+  trust: s.trust ?? ['안정 출처(기관·공영·장기 매체)', '공식 링크'],
+  origin: s.origin ?? (s.country === '대한민국' ? '한국' : '글로벌'),
+  language: s.language ?? '영어 · 소개 한국어',
+  type: s.type ?? 'site',
+  reuseLevel: s.reuseLevel ?? 'A',
+  sourceScope: s.sourceScope ?? 'general',
+  stability: s.stability ?? 'high',
+  frequency: s.frequency ?? '수시',
+  frequencyGroup: s.frequencyGroup ?? 'occasional',
+}));
+
+export const industryList = ['전체', ...new Set(seed.map(s => s.industry).filter(Boolean))] as string[];

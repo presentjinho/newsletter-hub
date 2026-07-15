@@ -113,6 +113,9 @@ export default function LiveDesk({
   const activeNewsletter = newsletters.find(n => n.id === activeSourceId);
   const sourceNotes = activeSourceId ? getNotesForSource(activeSourceId) : [];
 
+  const siteOf = (n: Newsletter) => n.siteUrl || n.url;
+  const subOf = (n: Newsletter) => n.subscribeUrl;
+
   const loadReader = useCallback(async (url: string) => {
     const ctrl = new AbortController();
     setReaderLoading(true);
@@ -140,15 +143,15 @@ export default function LiveDesk({
       setReaderError('');
       return;
     }
-    let cleanup: (() => void) | undefined;
     let cancelled = false;
     const ctrl = new AbortController();
+    const target = siteOf(activeNewsletter);
     (async () => {
       setReaderLoading(true);
       setReaderError('');
       setReaderText('');
       try {
-        const text = await fetchReadable(activeNewsletter.url, ctrl.signal);
+        const text = await fetchReadable(target, ctrl.signal);
         if (!cancelled) setReaderText(text);
       } catch (e) {
         if (!cancelled && (e as Error).name !== 'AbortError') {
@@ -164,15 +167,21 @@ export default function LiveDesk({
       cancelled = true;
       ctrl.abort();
     };
-  }, [activeNewsletter?.id, activeNewsletter?.url]);
+  }, [activeNewsletter?.id, activeNewsletter?.siteUrl, activeNewsletter?.url]);
 
   const openOriginal = () => {
-    if (activeNewsletter) window.open(activeNewsletter.url, '_blank', 'noopener,noreferrer');
+    if (activeNewsletter) window.open(siteOf(activeNewsletter), '_blank', 'noopener,noreferrer');
+  };
+
+  const openSubscribe = () => {
+    if (!activeNewsletter) return;
+    const sub = subOf(activeNewsletter);
+    if (sub) window.open(sub, '_blank', 'noopener,noreferrer');
   };
 
   const openTranslate = () => {
     if (!activeNewsletter) return;
-    const u = `https://translate.google.com/translate?sl=auto&tl=ko&u=${encodeURIComponent(activeNewsletter.url)}`;
+    const u = `https://translate.google.com/translate?sl=auto&tl=ko&u=${encodeURIComponent(siteOf(activeNewsletter))}`;
     window.open(u, '_blank', 'noopener,noreferrer');
   };
 
@@ -237,8 +246,17 @@ export default function LiveDesk({
                     className="px-3 py-2 bg-white/10 text-xs font-bold text-[var(--live-fg)] border border-white/20 rounded-sm cursor-pointer flex items-center gap-1.5"
                   >
                     <ExternalLink className="w-3.5 h-3.5 live-accent" />
-                    원문 새 탭
+                    사이트 열기
                   </button>
+                  {subOf(activeNewsletter) && (
+                    <button
+                      type="button"
+                      onClick={openSubscribe}
+                      className="px-3 py-2 bg-[#cf4f39]/90 text-xs font-bold text-[var(--live-fg)] rounded-sm cursor-pointer flex items-center gap-1.5"
+                    >
+                      구독 페이지
+                    </button>
+                  )}
                   {activeNewsletter.origin === '글로벌' && (
                     <button
                       type="button"
@@ -343,19 +361,19 @@ export default function LiveDesk({
                     ? 'bg-[#9fe0b8] text-[#0a100e] border-[#9fe0b8]'
                     : 'bg-transparent text-[var(--live-fg)] border-white/25'
                 }`}
-                title={canAttemptIframe(activeNewsletter.url) ? '일부 사이트만 가능' : '대부분 차단됨'}
+                title={canAttemptIframe(siteOf(activeNewsletter)) ? '일부 사이트만 가능' : '대부분 차단됨'}
               >
                 <Eye className="w-3.5 h-3.5" />
                 페이지 끼워보기
               </button>
             </div>
             <a
-              href={activeNewsletter.url}
+              href={siteOf(activeNewsletter)}
               target="_blank"
               rel="noopener noreferrer"
               className="underline live-accent break-all text-xs ml-auto"
             >
-              {activeNewsletter.url}
+              {siteOf(activeNewsletter)}
             </a>
           </div>
         )}
@@ -373,7 +391,7 @@ export default function LiveDesk({
             ) : viewMode === 'iframe' ? (
               <div className="flex flex-col flex-1">
                 <iframe
-                  src={activeNewsletter.url}
+                  src={siteOf(activeNewsletter)}
                   title={`${activeNewsletter.name} 원문`}
                   sandbox="allow-scripts allow-popups allow-forms allow-popups-to-escape-sandbox"
                   referrerPolicy="no-referrer"
@@ -402,7 +420,7 @@ export default function LiveDesk({
                   <button
                     type="button"
                     disabled={readerLoading}
-                    onClick={() => activeNewsletter && loadReader(activeNewsletter.url)}
+                    onClick={() => activeNewsletter && loadReader(siteOf(activeNewsletter))}
                     className="text-xs font-bold text-[var(--live-fg)] underline cursor-pointer bg-transparent border-0 disabled:opacity-50"
                   >
                     다시 불러오기

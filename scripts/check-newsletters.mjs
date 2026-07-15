@@ -2,8 +2,9 @@ import { readFile, mkdir, writeFile } from 'node:fs/promises';
 
 // Parse ids + urls from Vite data source (AI Studio export)
 const source = await readFile(new URL('../src/data.ts', import.meta.url), 'utf8');
+// prefer siteUrl, fallback url
 const records = [
-  ...source.matchAll(/id:\s*'([^']+)'[\s\S]*?url:\s*'(https:[^']+)'/g),
+  ...source.matchAll(/id:\s*'([^']+)'[\s\S]*?(?:siteUrl|url):\s*'(https:[^']+)'/g),
 ].map(([, id, url]) => ({ id, url }));
 
 // de-dupe by id (regex may over-match multiline)

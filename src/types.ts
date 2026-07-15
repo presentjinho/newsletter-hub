@@ -5,6 +5,13 @@ export interface Newsletter {
   frequency: string;
   frequencyGroup: 'daily' | 'weekly' | 'occasional';
   description: string;
+  /** 사이트 홈·아카이브 (읽기/방문). 리더·새 탭 기본 */
+  siteUrl: string;
+  /** 이메일 구독·뉴스레터 가입 페이지. 없으면 구독 버튼 숨김 */
+  subscribeUrl?: string;
+  /**
+   * @deprecated siteUrl과 동일. 구버전 호환용
+   */
   url: string;
   daysSince: number;
   typical: string;
@@ -20,11 +27,15 @@ export interface Newsletter {
   licenseUrl: string;
   feedUrl?: string;
   sourceScope: 'public' | 'general';
+  /** 안정성: 공영/기관/장기 운영 등 */
+  stability?: 'high' | 'medium';
+  /** 산업 축 (반도체, 자동차 등) — 국가 다각화 필터 */
+  industry?: string;
 }
 
 export interface Note {
   id: string;
-  sourceId: string; // newsletter id or notebook id or 'inbox'
+  sourceId: string;
   title: string;
   body: string;
   createdAt: string;

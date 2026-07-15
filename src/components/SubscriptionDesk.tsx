@@ -232,13 +232,23 @@ export default function SubscriptionDesk({
                   </div>
                   <div className="md:col-span-3 flex flex-wrap gap-2">
                     <a
-                      href={item.url}
+                      href={item.siteUrl || item.url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-xs font-bold text-forest-green dark:text-[var(--green)] flex items-center gap-1 no-underline"
                     >
-                      <ExternalLink className="w-3 h-3" /> 원문
+                      <ExternalLink className="w-3 h-3" /> 사이트
                     </a>
+                    {item.subscribeUrl && (
+                      <a
+                        href={item.subscribeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs font-bold text-accent-red flex items-center gap-1 no-underline"
+                      >
+                        구독
+                      </a>
+                    )}
                     <button
                       type="button"
                       onClick={() => onOpenLive(item.id)}

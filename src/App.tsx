@@ -26,6 +26,7 @@ import {
   countriesList, 
   typesList, 
   disciplinesList,
+  industryList,
   readingTimes,
   valuePromises
 } from './data';
@@ -53,6 +54,8 @@ export default function App() {
   const [selectedCountry, setSelectedCountry] = useState('전체');
   const [selectedType, setSelectedType] = useState('전체');
   const [selectedPersonal, setSelectedPersonal] = useState('전체');
+  const [selectedIndustry, setSelectedIndustry] = useState('전체');
+  const [linkMode, setLinkMode] = useState<'all' | 'has-subscribe' | 'site-only'>('all');
   const [sortBy, setSortBy] = useState('recommended');
   const [toastMsg, setToastMsg] = useState('');
   const searchInputRef = React.useRef<HTMLInputElement | null>(null);
@@ -287,6 +290,8 @@ export default function App() {
     setSelectedCountry('전체');
     setSelectedType('전체');
     setSelectedPersonal('전체');
+    setSelectedIndustry('전체');
+    setLinkMode('all');
     setSortBy('recommended');
     showToast('필터 초기화');
   };
@@ -296,14 +301,14 @@ export default function App() {
       .filter(n => personalStatus[n.id] || savedIds.has(n.id))
       .map(n => {
         const status = personalStatus[n.id] || (savedIds.has(n.id) ? '관심 있음' : '');
-        const cells = [n.name, status, n.category, n.frequency, n.country, n.url, n.type];
+        const cells = [n.name, status, n.category, n.frequency, n.country, n.siteUrl || n.url, n.subscribeUrl || '', n.type, n.industry || ''];
         return cells.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',');
       });
     if (!rows.length) {
       showToast('내보낼 구독 기록이 없습니다');
       return;
     }
-    const csv = ['이름,상태,분야,빈도,국가,URL,형식', ...rows].join('\n');
+    const csv = ['이름,상태,분야,빈도,국가,사이트URL,구독URL,형식,산업', ...rows].join('\n');
     const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
@@ -332,7 +337,7 @@ export default function App() {
       '',
       ...list.map((n, i) => {
         const st = personalStatus[n.id] || '관심 있음';
-        return `## ${i + 1}. ${n.name}\n- 상태: ${st}\n- 분야: ${n.category} · ${n.frequency}\n- 링크: ${n.url}\n- 한 줄: ${n.description}\n`;
+        return `## ${i + 1}. ${n.name}\n- 상태: ${st}\n- 분야: ${n.category} · ${n.frequency}\n- 사이트: ${n.siteUrl || n.url}\n${n.subscribeUrl ? `- 구독: ${n.subscribeUrl}\n` : ''}- 한 줄: ${n.description}\n`;
       }),
       '---',
       '*exported from 오늘의 편지함*'
@@ -476,7 +481,8 @@ export default function App() {
       `📝 [오늘의 편지함 메모] ${note.title}`,
       `작성 일시: ${dateStr}`,
       `위치: ${getSourceName(note.sourceId)}`,
-      sourceItem ? `공식 링크: ${sourceItem.url}` : '',
+      sourceItem ? `사이트: ${sourceItem.siteUrl || sourceItem.url}` : '',
+      sourceItem?.subscribeUrl ? `구독: ${sourceItem.subscribeUrl}` : '',
       `---`,
       note.body,
       `---`,
@@ -570,8 +576,9 @@ export default function App() {
 
     const title = mode === 'saved' ? '오늘의 편지함 · 내 저장 목록' : '오늘의 편지함 · 검증 공공 출처';
     const outlines = source.map(item => {
-      const xmlUrl = item.feedUrl || item.url;
-      return `    <outline text="${escapeXml(item.name)}" title="${escapeXml(item.name)}" type="rss" xmlUrl="${escapeXml(xmlUrl)}" htmlUrl="${escapeXml(item.url)}" category="${escapeXml(item.category)}" />`;
+      const html = item.siteUrl || item.url;
+      const xmlUrl = item.feedUrl || html;
+      return `    <outline text="${escapeXml(item.name)}" title="${escapeXml(item.name)}" type="rss" xmlUrl="${escapeXml(xmlUrl)}" htmlUrl="${escapeXml(html)}" category="${escapeXml(item.category)}" />`;
     }).join('\n');
 
     const opmlText = `<?xml version="1.0" encoding="UTF-8"?>\n<opml version="2.0">\n  <head>\n    <title>${escapeXml(title)}</title>\n    <dateCreated>${new Date().toUTCString()}</dateCreated>\n  </head>\n  <body>\n    <outline text="${escapeXml(title)}" title="${escapeXml(title)}">\n${outlines}\n    </outline>\n  </body>\n</opml>\n`;
@@ -620,6 +627,9 @@ export default function App() {
       const st = personalStatus[item.id] || (savedIds.has(item.id) ? '관심 있음' : '');
       if (st !== selectedPersonal) return false;
     }
+    if (selectedIndustry !== '전체' && item.industry !== selectedIndustry) return false;
+    if (linkMode === 'has-subscribe' && !item.subscribeUrl) return false;
+    if (linkMode === 'site-only' && item.subscribeUrl) return false;
     return true;
   });
 
@@ -964,6 +974,56 @@ export default function App() {
               </div>
             </div>
 
+            <div className="flex flex-wrap items-center gap-2 border-t border-line-alpha/40 pt-3">
+              <span className="text-[10px] font-bold text-secondary uppercase tracking-widest w-[80px] text-left">
+                산업 축
+              </span>
+              <div className="flex flex-wrap gap-1.5 max-h-[100px] overflow-y-auto">
+                {industryList.map(ind => (
+                  <button
+                    key={ind}
+                    type="button"
+                    onClick={() => setSelectedIndustry(ind)}
+                    className={`px-3 py-1 text-xs border rounded-full transition duration-200 cursor-pointer
+                      ${selectedIndustry === ind
+                        ? 'chip-active border'
+                        : 'border-line-alpha text-ink hover:border-ink dark:hover:border-white'
+                      }
+                    `}
+                  >
+                    {ind === '전체' ? '산업 전체' : ind}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2 border-t border-line-alpha/40 pt-3">
+              <span className="text-[10px] font-bold text-secondary uppercase tracking-widest w-[80px] text-left">
+                링크 유형
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {([
+                  ['all', '전체'],
+                  ['has-subscribe', '구독 페이지 있음'],
+                  ['site-only', '사이트만']
+                ] as const).map(([value, label]) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => setLinkMode(value)}
+                    className={`px-3 py-1 text-xs border rounded-full transition duration-200 cursor-pointer
+                      ${linkMode === value
+                        ? 'chip-active border'
+                        : 'border-line-alpha text-ink hover:border-ink dark:hover:border-white'
+                      }
+                    `}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Source Scope Selector */}
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest w-[80px] text-left">
@@ -1140,7 +1200,7 @@ export default function App() {
             <span>
               총 <strong className="text-accent-red">{sortedFilteredNewsletters.length}</strong>개의 편지 지도 검색됨
             </span>
-            {(query || selectedSourceScope !== 'all' || selectedCategory !== '전체' || selectedDiscipline !== '전체' || selectedTopic !== '전체' || selectedFrequency !== '전체' || selectedOrigin !== '전체' || selectedType !== '전체' || selectedCountry !== '전체' || selectedPersonal !== '전체') && (
+            {(query || selectedSourceScope !== 'all' || selectedCategory !== '전체' || selectedDiscipline !== '전체' || selectedTopic !== '전체' || selectedFrequency !== '전체' || selectedOrigin !== '전체' || selectedType !== '전체' || selectedCountry !== '전체' || selectedPersonal !== '전체' || selectedIndustry !== '전체' || linkMode !== 'all') && (
               <button
                 type="button"
                 onClick={clearDirectoryFilters}
