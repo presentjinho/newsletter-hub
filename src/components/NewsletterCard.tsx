@@ -1,5 +1,5 @@
-import React from 'react';
-import { ExternalLink, Check, Bookmark, FileText, PenTool, Globe } from 'lucide-react';
+import React, { useState } from 'react';
+import { ExternalLink, Check, Bookmark, FileText, PenTool, Globe, ChevronDown, ChevronUp } from 'lucide-react';
 import { Newsletter } from '../types';
 import { valuePromises, readingTimes, unsubscribeText, reuseLabels } from '../data';
 
@@ -23,7 +23,9 @@ export default function NewsletterCard({
   personalState,
   onChangePersonalState
 }: NewsletterCardProps) {
-  
+  const [descOpen, setDescOpen] = useState(false);
+  const longDesc = (item.description || '').length > 90;
+
   const handleReport = () => {
     const issueUrl = 'https://github.com/presentjinho/newsletter-hub/issues/new/choose';
     const title = encodeURIComponent(`[정보 수정] ${item.name}`);
@@ -72,9 +74,18 @@ export default function NewsletterCard({
           {item.name}
         </h3>
         
-        <p className="description text-sm leading-relaxed mb-3 text-[#2a3831] dark:text-[#d0ddd6]">
+        <p className={`description text-sm leading-relaxed mb-1 text-[#2a3831] dark:text-[#d0ddd6] ${!descOpen && longDesc ? 'line-clamp-2' : ''}`}>
           {item.description}
         </p>
+        {longDesc && (
+          <button
+            type="button"
+            onClick={() => setDescOpen(v => !v)}
+            className="text-[11px] font-bold text-forest-green dark:text-[#8fd9ae] bg-transparent border-0 cursor-pointer mb-2 flex items-center gap-0.5 p-0"
+          >
+            {descOpen ? <>접기 <ChevronUp className="w-3 h-3" /></> : <>더 보기 <ChevronDown className="w-3 h-3" /></>}
+          </button>
+        )}
 
         {/* Value promise with red border */}
         <p className="border-l-2 border-accent-red pl-2 py-0.5 my-3 text-xs leading-relaxed text-[#3d4f46] dark:text-[#c5d4cb]">

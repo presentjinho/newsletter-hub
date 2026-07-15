@@ -38,6 +38,8 @@ import LiveDesk from './components/LiveDesk';
 import NotesHub from './components/NotesHub';
 import NoteDialog from './components/NoteDialog';
 import ToolsSection from './components/ToolsSection';
+import SubscriptionDesk from './components/SubscriptionDesk';
+import Toast from './components/Toast';
 
 export default function App() {
   // --- STATE DECLARATIONS ---
@@ -50,7 +52,10 @@ export default function App() {
   const [selectedOrigin, setSelectedOrigin] = useState('전체');
   const [selectedCountry, setSelectedCountry] = useState('전체');
   const [selectedType, setSelectedType] = useState('전체');
+  const [selectedPersonal, setSelectedPersonal] = useState('전체');
   const [sortBy, setSortBy] = useState('recommended');
+  const [toastMsg, setToastMsg] = useState('');
+  const searchInputRef = React.useRef<HTMLInputElement | null>(null);
 
   // Bookmarks & local preferences
   const [savedIds, setSavedIds] = useState<Set<string>>(() => {
@@ -141,7 +146,10 @@ export default function App() {
     return (localStorage.getItem('letter-text-size') as 'normal' | 'large') || 'normal';
   });
 
-  const [linkSyncStatus, setLinkSyncStatus] = useState('상태 최신 (동기화 완료)');
+  const [linkSyncStatus, setLinkSyncStatus] = useState('상태 파일 대기');
+  const [catalog, setCatalog] = useState<Newsletter[]>(newsletters);
+
+  const showToast = (msg: string) => setToastMsg(msg);
 
   // Onboarding auto-open trigger
   useEffect(() => {
@@ -149,6 +157,51 @@ export default function App() {
     if (!seen) {
       setOnboardingOpen(true);
     }
+  }, []);
+
+  // Ctrl/Cmd+K → 검색 포커스
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        document.getElementById('find')?.scrollIntoView({ behavior: 'smooth' });
+        searchInputRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  // link-status.json 실제 반영
+  const applyLinkStatusFile = async () => {
+    setLinkSyncStatus('동기화 중…');
+    try {
+      const base = (import.meta as ImportMeta & { env?: { BASE_URL?: string } }).env?.BASE_URL || '/';
+      const res = await fetch(`${base}data/link-status.json`, { cache: 'no-store' });
+      if (!res.ok) throw new Error(String(res.status));
+      const data = await res.json();
+      const bad = new Set(
+        (data.results || [])
+          .filter((r: { status?: string }) => r.status === 'needs-review')
+          .map((r: { id: string }) => r.id)
+      );
+      setCatalog(prev =>
+        prev.map(n => (bad.has(n.id) ? { ...n, status: 'needs-review' as const } : n))
+      );
+      const when = data.checkedAt
+        ? new Date(data.checkedAt).toLocaleString('ko-KR')
+        : new Date().toLocaleTimeString('ko-KR');
+      setLinkSyncStatus(`동기화 완료 · ${when}` + (bad.size ? ` · 확인 필요 ${bad.size}` : ''));
+      showToast(bad.size ? `확인 필요 ${bad.size}건 표시` : '링크 상태 동기화 완료');
+    } catch {
+      setLinkSyncStatus('동기화 실패 (로컬/네트워크) — 새 탭 원문은 가능');
+      showToast('상태 파일 동기화 실패 — 원문 링크는 그대로 사용하세요');
+    }
+  };
+
+  useEffect(() => {
+    applyLinkStatusFile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Theme application
@@ -199,6 +252,140 @@ export default function App() {
       ...prev,
       [id]: stat
     }));
+  };
+
+  const handleBulkStatus = (ids: string[], status: string) => {
+    setPersonalStatus(prev => {
+      const next = { ...prev };
+      ids.forEach(id => { next[id] = status; });
+      return next;
+    });
+    showToast(`${ids.length}개 → ${status}`);
+  };
+
+  const handleClearStatus = (id: string) => {
+    setPersonalStatus(prev => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+    showToast('상태 기록 삭제');
+  };
+
+  const clearDirectoryFilters = () => {
+    setQuery('');
+    setSelectedSourceScope('all');
+    setSelectedDiscipline('전체');
+    setSelectedCategory('전체');
+    setSelectedTopic('전체');
+    setSelectedFrequency('전체');
+    setSelectedOrigin('전체');
+    setSelectedCountry('전체');
+    setSelectedType('전체');
+    setSelectedPersonal('전체');
+    setSortBy('recommended');
+    showToast('필터 초기화');
+  };
+
+  const handleExportSubscriptionCsv = () => {
+    const rows = catalog
+      .filter(n => personalStatus[n.id] || savedIds.has(n.id))
+      .map(n => {
+        const status = personalStatus[n.id] || (savedIds.has(n.id) ? '관심 있음' : '');
+        const cells = [n.name, status, n.category, n.frequency, n.country, n.url, n.type];
+        return cells.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',');
+      });
+    if (!rows.length) {
+      showToast('내보낼 구독 기록이 없습니다');
+      return;
+    }
+    const csv = ['이름,상태,분야,빈도,국가,URL,형식', ...rows].join('\n');
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'letterbox-subscriptions.csv';
+    a.click();
+    showToast('구독 CSV 저장');
+  };
+
+  const handleExportWeekendDigest = () => {
+    const pile = catalog.filter(n => {
+      const s = personalStatus[n.id];
+      return s === '나중에' || s === '구독 중' || (!s && savedIds.has(n.id));
+    });
+    const weekend = pile.filter(n => personalStatus[n.id] === '나중에');
+    const list = weekend.length ? weekend : pile;
+    if (!list.length) {
+      showToast('주말 큐가 비어 있습니다 — 상태를 “나중에”로 표시하세요');
+      return;
+    }
+    const md = [
+      '# 주말 몰아보기 · 오늘의 편지함',
+      '',
+      `생성: ${new Date().toLocaleString('ko-KR')}`,
+      '',
+      '한 주에 쌓아 두고 주말에만 읽는 롤업 목록입니다.',
+      '',
+      ...list.map((n, i) => {
+        const st = personalStatus[n.id] || '관심 있음';
+        return `## ${i + 1}. ${n.name}\n- 상태: ${st}\n- 분야: ${n.category} · ${n.frequency}\n- 링크: ${n.url}\n- 한 줄: ${n.description}\n`;
+      }),
+      '---',
+      '*exported from 오늘의 편지함*'
+    ].join('\n');
+    const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'weekend-digest.md';
+    a.click();
+    showToast(`주말 몰아보기 ${list.length}개 저장`);
+  };
+
+  const handleBackupAll = () => {
+    const payload = {
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      savedIds: [...savedIds],
+      personalStatus,
+      userInterests,
+      prefs,
+      notes,
+      notebooks,
+      gmailSelfEmail,
+      theme,
+      textSize
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `letterbox-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    showToast('전체 백업 JSON 저장');
+  };
+
+  const handleRestoreBackup = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(String(reader.result));
+        if (Array.isArray(data.savedIds)) setSavedIds(new Set(data.savedIds));
+        if (data.personalStatus) setPersonalStatus(data.personalStatus);
+        if (Array.isArray(data.userInterests)) setUserInterests(data.userInterests);
+        if (data.prefs) setPrefs(data.prefs);
+        if (Array.isArray(data.notes)) setNotes(data.notes);
+        if (Array.isArray(data.notebooks)) setNotebooks(data.notebooks);
+        if (typeof data.gmailSelfEmail === 'string') {
+          setGmailSelfEmail(data.gmailSelfEmail);
+          localStorage.setItem('letter-gmail-pref', JSON.stringify({ selfEmail: data.gmailSelfEmail }));
+        }
+        if (data.theme === 'light' || data.theme === 'dark') setTheme(data.theme);
+        if (data.textSize === 'normal' || data.textSize === 'large') setTextSize(data.textSize);
+        showToast('백업 복원 완료');
+      } catch {
+        showToast('백업 파일을 읽을 수 없습니다');
+      }
+    };
+    reader.readAsText(file);
   };
 
   const handleOnboardingClose = (selectedInterests: string[]) => {
@@ -278,7 +465,7 @@ export default function App() {
 
   // Gmail Compose Link Maker
   const formatGmailBody = (note: Note) => {
-    const sourceItem = newsletters.find(n => n.id === note.sourceId);
+    const sourceItem = catalog.find(n => n.id === note.sourceId);
     const dateStr = new Date(note.updatedAt || note.createdAt).toLocaleString('ko-KR');
     
     return [
@@ -341,7 +528,7 @@ export default function App() {
     if (id === 'inbox') return '일반 메모함';
     const nb = notebooks.find(n => n.id === id);
     if (nb) return nb.name;
-    const nl = newsletters.find(item => item.id === id);
+    const nl = catalog.find(item => item.id === id);
     return nl ? nl.name : id;
   };
 
@@ -350,7 +537,7 @@ export default function App() {
     if (!name || !name.trim()) return;
     const newId = `nb_${Date.now().toString(36)}`;
     setNotebooks(prev => [...prev, { id: newId, name: name.trim() }]);
-    alert('새 메모함이 생성되었습니다. 메모 편집기 또는 메모 허브에서 선택할 수 있습니다.');
+    showToast(`메모함 “${name.trim()}” 생성`);
   };
 
   const handleGmailEmailSave = (email: string) => {
@@ -358,13 +545,8 @@ export default function App() {
     localStorage.setItem('letter-gmail-pref', JSON.stringify({ selfEmail: email }));
   };
 
-  // Link validation checking
   const handleRefreshLinkStatus = () => {
-    setLinkSyncStatus('동기화 처리 중...');
-    setTimeout(() => {
-      setLinkSyncStatus(`동기화 완료: ${new Date().toLocaleTimeString('ko-KR')}`);
-      alert('발행사 공개 피드 및 상태 체크 완료!');
-    }, 800);
+    applyLinkStatusFile();
   };
 
   // OPML Export function
@@ -374,11 +556,11 @@ export default function App() {
 
   const handleExportOpml = (mode: 'saved' | 'public') => {
     const source = mode === 'saved'
-      ? newsletters.filter(item => savedIds.has(item.id))
-      : newsletters.filter(item => item.sourceScope === 'public');
+      ? catalog.filter(item => savedIds.has(item.id))
+      : catalog.filter(item => item.sourceScope === 'public');
 
     if (!source.length) {
-      alert(mode === 'saved' ? '저장된 출처가 없습니다. 카드를 “내 목록”에 보관한 뒤 다시 실행해 주세요.' : '공공 출처가 존재하지 않습니다.');
+      showToast(mode === 'saved' ? '저장된 출처가 없습니다' : '공공 출처가 없습니다');
       return;
     }
 
@@ -395,6 +577,7 @@ export default function App() {
     link.href = URL.createObjectURL(blob);
     link.download = mode === 'saved' ? 'letterbox-saved-shelf.opml' : 'letterbox-public-sources.opml';
     link.click();
+    showToast('OPML 저장 완료');
   };
 
   // Dialog triggers
@@ -414,31 +597,25 @@ export default function App() {
     }, 150);
   };
 
-  // Filter Newsletters logic
-  const filteredNewsletters = newsletters.filter(item => {
-    // 1. Search text query
-    const words = `${item.name} ${item.discipline} ${item.category} ${item.description} ${item.interests.join(' ')}`.toLowerCase();
+  // Filter Newsletters logic (catalog includes live link-status overrides)
+  const filteredNewsletters = catalog.filter(item => {
+    const words = `${item.name} ${item.discipline} ${item.category} ${item.description} ${item.interests.join(' ')} ${item.country}`.toLowerCase();
     if (query && !words.includes(query.toLowerCase())) return false;
-
-    // 2. Source Scope (All vs Verified Public)
     if (selectedSourceScope === 'public' && item.sourceScope !== 'public') return false;
-
-    // 3. Filters
     if (selectedDiscipline !== '전체' && item.discipline !== selectedDiscipline) return false;
     if (selectedCategory !== '전체' && item.category !== selectedCategory) return false;
     if (selectedTopic !== '전체' && !item.interests.includes(selectedTopic)) return false;
     if (selectedType !== '전체' && item.type !== selectedType) return false;
     if (selectedCountry !== '전체' && item.country !== selectedCountry) return false;
-
-    // 4. Origin Filter
     if (selectedOrigin !== '전체') {
       if (selectedOrigin === '한국' && item.origin !== '한국') return false;
       if (selectedOrigin === '글로벌' && item.origin !== '글로벌') return false;
     }
-
-    // 5. Frequency Filter
     if (selectedFrequency !== '전체' && item.frequencyGroup !== selectedFrequency) return false;
-
+    if (selectedPersonal !== '전체') {
+      const st = personalStatus[item.id] || (savedIds.has(item.id) ? '관심 있음' : '');
+      if (st !== selectedPersonal) return false;
+    }
     return true;
   });
 
@@ -462,13 +639,22 @@ export default function App() {
     return a.daysSince - b.daysSince;
   });
 
-  // Today's Picks filtering
-  const todayPicks = newsletters
-    .filter(item => item.status === 'alive' && item.daysSince <= 1)
+  // Today's Picks — 선호 빈도 반영
+  const todayPicks = catalog
+    .filter(item => {
+      if (item.status !== 'alive' || item.daysSince > 1) return false;
+      if (prefs.paused) return false;
+      if (prefs.frequency !== 'all' && item.frequencyGroup !== prefs.frequency) return false;
+      return true;
+    })
+    .sort((a, b) => {
+      const am = a.interests.filter(t => userInterests.includes(t)).length;
+      const bm = b.interests.filter(t => userInterests.includes(t)).length;
+      return bm - am || a.daysSince - b.daysSince;
+    })
     .slice(0, 3);
 
-  // Recommendations filtering
-  const recommendedItems = newsletters
+  const recommendedItems = catalog
     .filter(item => {
       if (prefs.paused) return false;
       if (prefs.frequency !== 'all' && item.frequencyGroup !== prefs.frequency) return false;
@@ -477,10 +663,12 @@ export default function App() {
     .sort((a, b) => a.daysSince - b.daysSince)
     .slice(0, 5);
 
-  const savedNewsletters = newsletters.filter(item => savedIds.has(item.id));
+  const savedNewsletters = catalog.filter(item => savedIds.has(item.id));
 
-  const totalActive = newsletters.length;
-  const totalAlive = newsletters.filter(n => n.status === 'alive').length;
+  const totalActive = catalog.length;
+  const totalAlive = catalog.filter(n => n.status === 'alive').length;
+  const totalNeedsReview = catalog.filter(n => n.status === 'needs-review').length;
+  const weekendQueue = Object.values(personalStatus).filter(s => s === '나중에').length;
 
   return (
     <div className="relative min-h-screen text-ink selection:bg-accent-red/20 selection:text-ink">
@@ -494,7 +682,15 @@ export default function App() {
         </a>
 
         <nav className="flex items-center gap-6 md:gap-8 overflow-x-auto max-w-[65%] whitespace-nowrap">
-          <a href="#live" className="text-xs font-bold text-ink no-underline hover:text-accent-red">실시간 작업대</a>
+          <a href="#live" className="text-xs font-bold text-ink no-underline hover:text-accent-red">실시간</a>
+          <a href="#subscriptions" className="text-xs font-bold text-ink no-underline hover:text-accent-red flex items-center gap-1">
+            구독관리
+            {weekendQueue > 0 && (
+              <span className="text-[10px] bg-forest-green/15 text-forest-green px-1.5 py-0.5 font-bold rounded-full">
+                주말{weekendQueue}
+              </span>
+            )}
+          </a>
           <a href="#find" className="text-xs font-bold text-ink no-underline hover:text-accent-red">디렉터리</a>
           <a href="#notes" className="text-xs font-bold text-ink no-underline hover:text-accent-red flex items-center gap-1">
             <span>메모</span>
@@ -577,31 +773,30 @@ export default function App() {
       <section className="bg-ink dark:bg-[#121c18] text-[#f6f1e5] px-6 md:px-12 py-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
           <div className="border-l border-white/20 pl-4 py-1">
-            <span className="block text-[10px] text-[#5a6b62] dark:text-[#b8c9bf] uppercase tracking-wider mb-0.5">최종 상태 점검</span>
-            <strong className="text-sm font-semibold">2026. 07. 15</strong>
+            <span className="block text-[10px] text-[#b8c9bf] uppercase tracking-wider mb-0.5">상태 동기화</span>
+            <strong className="text-sm font-semibold text-white">{linkSyncStatus}</strong>
           </div>
           <div className="border-l border-white/20 pl-4 py-1">
-            <span className="block text-[10px] text-[#5a6b62] dark:text-[#b8c9bf] uppercase tracking-wider mb-0.5">오늘 발행 도착</span>
+            <span className="block text-[10px] text-[#b8c9bf] uppercase tracking-wider mb-0.5">오늘 발행 감각</span>
             <strong className="text-sm font-semibold text-[#9bcfb3]">
-              {newsletters.filter(n => n.daysSince === 0).length}개 채널
+              {catalog.filter(n => n.daysSince === 0).length}개 채널
             </strong>
           </div>
           <div className="border-l border-white/20 pl-4 py-1">
-            <span className="block text-[10px] text-[#5a6b62] dark:text-[#b8c9bf] uppercase tracking-wider mb-0.5">상태 점검 요함</span>
+            <span className="block text-[10px] text-[#b8c9bf] uppercase tracking-wider mb-0.5">확인 필요 · 주말 큐</span>
             <strong className="text-sm font-semibold text-accent-red">
-              {newsletters.filter(n => n.status !== 'alive').length}개 보류
+              {totalNeedsReview} · 주말 {weekendQueue}
             </strong>
           </div>
-          <div className="text-xs text-[#5a6b62] dark:text-[#b8c9bf] leading-relaxed">
-            상태 갱신은 공개 피드 및 사이트 운영 공지를 준수하여 일 단위 점검 처리됩니다. 
-            원문 확인과 메모는 실시간 작업대를 활용하세요.
+          <div className="text-xs text-[#d0ddd6] leading-relaxed">
+            Ctrl+K 검색 · 구독관리 일괄 정리 · 주말 몰아보기 MD · 백업 JSON
           </div>
         </div>
       </section>
 
       {/* --- LIVE DESK --- */}
       <LiveDesk
-        newsletters={newsletters}
+        newsletters={catalog}
         activeSourceId={liveSourceId}
         onSelectSource={(id) => {
           setLiveSourceId(id);
@@ -612,6 +807,24 @@ export default function App() {
         getNotesForSource={(sourceId) => notes.filter(n => n.sourceId === sourceId)}
         onRefreshLinkStatus={handleRefreshLinkStatus}
         linkSyncStatus={linkSyncStatus}
+      />
+
+      {/* --- SUBSCRIPTION DESK (X demand: one dashboard) --- */}
+      <SubscriptionDesk
+        newsletters={catalog}
+        personalStatus={personalStatus}
+        savedIds={savedIds}
+        onStatusChange={handleStatusChange}
+        onBulkStatus={handleBulkStatus}
+        onToggleSave={handleToggleSave}
+        onOpenLive={(id) => {
+          setLiveSourceId(id);
+          localStorage.setItem('letter-live-source', id);
+          document.getElementById('live')?.scrollIntoView({ behavior: 'smooth' });
+        }}
+        onExportCsv={handleExportSubscriptionCsv}
+        onExportDigest={handleExportWeekendDigest}
+        onClearStatus={handleClearStatus}
       />
 
       {/* --- TODAY'S PICKS (3 Items) --- */}
@@ -711,12 +924,37 @@ export default function App() {
             <div className="relative border-b border-ink/40 dark:border-white/40 focus-within:border-accent-red transition duration-200">
               <Search className="absolute left-0 top-3 h-5 w-5 text-[#5a6b62] dark:text-[#b8c9bf]" />
               <input
+                ref={searchInputRef}
                 type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="제목, 분류, 세부 키워드, 운영 목적을 직접 찾아보세요..."
+                placeholder="검색 (Ctrl+K) · 제목, 분류, 키워드…"
                 className="w-full pl-8 py-3 text-sm md:text-base text-ink dark:text-white bg-transparent focus:outline-none"
               />
+            </div>
+
+            {/* My subscription status filter */}
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-[10px] font-bold text-[#3d4f46] dark:text-[#c5d4cb] uppercase tracking-widest w-[80px] text-left">
+                내 상태
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {['전체', '구독 중', '나중에', '관심 있음', '해지함'].map(s => (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => setSelectedPersonal(s)}
+                    className={`px-3 py-1 text-xs border rounded-full transition duration-200 cursor-pointer
+                      ${selectedPersonal === s
+                        ? 'bg-ink border-ink text-white dark:bg-white dark:text-ink'
+                        : 'border-line-alpha text-ink hover:border-ink dark:hover:border-white'
+                      }
+                    `}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Source Scope Selector */}
@@ -895,19 +1133,10 @@ export default function App() {
             <span>
               총 <strong className="text-accent-red">{sortedFilteredNewsletters.length}</strong>개의 편지 지도 검색됨
             </span>
-            {(query || selectedSourceScope !== 'all' || selectedCategory !== '전체' || selectedDiscipline !== '전체' || selectedTopic !== '전체' || selectedFrequency !== '전체' || selectedOrigin !== '전체' || selectedType !== '전체' || selectedCountry !== '전체') && (
+            {(query || selectedSourceScope !== 'all' || selectedCategory !== '전체' || selectedDiscipline !== '전체' || selectedTopic !== '전체' || selectedFrequency !== '전체' || selectedOrigin !== '전체' || selectedType !== '전체' || selectedCountry !== '전체' || selectedPersonal !== '전체') && (
               <button
-                onClick={() => {
-                  setQuery('');
-                  setSelectedSourceScope('all');
-                  setSelectedDiscipline('전체');
-                  setSelectedCategory('전체');
-                  setSelectedTopic('전체');
-                  setSelectedFrequency('전체');
-                  setSelectedOrigin('전체');
-                  setSelectedCountry('전체');
-                  setSelectedType('전체');
-                }}
+                type="button"
+                onClick={clearDirectoryFilters}
                 className="text-xs text-forest-green hover:underline cursor-pointer bg-transparent border-0 font-bold"
               >
                 필터 조건 초기화 ↺
@@ -1031,20 +1260,45 @@ export default function App() {
       <ToolsSection />
 
       {/* --- FOOTER --- */}
-      <footer className="py-12 text-center text-xs text-[#3d4f46] dark:text-[#c5d4cb] bg-paper dark:bg-[#121c18] border-t border-line-alpha flex flex-col items-center justify-center gap-2">
+      <footer className="py-12 text-center text-xs text-[#3d4f46] dark:text-[#c5d4cb] bg-paper dark:bg-[#121c18] border-t border-line-alpha flex flex-col items-center justify-center gap-3">
         <p>오늘의 편지함 · 개인 정보 뉴스레터 디렉터리 및 메모작업 공간</p>
-        <p className="text-[10px] text-[#5a6b62] dark:text-[#b8c9bf]">
-          모든 뉴스레터 및 기사의 저작권은 각 원천 발행 기관 및 발행사에 귀속됩니다. 원문을 무단 전재하지 않습니다.
+        <p className="text-[10px] text-[#5a6b62] dark:text-[#b8c9bf] max-w-lg">
+          모든 뉴스레터 및 기사의 저작권은 각 원천 발행 기관에 귀속됩니다. 원문 무단 전재 없음. 데이터는 이 브라우저에만 저장됩니다.
         </p>
-        <button
-          onClick={() => {
-            window.open('https://github.com/presentjinho/newsletter-hub/issues/new/choose', '_blank', 'noopener');
-          }}
-          className="text-xs text-forest-green hover:underline cursor-pointer bg-transparent border-0 font-semibold mt-2"
-        >
-          제보 및 피드백 제안하기
-        </button>
+        <div className="flex flex-wrap gap-3 justify-center items-center">
+          <button
+            type="button"
+            onClick={handleBackupAll}
+            className="text-xs text-forest-green dark:text-[#8fd9ae] hover:underline cursor-pointer bg-transparent border-0 font-semibold"
+          >
+            전체 백업 JSON
+          </button>
+          <label className="text-xs text-forest-green dark:text-[#8fd9ae] hover:underline cursor-pointer font-semibold">
+            백업 복원
+            <input
+              type="file"
+              accept="application/json,.json"
+              className="hidden"
+              onChange={e => {
+                const f = e.target.files?.[0];
+                if (f) handleRestoreBackup(f);
+                e.target.value = '';
+              }}
+            />
+          </label>
+          <button
+            type="button"
+            onClick={() => {
+              window.open('https://github.com/presentjinho/newsletter-hub/issues/new/choose', '_blank', 'noopener');
+            }}
+            className="text-xs text-forest-green dark:text-[#8fd9ae] hover:underline cursor-pointer bg-transparent border-0 font-semibold"
+          >
+            제보 · 피드백
+          </button>
+        </div>
       </footer>
+
+      <Toast message={toastMsg} onDone={() => setToastMsg('')} />
 
       {/* --- DIALOG COMPONENT MOUNTS --- */}
       
@@ -1070,7 +1324,7 @@ export default function App() {
         noteId={noteEditorNoteId}
         notes={notes}
         notebooks={notebooks}
-        newsletters={newsletters}
+        newsletters={catalog}
         onSaveNote={handleSaveNote}
         onCreateNote={handleCreateNote}
         onDeleteNote={handleDeleteNote}
