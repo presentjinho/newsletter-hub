@@ -383,7 +383,7 @@ export default function App() {
           localStorage.setItem('letter-gmail-pref', JSON.stringify({ selfEmail: data.gmailSelfEmail }));
         }
         if (data.theme === 'light' || data.theme === 'dark') setTheme(data.theme);
-        if (data.textSize === 'normal' || data.textSize === 'large') setTextSize(data.textSize);
+        if (data.textSize === 'normal' || data.textSize === 'large' || data.textSize === 'xl') setTextSize(data.textSize);
         showToast('백업 복원 완료');
       } catch {
         showToast('백업 파일을 읽을 수 없습니다');
