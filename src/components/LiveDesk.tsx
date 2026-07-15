@@ -22,8 +22,11 @@ import {
   cleanReaderText,
   likelyNeedsKorean,
   translateToKorean,
+  googleTranslateTextUrl,
+  googleTranslatePageUrl,
   type CleanedReader
 } from '../readerClean';
+import { isInfoSource } from '../data';
 
 interface LiveDeskProps {
   newsletters: Newsletter[];
@@ -118,7 +121,9 @@ export default function LiveDesk({
     localStorage.setItem('letter-reader-zoom', String(zoom));
   }, [zoom]);
 
-  const activeNewsletter = newsletters.find(n => n.id === activeSourceId);
+  // 이메일 뉴스레터는 정보 리더 대상에서 제외
+  const infoList = useMemo(() => newsletters.filter(isInfoSource), [newsletters]);
+  const activeNewsletter = infoList.find(n => n.id === activeSourceId);
   const sourceNotes = activeSourceId ? getNotesForSource(activeSourceId) : [];
   const siteOf = (n: Newsletter) => n.siteUrl || n.url;
   const subOf = (n: Newsletter) => n.subscribeUrl;
@@ -201,13 +206,29 @@ export default function LiveDesk({
     setKoError('');
     setKoProgress(0);
     try {
-      const t = await translateToKorean(cleaned.body, ctrl.signal, setKoProgress);
-      setKoText(t);
+      const result = await translateToKorean(cleaned.body, ctrl.signal, setKoProgress);
+      setKoText(result.text);
       setShowKo(true);
-    } catch (e) {
-      if ((e as Error).name !== 'AbortError') {
-        setKoError('자동 번역에 실패했습니다. 아래 “번역 탭”으로 원문 페이지를 열어 주세요.');
+      if (result.partial) {
+        setKoError('일부만 번역되었습니다. 나머지는 번역 탭을 이용하세요.');
       }
+    } catch (e) {
+      if ((e as Error).name === 'AbortError') return;
+      const code = String((e as Error).message || e);
+      // 지역 차단·전체 실패 → 에러 문구를 본문에 넣지 않고 Google 번역 탭으로
+      if (code === 'REGION_BLOCKED' || code === 'TRANSLATE_FAILED') {
+        setKoError(
+          '이 지역에서 앱 안 번역 API가 막혀 있습니다. Google 번역 탭을 열었습니다. (본문은 원문으로 유지)'
+        );
+        window.open(googleTranslateTextUrl(cleaned.body), '_blank', 'noopener,noreferrer');
+        if (activeNewsletter) {
+          window.open(googleTranslatePageUrl(siteOf(activeNewsletter)), '_blank', 'noopener,noreferrer');
+        }
+      } else {
+        setKoError('자동 번역에 실패했습니다. “번역 탭”으로 원문 페이지를 열어 주세요.');
+        window.open(googleTranslateTextUrl(cleaned.body), '_blank', 'noopener,noreferrer');
+      }
+      setShowKo(false);
     } finally {
       setKoLoading(false);
     }
@@ -223,8 +244,7 @@ export default function LiveDesk({
   };
   const openTranslate = () => {
     if (!activeNewsletter) return;
-    const u = `https://translate.google.com/translate?sl=auto&tl=ko&u=${encodeURIComponent(siteOf(activeNewsletter))}`;
-    window.open(u, '_blank', 'noopener,noreferrer');
+    window.open(googleTranslatePageUrl(siteOf(activeNewsletter)), '_blank', 'noopener,noreferrer');
   };
 
   const zoomIn = () => setZoom(z => Math.min(200, z + 10));
@@ -260,12 +280,15 @@ export default function LiveDesk({
                 className="w-full bg-black/40 border border-white/25 text-[var(--live-fg)] p-3 text-sm focus:outline-none focus:border-[#a8e0c0] rounded-sm"
               >
                 <option value="">출처를 선택하세요...</option>
-                {newsletters.map(n => (
+                {infoList.map(n => (
                   <option key={n.id} value={n.id} className="bg-[var(--live-bg)] text-[var(--live-fg)]">
-                    {n.name} · {n.category}
+                    {n.name} · {n.category} · {n.country}
                   </option>
                 ))}
               </select>
+              <p className="text-[10px] text-[var(--live-muted)]">
+                이메일 뉴스레터는 제외 · 사이트·매거진·공공 정보만 (구독은 디렉터리 카드의 구독 페이지)
+              </p>
             </div>
 
             <div className="flex flex-wrap gap-2 items-center">

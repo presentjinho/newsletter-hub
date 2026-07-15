@@ -244,6 +244,14 @@ export const disciplinesList = ['전체', ...new Set(newsletters.map(n => n.disc
 export const industryList = industryListSeed.length > 1
   ? industryListSeed
   : ['전체', ...new Set(newsletters.map(n => n.industry).filter(Boolean) as string[])];
+
+/** 정보 매체: 사이트·매거진·공공 (이메일 뉴스레터 제외) — 첫 화면·리더용 */
+export function isInfoSource(n: Newsletter): boolean {
+  if (n.type === 'newsletter') return false;
+  return n.type === 'site' || n.type === 'magazine' || n.sourceScope === 'public';
+}
+
+export const infoSources: Newsletter[] = newsletters.filter(isInfoSource);
 export const unsubscribeText: Record<string, string> = {
   newsletter: '해지 · 원문 메일 하단 수신거부 링크 또는 계정 설정',
   magazine: '해지 · 구독 관리 페이지 또는 메일 하단 링크',

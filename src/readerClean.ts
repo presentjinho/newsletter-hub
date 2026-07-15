@@ -441,24 +441,102 @@ export function likelyNeedsKorean(text: string, languageHint?: string): boolean 
   return hangul < latin * 0.15;
 }
 
-async function translateChunk(text: string, signal: AbortSignal): Promise<string> {
-  const q = encodeURIComponent(text);
-  const url = `https://api.mymemory.translated.net/get?q=${q}&langpair=autodetect|ko`;
-  const res = await fetch(url, { signal });
-  if (!res.ok) throw new Error(`translate ${res.status}`);
-  const data = await res.json();
-  const out = data?.responseData?.translatedText;
-  if (!out || typeof out !== 'string') throw new Error('empty translation');
-  if (/MYMEMORY WARNING/i.test(out)) throw new Error('quota');
-  return out;
+const REGION_BLOCK_RE =
+  /not available in your region|isn't available in your region|isn.?t available in your region|service isn.?t available|quota|MYMEMORY WARNING|PLEASE SELECT TWO DISTINCT|INVALID LANGUAGE|TOO MANY REQUESTS|RATE LIMIT|IP.*blocked|forbidden|access denied/i;
+
+function isBadTranslation(out: string, _input: string): boolean {
+  if (!out || !out.trim()) return true;
+  if (REGION_BLOCK_RE.test(out)) return true;
+  if (out.length < 40 && /region|available|error|invalid/i.test(out)) return true;
+  return false;
 }
+
+async function translateChunk(text: string, signal: AbortSignal): Promise<string> {
+  const attempts: Array<() => Promise<string>> = [
+    async () => {
+      const hosts = [
+        'https://lingva.ml',
+        'https://lingva.thedaviddelta.com',
+        'https://translate.plausibility.cloud'
+      ];
+      for (const host of hosts) {
+        const url = `${host}/api/v1/auto/ko/${encodeURIComponent(text)}`;
+        const res = await fetch(url, { signal });
+        if (!res.ok) continue;
+        const data = await res.json();
+        const out = data?.translation;
+        if (typeof out === 'string' && !isBadTranslation(out, text)) return out;
+      }
+      throw new Error('lingva fail');
+    },
+    async () => {
+      const endpoints = [
+        'https://libretranslate.com/translate',
+        'https://translate.argosopentech.com/translate'
+      ];
+      for (const endpoint of endpoints) {
+        try {
+          const res = await fetch(endpoint, {
+            method: 'POST',
+            signal,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ q: text, source: 'auto', target: 'ko', format: 'text' })
+          });
+          if (!res.ok) continue;
+          const data = await res.json();
+          const out = data?.translatedText;
+          if (typeof out === 'string' && !isBadTranslation(out, text)) return out;
+        } catch {
+          /* next */
+        }
+      }
+      throw new Error('libre fail');
+    },
+    async () => {
+      const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=autodetect|ko`;
+      const res = await fetch(url, { signal });
+      if (!res.ok) throw new Error(`mymemory ${res.status}`);
+      const data = await res.json();
+      const out = data?.responseData?.translatedText;
+      if (typeof out !== 'string' || isBadTranslation(out, text)) {
+        throw new Error(typeof out === 'string' ? out : 'mymemory bad');
+      }
+      return out;
+    }
+  ];
+
+  let lastErr: Error | null = null;
+  for (const run of attempts) {
+    try {
+      return await run();
+    } catch (e) {
+      lastErr = e as Error;
+      if (signal.aborted) throw e;
+    }
+  }
+  throw lastErr || new Error('all translators failed');
+}
+
+export function googleTranslateTextUrl(text: string): string {
+  const q = text.slice(0, 4500);
+  return `https://translate.google.com/?sl=auto&tl=ko&text=${encodeURIComponent(q)}&op=translate`;
+}
+
+export function googleTranslatePageUrl(pageUrl: string): string {
+  return `https://translate.google.com/translate?sl=auto&tl=ko&u=${encodeURIComponent(pageUrl)}`;
+}
+
+export type TranslateResult = {
+  text: string;
+  partial: boolean;
+};
 
 export async function translateToKorean(
   text: string,
   signal: AbortSignal,
   onProgress?: (pct: number) => void
-): Promise<string> {
-  const max = 420;
+): Promise<TranslateResult> {
+  const max = 400;
   const chunks: string[] = [];
   let rest = text.trim();
   while (rest.length) {
@@ -473,20 +551,33 @@ export async function translateToKorean(
     rest = rest.slice(cut).trim();
   }
 
-  const limited = chunks.slice(0, 24);
+  const limited = chunks.slice(0, 20);
   const out: string[] = [];
+  let success = 0;
+  let regionBlocked = 0;
+
   for (let i = 0; i < limited.length; i++) {
     if (signal.aborted) throw new DOMException('Aborted', 'AbortError');
     try {
-      out.push(await translateChunk(limited[i], signal));
-    } catch {
-      out.push(limited[i]);
+      const t = await translateChunk(limited[i], signal);
+      if (isBadTranslation(t, limited[i])) regionBlocked += 1;
+      else {
+        out.push(t);
+        success += 1;
+      }
+    } catch (e) {
+      const msg = String((e as Error).message || e);
+      if (REGION_BLOCK_RE.test(msg)) regionBlocked += 1;
     }
     onProgress?.(Math.round(((i + 1) / limited.length) * 100));
-    await new Promise(r => setTimeout(r, 120));
+    await new Promise(r => setTimeout(r, 80));
+  }
+
+  if (success === 0) {
+    throw new Error(regionBlocked > 0 ? 'REGION_BLOCKED' : 'TRANSLATE_FAILED');
   }
   if (chunks.length > limited.length) {
-    out.push('\n…(이하 생략 — 전문은 새 탭 원문 또는 번역 탭)');
+    out.push('\n…(이하 생략 — 전문은 사이트 또는 번역 탭에서 확인)');
   }
-  return out.join('\n\n');
+  return { text: out.join('\n\n'), partial: success < limited.length };
 }

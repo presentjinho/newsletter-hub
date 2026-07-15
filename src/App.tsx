@@ -28,7 +28,8 @@ import {
   disciplinesList,
   industryList,
   readingTimes,
-  valuePromises
+  valuePromises,
+  isInfoSource
 } from './data';
 
 // Component imports
@@ -53,6 +54,8 @@ export default function App() {
   const [selectedOrigin, setSelectedOrigin] = useState('전체');
   const [selectedCountry, setSelectedCountry] = useState('전체');
   const [selectedType, setSelectedType] = useState('전체');
+  /** 첫 화면 기본: 정보 매체만 (이메일 뉴스레터 제외) */
+  const [mediaKind, setMediaKind] = useState<'info' | 'newsletter' | 'all'>('info');
   const [selectedPersonal, setSelectedPersonal] = useState('전체');
   const [selectedIndustry, setSelectedIndustry] = useState('전체');
   const [linkMode, setLinkMode] = useState<'all' | 'has-subscribe' | 'site-only'>('all');
@@ -289,12 +292,22 @@ export default function App() {
     setSelectedOrigin('전체');
     setSelectedCountry('전체');
     setSelectedType('전체');
+    setMediaKind('info');
     setSelectedPersonal('전체');
     setSelectedIndustry('전체');
     setLinkMode('all');
     setSortBy('recommended');
-    showToast('필터 초기화');
+    showToast('필터 초기화 · 정보 매체 보기');
   };
+
+  // 리더에 뉴스레터가 선택돼 있으면 해제
+  useEffect(() => {
+    const cur = catalog.find(n => n.id === liveSourceId);
+    if (cur && !isInfoSource(cur)) {
+      setLiveSourceId('');
+      localStorage.removeItem('letter-live-source');
+    }
+  }, [catalog, liveSourceId]);
 
   const handleExportSubscriptionCsv = () => {
     const rows = catalog
@@ -617,6 +630,8 @@ export default function App() {
     if (selectedCategory !== '전체' && item.category !== selectedCategory) return false;
     if (selectedTopic !== '전체' && !item.interests.includes(selectedTopic)) return false;
     if (selectedType !== '전체' && item.type !== selectedType) return false;
+    if (mediaKind === 'info' && !isInfoSource(item)) return false;
+    if (mediaKind === 'newsletter' && item.type !== 'newsletter') return false;
     if (selectedCountry !== '전체' && item.country !== selectedCountry) return false;
     if (selectedOrigin !== '전체') {
       if (selectedOrigin === '한국' && item.origin !== '한국') return false;
@@ -653,29 +668,50 @@ export default function App() {
     return a.daysSince - b.daysSince;
   });
 
-  // Today's Picks — 선호 빈도 반영
-  const todayPicks = catalog
-    .filter(item => {
-      if (item.status !== 'alive' || item.daysSince > 1) return false;
+  // 첫 화면: 정보 매체만 (사이트·매거진·공공) — 이메일 뉴스레터 제외
+  const infoCatalog = catalog.filter(isInfoSource);
+
+  // Today's Picks — 정보 매체 다양성 (국가·산업 분산)
+  const todayPicks = (() => {
+    const pool = infoCatalog.filter(item => {
+      if (item.status === 'needs-review') return false;
       if (prefs.paused) return false;
-      if (prefs.frequency !== 'all' && item.frequencyGroup !== prefs.frequency) return false;
       return true;
-    })
-    .sort((a, b) => {
+    });
+    const scored = [...pool].sort((a, b) => {
       const am = a.interests.filter(t => userInterests.includes(t)).length;
       const bm = b.interests.filter(t => userInterests.includes(t)).length;
-      return bm - am || a.daysSince - b.daysSince;
-    })
-    .slice(0, 3);
+      const as = (a.stability === 'high' ? 2 : 0) + (a.sourceScope === 'public' ? 1 : 0) + (a.industry ? 1 : 0);
+      const bs = (b.stability === 'high' ? 2 : 0) + (b.sourceScope === 'public' ? 1 : 0) + (b.industry ? 1 : 0);
+      return bm - am || bs - as || a.daysSince - b.daysSince;
+    });
+    // 국가 중복 줄여 다양하게 3개
+    const picked: typeof scored = [];
+    const usedCountry = new Set<string>();
+    for (const item of scored) {
+      if (picked.length >= 3) break;
+      if (usedCountry.has(item.country) && picked.length < 3 && scored.length > 5) continue;
+      picked.push(item);
+      usedCountry.add(item.country);
+    }
+    if (picked.length < 3) {
+      for (const item of scored) {
+        if (picked.length >= 3) break;
+        if (!picked.includes(item)) picked.push(item);
+      }
+    }
+    return picked.slice(0, 3);
+  })();
 
-  const recommendedItems = catalog
+  const recommendedItems = infoCatalog
     .filter(item => {
       if (prefs.paused) return false;
       if (prefs.frequency !== 'all' && item.frequencyGroup !== prefs.frequency) return false;
+      if (userInterests.length === 0) return item.stability === 'high' || !!item.industry || item.sourceScope === 'public';
       return item.interests.some(tag => userInterests.includes(tag));
     })
     .sort((a, b) => a.daysSince - b.daysSince)
-    .slice(0, 5);
+    .slice(0, 6);
 
   const savedNewsletters = catalog.filter(item => savedIds.has(item.id));
 
@@ -950,8 +986,36 @@ export default function App() {
               />
             </div>
 
-            {/* My subscription status filter */}
+            {/* 정보 vs 뉴스레터 — 기본 정보 매체 */}
             <div className="flex flex-wrap items-center gap-2">
+              <span className="text-[10px] font-bold text-secondary uppercase tracking-widest w-[80px] text-left">
+                매체 종류
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {([
+                  ['info', '정보 매체 (기본)'],
+                  ['newsletter', '이메일 뉴스레터만'],
+                  ['all', '전부']
+                ] as const).map(([value, label]) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => setMediaKind(value)}
+                    className={`px-3 py-1 text-xs border rounded-full transition duration-200 cursor-pointer
+                      ${mediaKind === value
+                        ? 'chip-active border'
+                        : 'border-line-alpha text-ink hover:border-ink dark:hover:border-white'
+                      }
+                    `}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* My subscription status filter */}
+            <div className="flex flex-wrap items-center gap-2 border-t border-line-alpha/40 pt-3">
               <span className="text-[10px] font-bold text-secondary uppercase tracking-widest w-[80px] text-left">
                 내 상태
               </span>
@@ -1200,7 +1264,7 @@ export default function App() {
             <span>
               총 <strong className="text-accent-red">{sortedFilteredNewsletters.length}</strong>개의 편지 지도 검색됨
             </span>
-            {(query || selectedSourceScope !== 'all' || selectedCategory !== '전체' || selectedDiscipline !== '전체' || selectedTopic !== '전체' || selectedFrequency !== '전체' || selectedOrigin !== '전체' || selectedType !== '전체' || selectedCountry !== '전체' || selectedPersonal !== '전체' || selectedIndustry !== '전체' || linkMode !== 'all') && (
+            {(query || selectedSourceScope !== 'all' || selectedCategory !== '전체' || selectedDiscipline !== '전체' || selectedTopic !== '전체' || selectedFrequency !== '전체' || selectedOrigin !== '전체' || selectedType !== '전체' || selectedCountry !== '전체' || selectedPersonal !== '전체' || selectedIndustry !== '전체' || linkMode !== 'all' || mediaKind !== 'info') && (
               <button
                 type="button"
                 onClick={clearDirectoryFilters}
