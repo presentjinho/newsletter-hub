@@ -1,6 +1,6 @@
 {
-  "checkedAt": "2026-07-15T03:10:47.438Z",
-  "count": 34,
+  "checkedAt": "2026-07-15T03:18:01.469Z",
+  "count": 54,
   "results": [
     {
       "id": "newneek",
@@ -201,6 +201,126 @@
     {
       "id": "paulg",
       "url": "https://x.com/paulg",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "booding",
+      "url": "https://www.booding.co/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "maeburi",
+      "url": "https://page.stibee.com/subscriptions/110950",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "surfit",
+      "url": "https://www.surfit.io/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "careet",
+      "url": "https://www.careet.net/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "goguma-farm",
+      "url": "https://gogumafarm.kr/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "designdb",
+      "url": "https://www.designdb.com/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "sciencetimes",
+      "url": "https://www.sciencetimes.co.kr/main",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "gmlawcat",
+      "url": "https://gmlawcat.stibee.com/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "gamemeca",
+      "url": "https://www.gamemeca.com/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "newstravel",
+      "url": "https://www.newstravel.co.kr/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "kinolights",
+      "url": "https://www.kinolights.com/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "esg-economy",
+      "url": "https://www.esgeconomy.com/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "dallem",
+      "url": "https://dallem.stibee.com/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "munhak-newsletter",
+      "url": "https://munhak.com/newsletter",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "nature",
+      "url": "https://www.nature.com/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "hubermanlab",
+      "url": "https://x.com/hubermanlab",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "nomadicmatt",
+      "url": "https://www.nomadicmatt.com/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "ign",
+      "url": "https://www.ign.com/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "rogerebert",
+      "url": "https://www.rogerebert.com/",
+      "status": "reachable",
+      "httpStatus": 403
+    },
+    {
+      "id": "yaleclimate",
+      "url": "https://yaleclimateconnections.org/",
       "status": "reachable",
       "httpStatus": 200
     }
