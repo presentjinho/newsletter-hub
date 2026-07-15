@@ -1,6 +1,6 @@
 {
-  "checkedAt": "2026-07-15T03:18:01.469Z",
-  "count": 54,
+  "checkedAt": "2026-07-15T03:30:13.647Z",
+  "count": 61,
   "results": [
     {
       "id": "newneek",
@@ -151,60 +151,6 @@
       "httpStatus": 200
     },
     {
-      "id": "karpathy",
-      "url": "https://x.com/karpathy",
-      "status": "reachable",
-      "httpStatus": 200
-    },
-    {
-      "id": "sama",
-      "url": "https://x.com/sama",
-      "status": "reachable",
-      "httpStatus": 200
-    },
-    {
-      "id": "anthropic-x",
-      "url": "https://x.com/AnthropicAI",
-      "status": "reachable",
-      "httpStatus": 200
-    },
-    {
-      "id": "openai-x",
-      "url": "https://x.com/OpenAI",
-      "status": "reachable",
-      "httpStatus": 200
-    },
-    {
-      "id": "simonw",
-      "url": "https://x.com/simonw",
-      "status": "reachable",
-      "httpStatus": 200
-    },
-    {
-      "id": "charliebilello",
-      "url": "https://x.com/charliebilello",
-      "status": "reachable",
-      "httpStatus": 200
-    },
-    {
-      "id": "zerohedge",
-      "url": "https://x.com/zerohedge",
-      "status": "reachable",
-      "httpStatus": 200
-    },
-    {
-      "id": "naval",
-      "url": "https://x.com/naval",
-      "status": "reachable",
-      "httpStatus": 200
-    },
-    {
-      "id": "paulg",
-      "url": "https://x.com/paulg",
-      "status": "reachable",
-      "httpStatus": 200
-    },
-    {
       "id": "booding",
       "url": "https://www.booding.co/",
       "status": "reachable",
@@ -295,12 +241,6 @@
       "httpStatus": 200
     },
     {
-      "id": "hubermanlab",
-      "url": "https://x.com/hubermanlab",
-      "status": "reachable",
-      "httpStatus": 200
-    },
-    {
       "id": "nomadicmatt",
       "url": "https://www.nomadicmatt.com/",
       "status": "reachable",
@@ -321,6 +261,108 @@
     {
       "id": "yaleclimate",
       "url": "https://yaleclimateconnections.org/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "foreign-affairs",
+      "url": "https://www.foreignaffairs.com/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "petapixel",
+      "url": "https://petapixel.com/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "foodbank",
+      "url": "https://www.foodbank.co.kr/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "hrinsight",
+      "url": "https://www.hrinsight.co.kr/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "joseilbo",
+      "url": "https://joseilbo.com/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "ikpnews",
+      "url": "https://www.ikpnews.net/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "platum",
+      "url": "https://platum.kr/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "dailyvet",
+      "url": "https://www.dailyvet.co.kr/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "ibabynews",
+      "url": "https://www.ibabynews.com/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "motorgraph",
+      "url": "https://www.motorgraph.com/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "fashionbiz",
+      "url": "https://fashionbiz.co.kr/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "medigatenews",
+      "url": "https://www.medigatenews.com/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "irobotnews",
+      "url": "https://www.irobotnews.com/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "thelec",
+      "url": "https://www.thelec.kr/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "tokenpost",
+      "url": "https://www.tokenpost.kr/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "osen",
+      "url": "https://www.osen.co.kr/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "eduinnews",
+      "url": "https://www.eduinnews.co.kr/",
       "status": "reachable",
       "httpStatus": 200
     }
