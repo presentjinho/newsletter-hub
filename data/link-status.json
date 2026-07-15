@@ -1,6 +1,6 @@
 {
-  "checkedAt": "2026-07-15T02:58:33.955Z",
-  "count": 18,
+  "checkedAt": "2026-07-15T03:10:47.438Z",
+  "count": 34,
   "results": [
     {
       "id": "newneek",
@@ -58,7 +58,7 @@
       "id": "morning-brew",
       "url": "https://www.morningbrew.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "tldr",
@@ -105,6 +105,102 @@
     {
       "id": "hbr-tip",
       "url": "https://hbr.org/email-newsletters",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "folin",
+      "url": "https://folin.co",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "yozm-it",
+      "url": "https://yozm.wishket.com/magazine/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "disquiet",
+      "url": "https://disquiet.io/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "eoplanet",
+      "url": "https://eopla.net/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "wired",
+      "url": "https://www.wired.com/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "the-atlantic",
+      "url": "https://www.theatlantic.com/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "mit-tech-review",
+      "url": "https://www.technologyreview.com/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "karpathy",
+      "url": "https://x.com/karpathy",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "sama",
+      "url": "https://x.com/sama",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "anthropic-x",
+      "url": "https://x.com/AnthropicAI",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "openai-x",
+      "url": "https://x.com/OpenAI",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "simonw",
+      "url": "https://x.com/simonw",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "charliebilello",
+      "url": "https://x.com/charliebilello",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "zerohedge",
+      "url": "https://x.com/zerohedge",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "naval",
+      "url": "https://x.com/naval",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "paulg",
+      "url": "https://x.com/paulg",
       "status": "reachable",
       "httpStatus": 200
     }

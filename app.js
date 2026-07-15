@@ -29,39 +29,67 @@ newsletters.push(
   { id:'hbr-tip', name:'HBR Management Tip', category:'리더십', frequency:'평일', frequencyGroup:'daily', description:'일을 더 잘하기 위한 짧고 실용적인 관리·리더십 팁을 전하는 데일리.', url:'https://hbr.org/email-newsletters', daysSince:0, typical:'평일', status:'alive', interests:['커리어','리더십','자기계발'], trust:['공식 구독 링크 확인','글로벌 인기'], origin:'글로벌', language:'영어 · 소개 한국어' }
 );
 
-const globalCountries = { 'morning-brew':'미국', 'tldr':'미국', 'rundown-ai':'미국', 'the-hustle':'미국', 'stratechery':'미국', 'the-browser':'영국', 'dense-discovery':'호주', 'three-two-one':'미국', 'hbr-tip':'미국' };
+newsletters.push(
+  { id:'folin', name:'폴인', category:'스타트업', frequency:'주 2회', frequencyGroup:'weekly', description:'스타트업·AI·투자 이슈를 깊이 있게 풀어주는 지식 콘텐츠 플랫폼.', url:'https://folin.co', daysSince:1, typical:'주 2회', status:'alive', interests:['AI','스타트업','재테크'], trust:['공식 구독 링크 확인','유료 포함'], origin:'한국', language:'한국어', country:'대한민국', type:'magazine' },
+  { id:'yozm-it', name:'요즘IT', category:'테크', frequency:'매일', frequencyGroup:'daily', description:'개발·디자인·기획 실무자가 쓰는 글을 모은 IT 매거진.', url:'https://yozm.wishket.com/magazine/', daysSince:0, typical:'매일', status:'alive', interests:['개발','디자인','커리어'], trust:['공식 구독 링크 확인','무료'], origin:'한국', language:'한국어', country:'대한민국', type:'site' },
+  { id:'disquiet', name:'디스콰이엇', category:'스타트업', frequency:'수시', frequencyGroup:'occasional', description:'메이커와 스타트업 팀이 만드는 것을 공유하는 커뮤니티 겸 매거진.', url:'https://disquiet.io/', daysSince:0, typical:'수시 업데이트', status:'alive', interests:['스타트업','디자인','개발'], trust:['공식 구독 링크 확인','무료'], origin:'한국', language:'한국어', country:'대한민국', type:'site' },
+  { id:'eoplanet', name:'EO플래닛', category:'스타트업', frequency:'주 2회', frequencyGroup:'weekly', description:'스타트업·벤처투자 인터뷰와 트렌드를 전하는 뉴미디어.', url:'https://eopla.net/', daysSince:1, typical:'주 2회', status:'alive', interests:['스타트업','재테크','커리어'], trust:['공식 구독 링크 확인','무료'], origin:'한국', language:'한국어', country:'대한민국', type:'site' }
+);
+
+newsletters.push(
+  { id:'wired', name:'Wired', category:'테크', frequency:'매일', frequencyGroup:'daily', description:'기술이 문화·사회를 바꾸는 방식을 깊이 있게 다루는 대표 테크 매거진.', url:'https://www.wired.com/', daysSince:0, typical:'매일', status:'alive', interests:['AI','디자인','문화'], trust:['공식 구독 링크 확인','유료 포함','글로벌 인기'], origin:'글로벌', language:'영어 · 소개 한국어', type:'magazine' },
+  { id:'the-atlantic', name:'The Atlantic', category:'문화', frequency:'매일', frequencyGroup:'daily', description:'시사·문화·정치를 깊이 있는 에세이로 풀어내는 미국 대표 매거진.', url:'https://www.theatlantic.com/', daysSince:0, typical:'매일', status:'alive', interests:['시사','문화'], trust:['공식 구독 링크 확인','유료 포함','글로벌 인기'], origin:'글로벌', language:'영어 · 소개 한국어', type:'magazine' },
+  { id:'mit-tech-review', name:'MIT Technology Review', category:'테크', frequency:'주 2회', frequencyGroup:'weekly', description:'AI·과학기술의 임팩트를 검증된 저널리즘으로 전하는 매거진.', url:'https://www.technologyreview.com/', daysSince:1, typical:'주 2회', status:'alive', interests:['AI','테크'], trust:['공식 구독 링크 확인','유료 포함','글로벌 인기'], origin:'글로벌', language:'영어 · 소개 한국어', type:'magazine' },
+  { id:'karpathy', name:'Andrej Karpathy', category:'AI', frequency:'수시', frequencyGroup:'occasional', description:'전 OpenAI·Tesla AI 리더가 AI 연구·학습법에 대해 남기는 글.', url:'https://x.com/karpathy', daysSince:0, typical:'수시 게시', status:'alive', interests:['AI','개발'], trust:['개인 계정','글로벌 인기'], origin:'글로벌', language:'영어', type:'x' },
+  { id:'sama', name:'Sam Altman', category:'AI', frequency:'수시', frequencyGroup:'occasional', description:'OpenAI CEO가 전하는 AI 업계 전략과 방향.', url:'https://x.com/sama', daysSince:0, typical:'수시 게시', status:'alive', interests:['AI','스타트업'], trust:['개인 계정','글로벌 인기'], origin:'글로벌', language:'영어', type:'x' },
+  { id:'anthropic-x', name:'Anthropic', category:'AI', frequency:'수시', frequencyGroup:'occasional', description:'Anthropic의 공식 제품·연구 발표 계정.', url:'https://x.com/AnthropicAI', daysSince:0, typical:'수시 게시', status:'alive', interests:['AI'], trust:['공식 계정'], origin:'글로벌', language:'영어', type:'x' },
+  { id:'openai-x', name:'OpenAI', category:'AI', frequency:'수시', frequencyGroup:'occasional', description:'OpenAI의 공식 제품·연구 발표 계정.', url:'https://x.com/OpenAI', daysSince:0, typical:'수시 게시', status:'alive', interests:['AI'], trust:['공식 계정'], origin:'글로벌', language:'영어', type:'x' },
+  { id:'simonw', name:'Simon Willison', category:'AI', frequency:'수시', frequencyGroup:'occasional', description:'AI 도구·LLM을 실제로 써보고 정리하는 개발자 계정.', url:'https://x.com/simonw', daysSince:0, typical:'수시 게시', status:'alive', interests:['AI','개발'], trust:['개인 계정'], origin:'글로벌', language:'영어', type:'x' },
+  { id:'charliebilello', name:'Charlie Bilello', category:'재테크', frequency:'수시', frequencyGroup:'occasional', description:'주식·금리·거시경제 통계를 차트로 정리해 전하는 계정.', url:'https://x.com/charliebilello', daysSince:0, typical:'수시 게시', status:'alive', interests:['재테크','시사'], trust:['개인 계정','글로벌 인기'], origin:'글로벌', language:'영어', type:'x' },
+  { id:'zerohedge', name:'ZeroHedge', category:'재테크', frequency:'수시', frequencyGroup:'occasional', description:'속보 위주 금융·경제 뉴스 계정. 관점이 강하니 교차 확인 권장.', url:'https://x.com/zerohedge', daysSince:0, typical:'수시 게시', status:'alive', interests:['재테크','시사'], trust:['개인 계정','관점 강함 · 교차 확인 권장'], origin:'글로벌', language:'영어', type:'x' },
+  { id:'naval', name:'Naval Ravikant', category:'자기계발', frequency:'수시', frequencyGroup:'occasional', description:'부·행복에 관한 짧고 철학적인 글로 널리 인용되는 계정.', url:'https://x.com/naval', daysSince:0, typical:'수시 게시', status:'alive', interests:['커리어','자기계발','재테크'], trust:['개인 계정','글로벌 인기'], origin:'글로벌', language:'영어', type:'x' },
+  { id:'paulg', name:'Paul Graham', category:'스타트업', frequency:'수시', frequencyGroup:'occasional', description:'Y Combinator 창업자가 남기는 스타트업·창업 에세이와 단상.', url:'https://x.com/paulg', daysSince:0, typical:'수시 게시', status:'alive', interests:['스타트업','커리어'], trust:['개인 계정','글로벌 인기'], origin:'글로벌', language:'영어', type:'x' }
+);
+
+const globalCountries = { 'morning-brew':'미국', 'tldr':'미국', 'rundown-ai':'미국', 'the-hustle':'미국', 'stratechery':'미국', 'the-browser':'영국', 'dense-discovery':'호주', 'three-two-one':'미국', 'hbr-tip':'미국', 'wired':'미국', 'the-atlantic':'미국', 'mit-tech-review':'미국', 'karpathy':'미국', 'sama':'미국', 'anthropic-x':'미국', 'openai-x':'미국', 'simonw':'미국', 'charliebilello':'미국', 'zerohedge':'미국', 'naval':'미국', 'paulg':'미국' };
 newsletters.forEach(item => { if (item.origin === '글로벌') item.country = globalCountries[item.id] || '미국'; });
+newsletters.forEach(item => { item.type = item.type || 'newsletter'; });
 
 const $ = (selector) => document.querySelector(selector);
 const stored = (key, fallback) => JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback));
-const state = { category:'전체', topic:'전체', origin:'전체', country:'전체', frequency:'전체', query:'', sort:'recommended', saved:new Set(stored('letter-shelf', [])), personal:stored('letter-status', {}), interests:stored('letter-interests', []), preferences:stored('letter-preferences', { frequency:'all', paused:false }) };
-const readingTimes = { '시사':'3분 읽기', '비즈니스':'4분 읽기', '마케팅':'3분 읽기', '테크':'5분 읽기', '라이프':'3분 읽기', '커리어':'4분 읽기' };
-const valuePromises = { '시사':'한 줄 요약 뒤에, 왜 중요한지까지 알려줘요.', '비즈니스':'일하는 사람에게 필요한 맥락을 먼저 짚어줘요.', '마케팅':'바로 써먹을 수 있는 브랜드 사례를 골라줘요.', '테크':'링크보다 맥락을 먼저 확인할 수 있어요.', '라이프':'짧게 읽어도 오래 생각할 이야기를 전해요.', '커리어':'내 일과 성장에 연결되는 포인트를 보여줘요.' };
+const state = { category:'전체', topic:'전체', origin:'전체', country:'전체', frequency:'전체', type:'전체', query:'', sort:'recommended', saved:new Set(stored('letter-shelf', [])), personal:stored('letter-status', {}), interests:stored('letter-interests', []), preferences:stored('letter-preferences', { frequency:'all', paused:false }) };
+const readingTimes = { '시사':'3분 읽기', '비즈니스':'4분 읽기', '마케팅':'3분 읽기', '테크':'5분 읽기', '라이프':'3분 읽기', '커리어':'4분 읽기', '재테크':'3분 읽기', '스타트업':'4분 읽기', 'AI':'2분 읽기' };
+const valuePromises = { '시사':'한 줄 요약 뒤에, 왜 중요한지까지 알려줘요.', '비즈니스':'일하는 사람에게 필요한 맥락을 먼저 짚어줘요.', '마케팅':'바로 써먹을 수 있는 브랜드 사례를 골라줘요.', '테크':'링크보다 맥락을 먼저 확인할 수 있어요.', '라이프':'짧게 읽어도 오래 생각할 이야기를 전해요.', '커리어':'내 일과 성장에 연결되는 포인트를 보여줘요.', '재테크':'시장을 보는 관점을 짧게 정리해줘요.', '스타트업':'만드는 사람의 관점에서 흐름을 짚어줘요.', 'AI':'AI 현장의 변화를 가장 빠르게 알려줘요.' };
 const categories = ['전체', ...new Set(newsletters.map(({category}) => category))];
 const topics = ['전체', ...new Set(newsletters.flatMap(({interests}) => interests))];
 const origins = [['전체','전체'], ['한국어 뉴스레터','한국'], ['글로벌 원문 · 한국어 소개','글로벌']];
 const countries = ['전체', ...new Set(newsletters.map(({country}) => country || '미국'))];
 const frequencyFilters = [['전체','전체'], ['매일','daily'], ['주 1회','weekly'], ['가끔만','occasional']];
 const interests = ['AI','재테크','커리어','디자인','시사'];
+const typeLabels = { newsletter:'뉴스레터', magazine:'매거진', site:'사이트', x:'X 계정' };
+const types = ['전체', ...new Set(newsletters.map(({type}) => type))];
+const unsubscribeText = { newsletter:'해지 · 원문 메일 하단 수신거부 링크 또는 계정 설정', magazine:'해지 · 구독 관리 페이지 또는 메일 하단 링크', site:'그만 보기 · 즐겨찾기 삭제 또는 방문 중단', x:'그만 보기 · 프로필에서 팔로우 취소' };
 
-function freshness(item) { if (item.daysSince === 0) return '오늘 발행'; if (item.daysSince === 1) return '어제 발행'; return `${item.daysSince}일째 새 글 없음`; }
-function matches(item) { const words = `${item.name} ${item.category} ${item.description} ${item.interests.join(' ')}`.toLowerCase(); return (state.category === '전체' || item.category === state.category) && (state.topic === '전체' || item.interests.includes(state.topic)) && (state.origin === '전체' || item.origin === state.origin) && (state.country === '전체' || item.country === state.country) && (state.frequency === '전체' || item.frequencyGroup === state.frequency) && words.includes(state.query); }
+function freshness(item) { const verb = (item.type === 'x' || item.type === 'site') ? '확인' : '발행'; if (item.daysSince === 0) return `오늘 ${verb}`; if (item.daysSince === 1) return `어제 ${verb}`; return `${item.daysSince}일째 새 글 없음`; }
+function matches(item) { const words = `${item.name} ${item.category} ${item.description} ${item.interests.join(' ')}`.toLowerCase(); return (state.category === '전체' || item.category === state.category) && (state.topic === '전체' || item.interests.includes(state.topic)) && (state.origin === '전체' || item.origin === state.origin) && (state.country === '전체' || item.country === state.country) && (state.frequency === '전체' || item.frequencyGroup === state.frequency) && (state.type === '전체' || item.type === state.type) && words.includes(state.query); }
 function issueLink(item) { return `${ISSUE_URL}?title=${encodeURIComponent(`[정보 수정] ${item.name}`)}&body=${encodeURIComponent(`뉴스레터: ${item.name}\n\n수정할 내용:\n\n확인한 링크:`)}`; }
 
 function card(item) {
   const node = $('#newsletter-template').content.firstElementChild.cloneNode(true);
   node.querySelector('.category').textContent = item.category;
+  node.querySelector('.type-badge').textContent = typeLabels[item.type] || '뉴스레터';
   node.querySelector('.origin-badge').textContent = item.origin === '글로벌' ? `GLOBAL · ${item.country} · 한국어 소개` : '대한민국 · 한국어 원문';
   node.querySelector('.tag-list').textContent = item.interests.slice(0, 3).map(tag => `#${tag}`).join(' ');
-  const status = node.querySelector('.status'); status.textContent = item.status === 'alive' ? '발행 중' : '확인 필요'; if (item.status !== 'alive') status.classList.add('paused');
+  const status = node.querySelector('.status'); status.textContent = item.status === 'alive' ? (item.type === 'x' ? '활동 중' : '발행 중') : '확인 필요'; if (item.status !== 'alive') status.classList.add('paused');
   node.querySelector('h3').textContent = item.name; node.querySelector('.description').textContent = item.description;
   node.querySelector('.value-promise').textContent = valuePromises[item.category] || '내게 필요한 내용인지 빠르게 확인할 수 있어요.';
   node.querySelector('.frequency').textContent = item.frequency; node.querySelector('.last-issue').textContent = freshness(item);
   node.querySelector('.reading-time').textContent = readingTimes[item.category] || '3분 읽기';
-  node.querySelector('.delivery').textContent = `평균 발행 · ${item.typical}`;
-  node.querySelector('.unsubscribe-help').textContent = '해지 · 원문 메일 하단 수신거부 링크 또는 계정 설정';
+  node.querySelector('.delivery').textContent = `${item.type === 'newsletter' || item.type === 'magazine' ? '평균 발행' : '평소 활동'} · ${item.typical}`;
+  node.querySelector('.unsubscribe-help').textContent = unsubscribeText[item.type] || unsubscribeText.newsletter;
   node.querySelector('.trust-badges').replaceChildren(...item.trust.map(label => { const badge = document.createElement('span'); badge.textContent = label; return badge; }));
   const visit = node.querySelector('.visit'); visit.href = item.url;
+  node.querySelector('.visit-label').textContent = item.type === 'x' ? '팔로우 · 프로필' : item.type === 'newsletter' ? '구독 · 원문' : '방문하기 · 원문';
   const translate = node.querySelector('.translate'); if (item.origin === '글로벌') { translate.hidden = false; translate.href = `https://translate.google.com/translate?sl=auto&tl=ko&u=${encodeURIComponent(item.url)}`; }
   const save = node.querySelector('.save'); const isSaved = state.saved.has(item.id); save.textContent = isSaved ? '저장됨 ✓' : '+ 내 목록'; save.classList.toggle('saved', isSaved);
   save.addEventListener('click', () => { state.saved.has(item.id) ? state.saved.delete(item.id) : state.saved.add(item.id); localStorage.setItem('letter-shelf', JSON.stringify([...state.saved])); render(); });
@@ -78,6 +106,7 @@ function renderFilters() {
   render('#frequency-filters', frequencyFilters, state.frequency, value => state.frequency = value);
   render('#origin-filters', origins, state.origin, value => state.origin = value);
   render('#country-filters', countries.map(value => [value === '전체' ? '국가 전체' : value, value]), state.country, value => state.country = value);
+  render('#type-filters', types.map(value => [value === '전체' ? '형식 전체' : typeLabels[value], value]), state.type, value => state.type = value);
 }
 function sortItems(items) { return [...items].sort((a,b) => { if (state.sort === 'recent') return a.daysSince - b.daysSince; if (state.sort === 'light') return (readingTimes[a.category] || '').localeCompare(readingTimes[b.category] || ''); const aMatch = a.interests.filter(interest => state.interests.includes(interest)).length; const bMatch = b.interests.filter(interest => state.interests.includes(interest)).length; return bMatch - aMatch || a.daysSince - b.daysSince; }); }
 function renderToday() { const picks = newsletters.filter(item => item.status === 'alive' && item.daysSince <= 1 && (state.preferences.frequency === 'all' || item.frequencyGroup === state.preferences.frequency)).slice(0, 3); $('#today-grid').replaceChildren(...(state.preferences.paused ? [] : picks.map(card))); }

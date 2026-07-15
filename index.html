@@ -13,7 +13,7 @@
       body.dark{--ink:#edf1e8;--paper:#18231f;--warm:#283a32;--green:#9bcfb3;--line:rgba(237,241,232,.2)}body.dark .directory,body.dark .recommendations{background:#1d2a25}body.dark .my-list{background:#283a32}body.dark .newsletter-card:hover{background:#2c3d35}body.dark .today-picks{background:#284238}body.dark .onboarding{background:#22332b;color:var(--ink)}.nav-button{border:0;background:transparent;color:inherit;font:600 13px var(--sans);padding:0;cursor:pointer}.sort-label{justify-self:end;font-size:11px;color:#687069}.sort-label select{margin-left:7px;border:1px solid var(--line);background:transparent;color:var(--ink);padding:6px;font:12px var(--sans)}.value-promise{margin:9px 0 0;padding-left:9px;border-left:2px solid var(--red);font-size:11px;line-height:1.5;color:var(--ink)}.reading-time{color:var(--green)}.preferences h3{margin:27px 0 -16px;font-size:12px}.preference-frequency{display:flex;flex-wrap:wrap;gap:7px;margin:27px 0}.preference-frequency label,.pause-option{border:1px solid var(--line);padding:8px;font-size:12px}.pause-option{display:block;margin-bottom:22px;border:0;padding:0}.preferences .interest-options{margin-bottom:10px}@media(max-width:760px){.site-header nav{gap:12px}.nav-button{font-size:11px}}
     </style>
     <style>body.large-text .newsletter-card{font-size:1.13rem}body.large-text .newsletter-card .description{font-size:15px}body.large-text .newsletter-card .value-promise,body.large-text .newsletter-card .delivery,body.large-text .newsletter-card .unsubscribe-help{font-size:12px}</style>
-    <style>.topic-filters{padding-top:2px}.topic-filters .filter{border-style:dashed}.origin-badge{display:inline-block;margin-top:9px;padding:3px 6px;background:#e4eadf;color:var(--green);font-size:9px;font-weight:700}.tag-list{margin-left:6px;color:#687069;font-size:10px}.card-tags{min-height:20px}.card-tags+.newsletter-card h3{margin-top:10px}body.dark .origin-badge{background:#314b3f}</style>
+    <style>.topic-filters{padding-top:2px}.topic-filters .filter{border-style:dashed}.type-filters .filter{border-style:dotted}.origin-badge{display:inline-block;margin-top:9px;padding:3px 6px;background:#e4eadf;color:var(--green);font-size:9px;font-weight:700}.type-badge{display:inline-block;margin-top:9px;padding:3px 6px;background:#f6ded8;color:var(--red);font-size:9px;font-weight:700;margin-right:5px}.tag-list{margin-left:6px;color:#687069;font-size:10px}.card-tags{min-height:20px}.card-tags+.newsletter-card h3{margin-top:10px}body.dark .origin-badge{background:#314b3f}body.dark .type-badge{background:#4a2c26}</style>
   </head>
   <body>
     <div class="paper-grain" aria-hidden="true"></div>
@@ -76,6 +76,7 @@
           <div class="filters frequency-filters" id="frequency-filters" aria-label="발행 빈도 필터"></div>
           <div class="filters origin-filters" id="origin-filters" aria-label="발행 언어 필터"></div>
           <div class="filters country-filters" id="country-filters" aria-label="국가 필터"></div>
+          <div class="filters type-filters" id="type-filters" aria-label="콘텐츠 형식 필터"></div>
           <label class="sort-label">정렬 <select id="sort"><option value="recommended">나에게 맞는 순</option><option value="recent">최근 발행 순</option><option value="light">가볍게 읽는 순</option></select></label>
         </div>
         <div class="result-line"><span id="result-count">0</span>개의 편지</div>
@@ -96,7 +97,7 @@
     <template id="newsletter-template">
       <article class="newsletter-card">
         <div class="card-top"><span class="category"></span><span class="status"></span></div>
-        <div class="card-tags"><span class="origin-badge"></span><span class="tag-list"></span></div>
+        <div class="card-tags"><span class="type-badge"></span><span class="origin-badge"></span><span class="tag-list"></span></div>
         <h3></h3>
         <p class="description"></p>
         <p class="value-promise"></p>
@@ -104,7 +105,7 @@
         <p class="delivery"></p>
         <p class="unsubscribe-help"></p>
         <div class="trust-badges"></div>
-        <div class="card-actions"><a class="visit" target="_blank" rel="noopener">구독 · 원문 <span>↗</span></a><a class="translate" target="_blank" rel="noopener" hidden>한국어로 읽기 ↗</a><button class="save" type="button"></button></div>
+        <div class="card-actions"><a class="visit" target="_blank" rel="noopener"><span class="visit-label">구독 · 원문</span> <span>↗</span></a><a class="translate" target="_blank" rel="noopener" hidden>한국어로 읽기 ↗</a><button class="save" type="button"></button></div>
         <label class="personal-label">내 상태 <select class="personal-state"><option>관심 있음</option><option>구독 중</option><option>나중에</option><option>해지함</option></select></label>
         <button class="report" type="button">정보 수정·제보</button>
       </article>
