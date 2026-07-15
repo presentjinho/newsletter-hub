@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="한국 뉴스레터를 분야별로 발견하고 발행 상태를 확인하는 작은 안내서" />
+    <title>오늘의 편지함 — 한국 뉴스레터 안내서</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      body.dark{--ink:#edf1e8;--paper:#18231f;--warm:#283a32;--green:#9bcfb3;--line:rgba(237,241,232,.2)}body.dark .directory,body.dark .recommendations{background:#1d2a25}body.dark .my-list{background:#283a32}body.dark .newsletter-card:hover{background:#2c3d35}body.dark .today-picks{background:#284238}body.dark .onboarding{background:#22332b;color:var(--ink)}.nav-button{border:0;background:transparent;color:inherit;font:600 13px var(--sans);padding:0;cursor:pointer}.sort-label{justify-self:end;font-size:11px;color:#687069}.sort-label select{margin-left:7px;border:1px solid var(--line);background:transparent;color:var(--ink);padding:6px;font:12px var(--sans)}.value-promise{margin:9px 0 0;padding-left:9px;border-left:2px solid var(--red);font-size:11px;line-height:1.5;color:var(--ink)}.reading-time{color:var(--green)}.preferences h3{margin:27px 0 -16px;font-size:12px}.preference-frequency{display:flex;flex-wrap:wrap;gap:7px;margin:27px 0}.preference-frequency label,.pause-option{border:1px solid var(--line);padding:8px;font-size:12px}.pause-option{display:block;margin-bottom:22px;border:0;padding:0}.preferences .interest-options{margin-bottom:10px}@media(max-width:760px){.site-header nav{gap:12px}.nav-button{font-size:11px}}
+    </style>
+    <style>body.large-text .newsletter-card{font-size:1.13rem}body.large-text .newsletter-card .description{font-size:15px}body.large-text .newsletter-card .value-promise,body.large-text .newsletter-card .delivery,body.large-text .newsletter-card .unsubscribe-help{font-size:12px}</style>
+    <style>.topic-filters{padding-top:2px}.topic-filters .filter{border-style:dashed}.origin-badge{display:inline-block;margin-top:9px;padding:3px 6px;background:#e4eadf;color:var(--green);font-size:9px;font-weight:700}.tag-list{margin-left:6px;color:#687069;font-size:10px}.card-tags{min-height:20px}.card-tags+.newsletter-card h3{margin-top:10px}body.dark .origin-badge{background:#314b3f}</style>
+  </head>
+  <body>
+    <div class="paper-grain" aria-hidden="true"></div>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="오늘의 편지함 홈">
+        <span class="brand-mark">✦</span> 오늘의 편지함
+      </a>
+      <nav aria-label="주요 메뉴">
+        <a href="#find">찾아보기</a>
+        <a href="#my-list">내 목록 <span id="saved-count">0</span></a>
+        <button class="nav-button" id="open-preferences" type="button">내 설정</button>
+        <button class="nav-button" id="toggle-text-size" type="button" aria-pressed="false">글자 크게</button>
+        <button class="nav-button" id="toggle-theme" type="button" aria-pressed="false">다크 모드</button>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <p class="eyebrow">KOREAN NEWSLETTER DIRECTORY · 매일 오전 7시 확인</p>
+        <h1>좋아하는 이야기는<br /><em>가볍게</em> 모으고,<br />바로 읽어요.</h1>
+        <p class="hero-copy">어디에 어떤 뉴스레터가 있는지, 오늘도 살아 있는지.<br />분야별로 찾아 원문에서 한 번에 구독하세요.</p>
+        <a class="hero-link" href="#find">편지 고르기 <span>↓</span></a>
+        <div class="hero-note"><span class="pulse"></span> <strong id="active-total">—</strong>개 중 <strong id="alive-total">—</strong>개 발행 중</div>
+      </section>
+
+      <section class="daily-strip" aria-label="오늘의 발행 현황">
+        <div><span>오늘 확인</span><strong id="checked-date">2026. 07. 15</strong></div>
+        <div><span>새로 도착</span><strong id="today-count">—</strong></div>
+        <div><span>잠시 멈춤</span><strong id="paused-count">—</strong></div>
+        <p>발행 상태는 공개 피드와 운영 공지를 기준으로 표시합니다.</p>
+      </section>
+
+      <section class="today-picks" id="today">
+        <div class="today-heading">
+          <p class="eyebrow">A SMALL MORNING STACK</p>
+          <h2>오늘 읽을 편지 <span>3</span></h2>
+          <p>최근 발행했고, 짧은 시간에 훑기 좋은 편지만 골랐어요.</p>
+        </div>
+        <div class="today-grid" id="today-grid"></div>
+      </section>
+
+      <section class="recommendations" id="recommendations" hidden>
+        <div class="recommendation-heading">
+          <p class="eyebrow">PICKED FOR YOU</p>
+          <h2><span id="interest-name"></span> 관심사를 위한 5개</h2>
+          <button class="text-button" type="button" id="edit-interests">관심사 다시 고르기</button>
+        </div>
+        <div class="recommendation-grid" id="recommendation-grid"></div>
+      </section>
+
+      <section class="directory" id="find">
+        <div class="section-heading">
+          <p class="eyebrow">THE DIRECTORY</p>
+          <h2>오늘, 무슨 편지를<br />기다리고 있나요?</h2>
+        </div>
+        <div class="controls">
+          <label class="search"><span class="visually-hidden">뉴스레터 검색</span><input id="search" type="search" placeholder="제목, 키워드, 운영자를 찾아보세요" /></label>
+          <div class="filters" id="filters" aria-label="분야 필터"></div>
+          <div class="filters topic-filters" id="topic-filters" aria-label="세부 주제 필터"></div>
+          <div class="filters frequency-filters" id="frequency-filters" aria-label="발행 빈도 필터"></div>
+          <div class="filters origin-filters" id="origin-filters" aria-label="발행 언어 필터"></div>
+          <div class="filters country-filters" id="country-filters" aria-label="국가 필터"></div>
+          <label class="sort-label">정렬 <select id="sort"><option value="recommended">나에게 맞는 순</option><option value="recent">최근 발행 순</option><option value="light">가볍게 읽는 순</option></select></label>
+        </div>
+        <div class="result-line"><span id="result-count">0</span>개의 편지</div>
+        <div class="newsletter-grid" id="newsletter-grid" aria-live="polite"></div>
+      </section>
+
+      <section class="my-list" id="my-list">
+        <div class="list-heading">
+          <p class="eyebrow">YOUR SHELF</p>
+          <h2>내가 모아 둔 편지</h2>
+          <p>이 목록은 현재 브라우저에만 저장됩니다.</p>
+        </div>
+        <div class="saved-grid" id="saved-grid"></div>
+        <p class="empty-state" id="empty-state">아직 고른 편지가 없어요. 마음에 드는 편지를 저장해 보세요.</p>
+      </section>
+    </main>
+
+    <template id="newsletter-template">
+      <article class="newsletter-card">
+        <div class="card-top"><span class="category"></span><span class="status"></span></div>
+        <div class="card-tags"><span class="origin-badge"></span><span class="tag-list"></span></div>
+        <h3></h3>
+        <p class="description"></p>
+        <p class="value-promise"></p>
+        <div class="card-meta"><span class="frequency"></span><span class="reading-time"></span><span class="last-issue"></span></div>
+        <p class="delivery"></p>
+        <p class="unsubscribe-help"></p>
+        <div class="trust-badges"></div>
+        <div class="card-actions"><a class="visit" target="_blank" rel="noopener">구독 · 원문 <span>↗</span></a><a class="translate" target="_blank" rel="noopener" hidden>한국어로 읽기 ↗</a><button class="save" type="button"></button></div>
+        <label class="personal-label">내 상태 <select class="personal-state"><option>관심 있음</option><option>구독 중</option><option>나중에</option><option>해지함</option></select></label>
+        <button class="report" type="button">정보 수정·제보</button>
+      </article>
+    </template>
+
+    <footer>오늘의 편지함 · 개인 프로젝트 · <button class="footer-report" type="button">정보 수정 제안</button></footer>
+    <dialog class="onboarding" id="onboarding">
+      <form method="dialog" id="onboarding-form">
+        <p class="eyebrow">FIRST, A QUICK PICK</p>
+        <h2>어떤 편지를<br />기다리나요?</h2>
+        <p>관심사 1~3개를 고르면, 먼저 볼 5개를 골라드릴게요.</p>
+        <div class="interest-options" id="interest-options"></div>
+        <button class="onboarding-submit" value="save" type="submit">나를 위한 편지 보기 <span>→</span></button>
+        <button class="skip-onboarding" value="skip" type="submit">건너뛰기</button>
+      </form>
+    </dialog>
+    <dialog class="onboarding preferences" id="preferences">
+      <form method="dialog" id="preferences-form">
+        <p class="eyebrow">YOUR PREFERENCE CENTER</p>
+        <h2>받는 부담은<br />내가 정해요.</h2>
+        <p>이 설정은 이 브라우저에서 추천과 정렬에만 사용됩니다.</p>
+        <h3>관심사</h3><div class="interest-options" id="preference-interests"></div>
+        <h3>선호 빈도</h3>
+        <div class="preference-frequency"><label><input name="preference-frequency" value="all" type="radio" checked /> 상관없음</label><label><input name="preference-frequency" value="daily" type="radio" /> 매일</label><label><input name="preference-frequency" value="weekly" type="radio" /> 주 1회</label><label><input name="preference-frequency" value="occasional" type="radio" /> 가끔만</label></div>
+        <label class="pause-option"><input id="pause-recommendations" type="checkbox" /> 추천 잠시 멈추기</label>
+        <button class="onboarding-submit" value="save" type="submit">설정 저장 <span>→</span></button>
+      </form>
+    </dialog>
+    <script src="app.js"></script>
+  </body>
+</html>

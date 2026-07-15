@@ -1,0 +1,112 @@
+{
+  "checkedAt": "2026-07-15T02:43:44.034Z",
+  "count": 18,
+  "results": [
+    {
+      "id": "newneek",
+      "url": "https://newneek.co/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "outstand",
+      "url": "https://outstand.co.kr/",
+      "status": "needs-review"
+    },
+    {
+      "id": "stibee",
+      "url": "https://stibee.com/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "geeknews",
+      "url": "https://news.hada.io/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "longblack",
+      "url": "https://www.longblack.co/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "beletter",
+      "url": "https://www.beletter.co.kr/",
+      "status": "needs-review"
+    },
+    {
+      "id": "maily",
+      "url": "https://maily.so/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "weekly",
+      "url": "https://www.chosun.com/economy/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "publy",
+      "url": "https://publy.co/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "morning-brew",
+      "url": "https://www.morningbrew.com/",
+      "status": "reachable",
+      "httpStatus": 403
+    },
+    {
+      "id": "tldr",
+      "url": "https://tldr.tech/signup",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "rundown-ai",
+      "url": "https://www.therundown.ai/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "the-hustle",
+      "url": "https://thehustle.co/join",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "stratechery",
+      "url": "https://stratechery.com/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "the-browser",
+      "url": "https://thebrowser.com/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "dense-discovery",
+      "url": "https://www.densediscovery.com/",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "three-two-one",
+      "url": "https://jamesclear.com/3-2-1",
+      "status": "reachable",
+      "httpStatus": 200
+    },
+    {
+      "id": "hbr-tip",
+      "url": "https://hbr.org/email-newsletters",
+      "status": "reachable",
+      "httpStatus": 200
+    }
+  ]
+}
