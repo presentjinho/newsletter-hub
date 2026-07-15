@@ -24,6 +24,8 @@ import {
   translateToKorean,
   googleTranslateTextUrl,
   googleTranslatePageUrl,
+  googleTranslateEmbedUrl,
+  getCachedTranslation,
   type CleanedReader
 } from '../readerClean';
 import { isInfoSource } from '../data';
@@ -39,7 +41,7 @@ interface LiveDeskProps {
   linkSyncStatus: string;
 }
 
-type ViewMode = 'reader' | 'iframe';
+type ViewMode = 'reader' | 'iframe' | 'page-ko';
 
 async function fetchReadable(url: string, signal: AbortSignal): Promise<string> {
   const endpoints = [
@@ -201,6 +203,15 @@ export default function LiveDesk({
       setShowKo(true);
       return;
     }
+    // 캐시 즉시
+    const cached = getCachedTranslation(cleaned.body);
+    if (cached) {
+      setKoText(cached);
+      setShowKo(true);
+      setKoError('');
+      return;
+    }
+
     const ctrl = new AbortController();
     setKoLoading(true);
     setKoError('');
@@ -210,27 +221,23 @@ export default function LiveDesk({
       setKoText(result.text);
       setShowKo(true);
       if (result.partial) {
-        setKoError('일부만 번역되었습니다. 나머지는 번역 탭을 이용하세요.');
+        setKoError(
+          `일부 구간은 원문 유지 (${result.translatedChunks}/${result.totalChunks} 번역). 끊긴 게 아니라 실패 구간을 원문으로 남겨 둔 것입니다. 전체 번역은 「페이지 번역」을 쓰세요.`
+        );
+      } else {
+        setKoError('');
       }
     } catch (e) {
       if ((e as Error).name === 'AbortError') return;
-      const code = String((e as Error).message || e);
-      // 지역 차단·전체 실패 → 에러 문구를 본문에 넣지 않고 Google 번역 탭으로
-      if (code === 'REGION_BLOCKED' || code === 'TRANSLATE_FAILED') {
-        setKoError(
-          '이 지역에서 앱 안 번역 API가 막혀 있습니다. Google 번역 탭을 열었습니다. (본문은 원문으로 유지)'
-        );
-        window.open(googleTranslateTextUrl(cleaned.body), '_blank', 'noopener,noreferrer');
-        if (activeNewsletter) {
-          window.open(googleTranslatePageUrl(siteOf(activeNewsletter)), '_blank', 'noopener,noreferrer');
-        }
-      } else {
-        setKoError('자동 번역에 실패했습니다. “번역 탭”으로 원문 페이지를 열어 주세요.');
-        window.open(googleTranslateTextUrl(cleaned.body), '_blank', 'noopener,noreferrer');
-      }
+      // API 막힘 → 페이지 번역 모드로 전환 (가장 안정)
       setShowKo(false);
+      setKoError(
+        '앱 안 문장 번역 API가 이 환경에서 불안정합니다. 「페이지 번역」으로 전환합니다. (Google이 페이지 전체를 번역)'
+      );
+      setViewMode('page-ko');
     } finally {
       setKoLoading(false);
+      setKoProgress(0);
     }
   };
 
@@ -338,7 +345,7 @@ export default function LiveDesk({
         {activeNewsletter && (
           <div className="p-3 bg-black/25 border border-white/15 text-sm text-[var(--live-muted)] mb-4 flex flex-wrap gap-x-4 gap-y-2 items-center rounded-sm">
             <span className="font-bold text-[var(--live-fg)]">{activeNewsletter.name}</span>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <button
                 type="button"
                 onClick={() => setViewMode('reader')}
@@ -350,12 +357,21 @@ export default function LiveDesk({
               </button>
               <button
                 type="button"
+                onClick={() => setViewMode('page-ko')}
+                className={`px-2.5 py-1 text-xs font-bold rounded-sm border cursor-pointer flex items-center gap-1 ${
+                  viewMode === 'page-ko' ? 'bg-[#9fe0b8] text-[#0a100e] border-[#9fe0b8]' : 'bg-transparent text-[var(--live-fg)] border-white/25'
+                }`}
+              >
+                <Languages className="w-3.5 h-3.5" /> 페이지 번역
+              </button>
+              <button
+                type="button"
                 onClick={() => setViewMode('iframe')}
                 className={`px-2.5 py-1 text-xs font-bold rounded-sm border cursor-pointer flex items-center gap-1 ${
                   viewMode === 'iframe' ? 'bg-[#9fe0b8] text-[#0a100e] border-[#9fe0b8]' : 'bg-transparent text-[var(--live-fg)] border-white/25'
                 }`}
               >
-                <Eye className="w-3.5 h-3.5" /> 페이지 끼워보기
+                <Eye className="w-3.5 h-3.5" /> 원문 끼워보기
               </button>
             </div>
           </div>
@@ -367,7 +383,33 @@ export default function LiveDesk({
               <div className="flex-1 flex flex-col items-center justify-center p-10">
                 <Globe2 className="w-10 h-10 live-accent mb-3 opacity-80" />
                 <p className="text-base text-[var(--live-muted)] text-center max-w-md leading-relaxed">
-                  출처를 고르면 본문만 정리해서 보여 줍니다. 외국어는 한국어 번역을 켤 수 있습니다.
+                  출처를 고르면 본문만 정리해서 보여 줍니다. 외국어는 「한국어로 번역」또는 더 안정적인 「페이지 번역」을 쓰세요.
+                </p>
+              </div>
+            ) : viewMode === 'page-ko' ? (
+              <div className="flex flex-col flex-1">
+                <div className="px-4 py-2 border-b border-white/10 bg-black/30 flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-xs font-bold live-accent flex items-center gap-1.5">
+                    <Languages className="w-3.5 h-3.5" />
+                    페이지 전체 번역 (Google) · API 지역 제한 우회용
+                  </span>
+                  <div className="flex gap-2">
+                    <button type="button" onClick={openTranslate} className="text-xs underline live-accent font-bold cursor-pointer bg-transparent border-0">
+                      새 탭에서 열기
+                    </button>
+                    <button type="button" onClick={() => setViewMode('reader')} className="text-xs underline text-[var(--live-fg)] font-bold cursor-pointer bg-transparent border-0">
+                      리더로
+                    </button>
+                  </div>
+                </div>
+                <iframe
+                  src={googleTranslateEmbedUrl(siteOf(activeNewsletter))}
+                  title={`${activeNewsletter.name} 한국어 번역 페이지`}
+                  className="w-full flex-1 min-h-[480px] border-0 bg-white"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+                <p className="p-2 text-[11px] text-[var(--live-muted)] bg-black/50">
+                  화면이 비면 Google이 iframe을 막은 것입니다. 「새 탭에서 열기」를 사용하세요. 문장 API보다 이 방식이 지역 제한에 강합니다.
                 </p>
               </div>
             ) : viewMode === 'iframe' ? (
@@ -380,7 +422,7 @@ export default function LiveDesk({
                   className="w-full flex-1 min-h-[480px] border-0 bg-white"
                 />
                 <div className="p-3 text-xs text-[var(--live-muted)] bg-black/50 flex justify-between">
-                  <span>연결 거부 시 정상입니다. 리더로 전환하세요.</span>
+                  <span>연결 거부 시 정상입니다. 리더 또는 페이지 번역으로 전환하세요.</span>
                   <button type="button" onClick={() => setViewMode('reader')} className="underline live-accent font-bold cursor-pointer bg-transparent border-0">
                     리더로
                   </button>
@@ -395,22 +437,31 @@ export default function LiveDesk({
                   </span>
                   <div className="flex flex-wrap gap-2 items-center">
                     {needsKo && (
-                      <button
-                        type="button"
-                        disabled={koLoading || readerLoading}
-                        onClick={() => {
-                          if (showKo) setShowKo(false);
-                          else runTranslate();
-                        }}
-                        className="px-2.5 py-1 text-xs font-bold rounded-sm border border-[#9fe0b8]/50 live-accent bg-black/20 cursor-pointer flex items-center gap-1 disabled:opacity-50"
-                      >
-                        <Languages className="w-3.5 h-3.5" />
-                        {koLoading ? `번역 중 ${koProgress}%` : showKo ? '원문 보기' : '한국어로 번역'}
-                      </button>
+                      <>
+                        <button
+                          type="button"
+                          disabled={koLoading || readerLoading}
+                          onClick={() => {
+                            if (showKo) setShowKo(false);
+                            else runTranslate();
+                          }}
+                          className="px-2.5 py-1 text-xs font-bold rounded-sm border border-[#9fe0b8]/50 live-accent bg-black/20 cursor-pointer flex items-center gap-1 disabled:opacity-50"
+                        >
+                          <Languages className="w-3.5 h-3.5" />
+                          {koLoading ? `문장 번역 ${koProgress}%` : showKo ? '원문 보기' : '문장 번역'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setViewMode('page-ko')}
+                          className="px-2.5 py-1 text-xs font-bold rounded-sm border border-white/25 text-[var(--live-fg)] cursor-pointer flex items-center gap-1"
+                        >
+                          페이지 번역 (권장)
+                        </button>
+                      </>
                     )}
                     {!needsKo && activeNewsletter.origin === '글로벌' && (
-                      <button type="button" onClick={openTranslate} className="px-2.5 py-1 text-xs font-bold rounded-sm border border-white/20 text-[var(--live-fg)] cursor-pointer flex items-center gap-1">
-                        <Languages className="w-3.5 h-3.5" /> 페이지 번역 탭
+                      <button type="button" onClick={() => setViewMode('page-ko')} className="px-2.5 py-1 text-xs font-bold rounded-sm border border-white/20 text-[var(--live-fg)] cursor-pointer flex items-center gap-1">
+                        <Languages className="w-3.5 h-3.5" /> 페이지 번역
                       </button>
                     )}
                     <button

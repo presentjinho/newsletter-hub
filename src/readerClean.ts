@@ -442,73 +442,100 @@ export function likelyNeedsKorean(text: string, languageHint?: string): boolean 
 }
 
 const REGION_BLOCK_RE =
-  /not available in your region|isn't available in your region|isn.?t available in your region|service isn.?t available|quota|MYMEMORY WARNING|PLEASE SELECT TWO DISTINCT|INVALID LANGUAGE|TOO MANY REQUESTS|RATE LIMIT|IP.*blocked|forbidden|access denied/i;
+  /not available in your region|isn't available in your region|isn.?t available in your region|service isn.?t available|quota|MYMEMORY WARNING|PLEASE SELECT TWO DISTINCT|INVALID LANGUAGE|TOO MANY REQUESTS|RATE LIMIT|IP.*blocked|forbidden|access denied|403|429|503/i;
 
-function isBadTranslation(out: string, _input: string): boolean {
+function isBadTranslation(out: string, input: string): boolean {
   if (!out || !out.trim()) return true;
   if (REGION_BLOCK_RE.test(out)) return true;
   if (out.length < 40 && /region|available|error|invalid/i.test(out)) return true;
+  // 입력이 긴데 출력이 한 줄 에러
+  if (input.length > 80 && out.length < 25) return true;
   return false;
 }
 
-async function translateChunk(text: string, signal: AbortSignal): Promise<string> {
-  const attempts: Array<() => Promise<string>> = [
-    async () => {
-      const hosts = [
-        'https://lingva.ml',
-        'https://lingva.thedaviddelta.com',
-        'https://translate.plausibility.cloud'
-      ];
-      for (const host of hosts) {
-        const url = `${host}/api/v1/auto/ko/${encodeURIComponent(text)}`;
-        const res = await fetch(url, { signal });
-        if (!res.ok) continue;
-        const data = await res.json();
-        const out = data?.translation;
-        if (typeof out === 'string' && !isBadTranslation(out, text)) return out;
-      }
-      throw new Error('lingva fail');
-    },
-    async () => {
-      const endpoints = [
-        'https://libretranslate.com/translate',
-        'https://translate.argosopentech.com/translate'
-      ];
-      for (const endpoint of endpoints) {
-        try {
-          const res = await fetch(endpoint, {
-            method: 'POST',
-            signal,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ q: text, source: 'auto', target: 'ko', format: 'text' })
-          });
-          if (!res.ok) continue;
-          const data = await res.json();
-          const out = data?.translatedText;
-          if (typeof out === 'string' && !isBadTranslation(out, text)) return out;
-        } catch {
-          /* next */
-        }
-      }
-      throw new Error('libre fail');
-    },
-    async () => {
-      const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=autodetect|ko`;
-      const res = await fetch(url, { signal });
-      if (!res.ok) throw new Error(`mymemory ${res.status}`);
-      const data = await res.json();
-      const out = data?.responseData?.translatedText;
-      if (typeof out !== 'string' || isBadTranslation(out, text)) {
-        throw new Error(typeof out === 'string' ? out : 'mymemory bad');
-      }
-      return out;
-    }
+/** 세션 동안 잘 되는 엔진 기억 */
+let preferredEngine: 'lingva' | 'libre' | 'mymemory' | null = null;
+
+type Engine = 'lingva' | 'libre' | 'mymemory';
+
+async function tryLingva(text: string, signal: AbortSignal): Promise<string> {
+  const hosts = [
+    'https://lingva.ml',
+    'https://lingva.thedaviddelta.com',
+    'https://translate.plausibility.cloud',
+    'https://lingva.pussthecat.org'
   ];
+  for (const host of hosts) {
+    try {
+      const url = `${host}/api/v1/auto/ko/${encodeURIComponent(text)}`;
+      const res = await fetch(url, { signal });
+      if (!res.ok) continue;
+      const data = await res.json();
+      const out = data?.translation;
+      if (typeof out === 'string' && !isBadTranslation(out, text)) return out;
+    } catch {
+      /* next host */
+    }
+  }
+  throw new Error('lingva fail');
+}
+
+async function tryLibre(text: string, signal: AbortSignal): Promise<string> {
+  const endpoints = [
+    'https://libretranslate.com/translate',
+    'https://translate.argosopentech.com/translate',
+    'https://libretranslate.de/translate'
+  ];
+  for (const endpoint of endpoints) {
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        signal,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ q: text, source: 'auto', target: 'ko', format: 'text' })
+      });
+      if (!res.ok) continue;
+      const data = await res.json();
+      const out = data?.translatedText;
+      if (typeof out === 'string' && !isBadTranslation(out, text)) return out;
+    } catch {
+      /* next */
+    }
+  }
+  throw new Error('libre fail');
+}
+
+async function tryMyMemory(text: string, signal: AbortSignal): Promise<string> {
+  const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=autodetect|ko`;
+  const res = await fetch(url, { signal });
+  if (!res.ok) throw new Error(`mymemory ${res.status}`);
+  const data = await res.json();
+  const out = data?.responseData?.translatedText;
+  if (typeof out !== 'string' || isBadTranslation(out, text)) {
+    throw new Error(typeof out === 'string' ? out : 'mymemory bad');
+  }
+  return out;
+}
+
+const ENGINE_ORDER: Engine[] = ['lingva', 'libre', 'mymemory'];
+
+async function runEngine(engine: Engine, text: string, signal: AbortSignal): Promise<string> {
+  if (engine === 'lingva') return tryLingva(text, signal);
+  if (engine === 'libre') return tryLibre(text, signal);
+  return tryMyMemory(text, signal);
+}
+
+async function translateChunk(text: string, signal: AbortSignal): Promise<string> {
+  const order = preferredEngine
+    ? [preferredEngine, ...ENGINE_ORDER.filter(e => e !== preferredEngine)]
+    : ENGINE_ORDER;
 
   let lastErr: Error | null = null;
-  for (const run of attempts) {
+  for (const engine of order) {
     try {
-      return await run();
+      const out = await runEngine(engine, text, signal);
+      preferredEngine = engine;
+      return out;
     } catch (e) {
       lastErr = e as Error;
       if (signal.aborted) throw e;
@@ -523,61 +550,170 @@ export function googleTranslateTextUrl(text: string): string {
 }
 
 export function googleTranslatePageUrl(pageUrl: string): string {
-  return `https://translate.google.com/translate?sl=auto&tl=ko&u=${encodeURIComponent(pageUrl)}`;
+  return `https://translate.google.com/translate?sl=auto&tl=ko&u=${encodeURIComponent(pageUrl)}&hl=ko`;
+}
+
+/** 페이지 단위 번역 보기용 (iframe 시도) */
+export function googleTranslateEmbedUrl(pageUrl: string): string {
+  // hl=ko 로 UI 한국어, 원문 페이지 번역
+  return `https://translate.google.com/translate?hl=ko&sl=auto&tl=ko&u=${encodeURIComponent(pageUrl)}`;
 }
 
 export type TranslateResult = {
   text: string;
+  /** 일부 청크는 원문 유지 */
   partial: boolean;
+  /** 성공 청크 / 전체 청크 */
+  translatedChunks: number;
+  totalChunks: number;
+  engine: string | null;
 };
 
+function splitForTranslate(text: string, max = 380): string[] {
+  const chunks: string[] = [];
+  // 문단 우선 분할
+  const paras = text.split(/\n{2,}/).map(p => p.trim()).filter(Boolean);
+  for (const para of paras) {
+    if (para.length <= max) {
+      chunks.push(para);
+      continue;
+    }
+    let rest = para;
+    while (rest.length) {
+      if (rest.length <= max) {
+        chunks.push(rest);
+        break;
+      }
+      let cut = rest.lastIndexOf('. ', max);
+      if (cut < max * 0.35) cut = rest.lastIndexOf('。', max);
+      if (cut < max * 0.35) cut = rest.lastIndexOf(' ', max);
+      if (cut < max * 0.35) cut = max;
+      chunks.push(rest.slice(0, cut + 1).trim());
+      rest = rest.slice(cut + 1).trim();
+    }
+  }
+  return chunks.filter(Boolean);
+}
+
+const CACHE_PREFIX = 'letter-tr-v2:';
+
+function cacheKey(text: string): string {
+  // 짧은 해시
+  let h = 0;
+  const s = text.slice(0, 4000);
+  for (let i = 0; i < s.length; i++) h = (Math.imul(31, h) + s.charCodeAt(i)) | 0;
+  return `${CACHE_PREFIX}${h}_${text.length}`;
+}
+
+export function getCachedTranslation(text: string): string | null {
+  try {
+    return sessionStorage.getItem(cacheKey(text));
+  } catch {
+    return null;
+  }
+}
+
+export function setCachedTranslation(source: string, translated: string): void {
+  try {
+    sessionStorage.setItem(cacheKey(source), translated);
+  } catch {
+    /* quota */
+  }
+}
+
+/**
+ * 긴 본문 한국어 번역.
+ * - 실패 청크는 **원문 유지** (중간 끊김 방지)
+ * - 세션 캐시
+ * - 성공 엔진 재사용
+ */
 export async function translateToKorean(
   text: string,
   signal: AbortSignal,
   onProgress?: (pct: number) => void
 ): Promise<TranslateResult> {
-  const max = 400;
-  const chunks: string[] = [];
-  let rest = text.trim();
-  while (rest.length) {
-    if (rest.length <= max) {
-      chunks.push(rest);
-      break;
-    }
-    let cut = rest.lastIndexOf('\n', max);
-    if (cut < max * 0.4) cut = rest.lastIndexOf(' ', max);
-    if (cut < max * 0.4) cut = max;
-    chunks.push(rest.slice(0, cut).trim());
-    rest = rest.slice(cut).trim();
+  const cached = getCachedTranslation(text);
+  if (cached) {
+    onProgress?.(100);
+    return {
+      text: cached,
+      partial: false,
+      translatedChunks: 1,
+      totalChunks: 1,
+      engine: preferredEngine
+    };
   }
 
-  const limited = chunks.slice(0, 20);
+  const chunks = splitForTranslate(text.trim(), 380);
+  // 너무 길면 앞부분 번역 + 뒤는 원문 유지 (완전 삭제하지 않음)
+  const MAX = 48;
+  const primary = chunks.slice(0, MAX);
+  const overflow = chunks.slice(MAX);
+
   const out: string[] = [];
   let success = 0;
-  let regionBlocked = 0;
+  let fail = 0;
+  let consecutiveFail = 0;
 
-  for (let i = 0; i < limited.length; i++) {
+  for (let i = 0; i < primary.length; i++) {
     if (signal.aborted) throw new DOMException('Aborted', 'AbortError');
+    const chunk = primary[i];
+
+    // 연속 실패 많으면 나머지 원문 유지하고 종료 (시간 낭비·중도 공백 방지)
+    if (consecutiveFail >= 4 && success > 0) {
+      for (let j = i; j < primary.length; j++) out.push(primary[j]);
+      fail += primary.length - i;
+      onProgress?.(100);
+      break;
+    }
+    if (consecutiveFail >= 3 && success === 0) {
+      // 아예 안 되면 조기 실패 → 페이지 번역 폴백 유도
+      throw new Error('REGION_BLOCKED');
+    }
+
     try {
-      const t = await translateChunk(limited[i], signal);
-      if (isBadTranslation(t, limited[i])) regionBlocked += 1;
-      else {
+      const t = await translateChunk(chunk, signal);
+      if (isBadTranslation(t, chunk)) {
+        out.push(chunk);
+        fail += 1;
+        consecutiveFail += 1;
+      } else {
         out.push(t);
         success += 1;
+        consecutiveFail = 0;
       }
     } catch (e) {
-      const msg = String((e as Error).message || e);
-      if (REGION_BLOCK_RE.test(msg)) regionBlocked += 1;
+      if ((e as Error).name === 'AbortError') throw e;
+      // ★ 핵심: 실패해도 청크를 버리지 않고 원문 유지 → 중간 끊김 방지
+      out.push(chunk);
+      fail += 1;
+      consecutiveFail += 1;
     }
-    onProgress?.(Math.round(((i + 1) / limited.length) * 100));
-    await new Promise(r => setTimeout(r, 80));
+    onProgress?.(Math.round(((i + 1) / (primary.length + (overflow.length ? 1 : 0))) * 100));
+    // 성공 시 짧게, 실패 시 조금 더 대기
+    await new Promise(r => setTimeout(r, consecutiveFail ? 200 : 60));
+  }
+
+  if (overflow.length) {
+    out.push('\n—— 이하 원문 (길이 제한으로 미번역) ——\n');
+    out.push(...overflow);
   }
 
   if (success === 0) {
-    throw new Error(regionBlocked > 0 ? 'REGION_BLOCKED' : 'TRANSLATE_FAILED');
+    throw new Error('REGION_BLOCKED');
   }
-  if (chunks.length > limited.length) {
-    out.push('\n…(이하 생략 — 전문은 사이트 또는 번역 탭에서 확인)');
+
+  const result = out.join('\n\n');
+  // 전부 성공에 가깝면 캐시
+  if (fail === 0 && overflow.length === 0) {
+    setCachedTranslation(text, result);
   }
-  return { text: out.join('\n\n'), partial: success < limited.length };
+
+  return {
+    text: result,
+    partial: fail > 0 || overflow.length > 0,
+    translatedChunks: success,
+    totalChunks: chunks.length,
+    engine: preferredEngine
+  };
 }
