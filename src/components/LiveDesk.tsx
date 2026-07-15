@@ -432,11 +432,25 @@ export default function LiveDesk({
                         className="text-[var(--live-fg)] leading-relaxed space-y-4"
                         style={{ fontSize: '0.95em', lineHeight: 1.8 }}
                       >
-                        {displayBody.split(/\n{2,}/).map((para, i) => (
-                          <p key={i} className="m-0 whitespace-pre-wrap break-words">
-                            {para}
-                          </p>
-                        ))}
+                        {displayBody.split(/\n{2,}/).map((para, i) => {
+                          const t = para.trim();
+                          if (!t) return null;
+                          // 짧은 줄은 소제목 느낌
+                          const isHead = t.length <= 80 && !/[.!?。]\s/.test(t) && !t.startsWith('·');
+                          return (
+                            <p
+                              key={i}
+                              className={
+                                isHead
+                                  ? 'm-0 mt-2 mb-1 font-semibold text-[var(--live-fg)] tracking-tight'
+                                  : 'm-0 whitespace-pre-wrap break-words text-[var(--live-fg)]/95'
+                              }
+                              style={isHead ? { fontSize: '1.05em', lineHeight: 1.45 } : undefined}
+                            >
+                              {t}
+                            </p>
+                          );
+                        })}
                       </div>
 
                       {/* 정제된 읽을 링크만 (이미지·CDN·트래킹 제외) */}

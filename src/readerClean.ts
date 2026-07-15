@@ -227,38 +227,206 @@ export function cleanReaderText(raw: string): CleanedReader {
     .replace(/\(\s*\)/g, '')
     .replace(/【[^】]*】/g, '');
 
+  // CMS/워드프레스 잡 라벨 (Uncategorized 등) — 줄 단위·문장 안 모두 제거
+  text = stripNoiseLabels(text);
+
   text = text
     .replace(/\u00a0/g, ' ')
     .replace(/[ \t]+\n/g, '\n')
-    .replace(/\n{3,}/g, '\n\n')
     .replace(/[ \t]{2,}/g, ' ')
     .trim();
 
-  // 거의 URL만 남은 줄 제거
-  const lines = text
-    .split('\n')
-    .map(l => l.trim())
-    .filter(l => {
-      if (!l) return false;
-      if (/^https?:\/\//i.test(l)) return false;
-      if (l.length < 2) return false;
-      // 점·기호만
-      if (/^[\s·\-–—*•|#]+$/.test(l)) return false;
-      return true;
-    });
+  // 줄 단위 필터 + 문단 재구성 (붙어 있는 글 분리)
+  const rawLines = text.split(/\n+/).map(l => l.trim()).filter(Boolean);
+  const kept: string[] = [];
+  for (const line of rawLines) {
+    if (isNoiseLine(line)) continue;
+    if (/^https?:\/\//i.test(line)) continue;
+    if (line.length < 2) continue;
+    if (/^[\s·\-–—*•|#|/\\]+$/.test(line)) continue;
+    kept.push(line);
+  }
 
-  const title = lines[0] ? lines[0].slice(0, 120) : '';
-  const body = lines.join('\n\n');
+  const title = kept[0] ? kept[0].slice(0, 120) : '';
+  const body = formatParagraphs(kept);
 
-  // 링크 정렬: article 먼저, 같은 호스트 묶음
   const ranked = [...links].sort((a, b) => {
     const order = { article: 0, video: 1, social: 2, other: 3 };
     if (order[a.kind] !== order[b.kind]) return order[a.kind] - order[b.kind];
     return a.host.localeCompare(b.host) || a.label.localeCompare(b.label, 'ko');
   });
 
-  // 최대 개수 제한 (UI 깔끔)
   return { title, body, links: ranked.slice(0, 20) };
+}
+
+/** 카테고리 없음·메뉴 찌꺼기 라벨 */
+const NOISE_LABELS = [
+  'uncategorized',
+  'uncategorised',
+  'no category',
+  'no categories',
+  'categorized',
+  'categories',
+  'category',
+  'tags?',
+  'tag cloud',
+  'leave a comment',
+  'leave a reply',
+  'comments? off',
+  'no comments?',
+  '0 comments?',
+  'share this',
+  'share on',
+  'related posts?',
+  'you may also like',
+  'read more',
+  'continue reading',
+  'click here',
+  'home',
+  'menu',
+  'search',
+  'subscribe',
+  'sign up',
+  'log ?in',
+  'sign ?in',
+  'cookie',
+  'privacy policy',
+  'terms of (use|service)',
+  'all rights reserved',
+  'advertisement',
+  'sponsored',
+  'newsletter',
+  'skip to content',
+  'skip to main',
+  'breadcrumb',
+  'posted (in|on)',
+  'filed under',
+  'written by',
+  'by admin',
+  'permalink',
+  'print this',
+  'email this',
+  '미분류',
+  '분류 없음',
+  '카테고리 없음',
+  '댓글 없음',
+  '관련 글',
+  '더 보기',
+  '공유하기',
+];
+
+function stripNoiseLabels(text: string): string {
+  let t = text;
+  // 단독 줄 Uncategorized / 미분류
+  for (const n of NOISE_LABELS) {
+    t = t.replace(new RegExp(`^\\s*${n}\\s*$`, 'gim'), '');
+  }
+  // 줄 안 붙어 있는 경우: "UncategorizedSomething" / "Uncategorized | Foo"
+  t = t.replace(/\bUncategorized\b/gi, ' ');
+  t = t.replace(/\bUncategorised\b/gi, ' ');
+  t = t.replace(/미분류/g, ' ');
+  t = t.replace(/분류\s*없음/g, ' ');
+  // Category: Foo / Tags: a, b
+  t = t.replace(/^\s*(categor(y|ies)|tags?|topics?|section|channel)\s*[:：]\s*.+$/gim, '');
+  t = t.replace(/^\s*(카테고리|태그|분류|토픽)\s*[:：]\s*.+$/gim, '');
+  // 메뉴 나열처럼 | 로만 이어진 짧은 토큰 줄
+  t = t.replace(/^[A-Za-z가-힣0-9 ]{1,18}(\s*[|›»>/\\]\s*[A-Za-z가-힣0-9 ]{1,18}){2,}\s*$/gm, '');
+  return t;
+}
+
+function isNoiseLine(line: string): boolean {
+  const s = line.trim();
+  const lower = s.toLowerCase();
+  if (!s) return true;
+  if (/^uncategor/i.test(s)) return true;
+  if (NOISE_LABELS.some(n => new RegExp(`^${n}$`, 'i').test(lower))) return true;
+  // 날짜만 / 숫자+comments
+  if (/^\d+\s*(comments?|replies?|views?|shares?)$/i.test(s)) return true;
+  if (/^(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\s+\d{1,2},?\s+\d{4}$/i.test(s)) return true;
+  // 글자 거의 없는 구분선
+  if (s.length <= 3 && !/[가-힣A-Za-z]/.test(s)) return true;
+  return false;
+}
+
+/**
+ * 붙어 있는 글을 문단으로 재배치.
+ * - 짧은 제목성 줄은 단독 문단
+ * - 긴 줄은 문장 끝(. ? ! 。) 기준으로 적당히 나눔
+ * - 한 덩어리가 너무 길면 줄바꿈
+ */
+function formatParagraphs(lines: string[]): string {
+  const paras: string[] = [];
+
+  for (const line of lines) {
+    let L = line.replace(/\s+/g, ' ').trim();
+    if (!L || isNoiseLine(L)) continue;
+
+    // "UncategorizedTitle" 처럼 붙은 잔재 한 번 더
+    L = L.replace(/^Uncategorized\s*/i, '').trim();
+    if (!L) continue;
+
+    // 짧은 헤드라인
+    if (L.length <= 90 && !/[.!?。]\s/.test(L)) {
+      paras.push(L);
+      continue;
+    }
+
+    // 문장 단위 분리 후 2~3문장씩 묶기
+    const sentences = splitSentences(L);
+    if (sentences.length <= 1) {
+      paras.push(...wrapLong(L, 280));
+      continue;
+    }
+    let buf = '';
+    let count = 0;
+    for (const s of sentences) {
+      if (!s) continue;
+      if (!buf) {
+        buf = s;
+        count = 1;
+      } else if (buf.length + s.length < 320 && count < 3) {
+        buf = `${buf} ${s}`;
+        count += 1;
+      } else {
+        paras.push(buf);
+        buf = s;
+        count = 1;
+      }
+    }
+    if (buf) paras.push(buf);
+  }
+
+  // 연속 중복 문단 제거
+  const dedup: string[] = [];
+  for (const p of paras) {
+    if (dedup.length && dedup[dedup.length - 1] === p) continue;
+    dedup.push(p);
+  }
+  return dedup.join('\n\n');
+}
+
+function splitSentences(text: string): string[] {
+  // 한국어/영문 문장 끝
+  const parts = text
+    .replace(/([.!?。…])\s+(?=[A-Z가-힣“"‘(0-9])/g, '$1\n')
+    .split('\n')
+    .map(s => s.trim())
+    .filter(Boolean);
+  return parts.length ? parts : [text];
+}
+
+function wrapLong(text: string, max: number): string[] {
+  if (text.length <= max) return [text];
+  const out: string[] = [];
+  let rest = text;
+  while (rest.length > max) {
+    let cut = rest.lastIndexOf(' ', max);
+    if (cut < max * 0.5) cut = max;
+    out.push(rest.slice(0, cut).trim());
+    rest = rest.slice(cut).trim();
+  }
+  if (rest) out.push(rest);
+  return out;
 }
 
 export function likelyNeedsKorean(text: string, languageHint?: string): boolean {
