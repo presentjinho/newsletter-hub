@@ -161,17 +161,17 @@ export default function NoteDialog({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/55 backdrop-blur-xs">
-      <div className="w-full max-w-4xl bg-[#f6f0e3] dark:bg-[#22332b] text-ink border border-line-alpha shadow-2xl relative animate-fade-in max-h-[95vh] flex flex-col md:flex-row overflow-hidden rounded-xs">
+      <div className="w-full max-w-4xl bg-[#f6f0e3] dark:bg-[var(--surface)] text-ink border border-line-alpha shadow-2xl relative animate-fade-in max-h-[95vh] flex flex-col md:flex-row overflow-hidden rounded-xs">
         
         {/* Left sidebar: list of notes in current source folder */}
-        <aside className="w-full md:w-[240px] bg-[#ebe4d4] dark:bg-[#1a2822] border-r border-line-alpha p-5 overflow-y-auto flex flex-col justify-between max-h-[300px] md:max-h-[80vh]">
+        <aside className="w-full md:w-[240px] bg-[#ebe4d4] dark:bg-[var(--surface)] border-r border-line-alpha p-5 overflow-y-auto flex flex-col justify-between max-h-[300px] md:max-h-[80vh]">
           <div>
-            <p className="text-[10px] font-bold tracking-widest text-forest-green dark:text-green-300 uppercase mb-4">
+            <p className="text-[10px] font-bold tracking-widest text-forest-green dark:text-[var(--green)] uppercase mb-4">
               폴더 메모 아카이브
             </p>
             <button
               onClick={handleCreateNew}
-              className="w-full py-2 px-3 text-xs font-bold text-forest-green dark:text-green-300 border border-dashed border-forest-green/30 hover:bg-ink/5 transition duration-200 text-left flex items-center justify-between cursor-pointer rounded-xs mb-4"
+              className="w-full py-2 px-3 text-xs font-bold text-forest-green dark:text-[var(--green)] border border-dashed border-forest-green/30 hover:bg-ink/5 transition duration-200 text-left flex items-center justify-between cursor-pointer rounded-xs mb-4"
             >
               <span>+ 새 메모 작성</span>
               <Plus className="w-3.5 h-3.5" />
@@ -184,13 +184,13 @@ export default function NoteDialog({
                   onClick={() => handleNoteSelect(n)}
                   className={`w-full text-left p-3 border cursor-pointer transition duration-200 flex flex-col gap-1 rounded-xs
                     ${activeNote?.id === n.id
-                      ? 'bg-ink border-ink text-white dark:bg-white dark:border-white dark:text-ink'
+                      ? 'chip-active border'
                       : 'border-line-alpha hover:bg-ink/5 dark:hover:bg-white/5 text-ink'
                     }
                   `}
                 >
                   <span className="text-xs font-bold line-clamp-1">{n.title || '제목 없음'}</span>
-                  <span className={`text-[9px] font-mono ${activeNote?.id === n.id ? 'opacity-70' : 'text-[#5a6b62] dark:text-[#b8c9bf]'}`}>
+                  <span className={`text-[9px] font-mono ${activeNote?.id === n.id ? 'opacity-70' : 'text-secondary'}`}>
                     {new Date(n.updatedAt).toLocaleDateString('ko-KR', {
                       month: 'short',
                       day: 'numeric',
@@ -204,7 +204,7 @@ export default function NoteDialog({
           </div>
 
           <div className="pt-4 border-t border-line-alpha hidden md:block">
-            <span className="text-[10px] text-[#5a6b62] dark:text-[#b8c9bf] font-bold block">현재 폴더</span>
+            <span className="text-[10px] text-secondary font-bold block">현재 폴더</span>
             <span className="text-xs font-bold text-ink line-clamp-1 mt-0.5">
               {getSourceName(sourceId)}
             </span>
@@ -215,7 +215,7 @@ export default function NoteDialog({
         <div className="flex-1 p-6 md:p-8 overflow-y-auto max-h-[70vh] md:max-h-[80vh] flex flex-col">
           <div className="flex justify-between items-start mb-4">
             <div>
-              <span className="text-[10px] font-bold tracking-wider text-forest-green dark:text-green-300 uppercase block">
+              <span className="text-[10px] font-bold tracking-wider text-forest-green dark:text-[var(--green)] uppercase block">
                 MEMO EDITOR
               </span>
               <h3 className="font-serif text-xl text-ink leading-tight">
@@ -230,7 +230,7 @@ export default function NoteDialog({
               }}
               className="p-1.5 hover:bg-ink/5 dark:hover:bg-white/5 rounded-full cursor-pointer"
             >
-              <X className="w-5 h-5 text-[#3d4f46] dark:text-[#c5d4cb]" />
+              <X className="w-5 h-5 text-secondary" />
             </button>
           </div>
 
@@ -240,7 +240,7 @@ export default function NoteDialog({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="메모 제목"
-            className="w-full text-base font-bold text-ink border border-line-alpha px-3 py-2.5 bg-white dark:bg-[#15201c] dark:text-white rounded-xs focus:outline-none focus:border-forest-green mb-3"
+            className="w-full text-base font-bold text-ink border border-line-alpha px-3 py-2.5 bg-[var(--surface)] dark:text-white rounded-xs focus:outline-none focus:border-forest-green mb-3"
           />
 
           {/* Text Area */}
@@ -248,7 +248,7 @@ export default function NoteDialog({
             value={body}
             onChange={(e) => setBody(e.target.value)}
             placeholder="읽고 떠오른 것, 나중에 다시 볼 요약, 할 일 등을 자유롭게 남기세요..."
-            className="w-full flex-1 min-h-[180px] text-sm text-ink border border-line-alpha p-4 bg-white dark:bg-[#15201c] dark:text-white rounded-xs focus:outline-none focus:border-forest-green leading-relaxed resize-y font-sans"
+            className="w-full flex-1 min-h-[180px] text-sm text-ink border border-line-alpha p-4 bg-[var(--surface)] dark:text-white rounded-xs focus:outline-none focus:border-forest-green leading-relaxed resize-y font-sans"
           />
 
           {/* Visit origin helper if active source is a newsletter */}
@@ -257,7 +257,7 @@ export default function NoteDialog({
               href={activeNewsletter.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-forest-green dark:text-green-300 hover:underline mt-2 self-start flex items-center gap-1.5 font-bold"
+              className="text-xs text-forest-green dark:text-[var(--green)] hover:underline mt-2 self-start flex items-center gap-1.5 font-bold"
             >
               <span>{activeNewsletter.name} 원문 실시간 확인 ↗</span>
             </a>
@@ -321,13 +321,13 @@ export default function NoteDialog({
             <div className="flex flex-wrap gap-4 items-end justify-between mt-4 pt-4 border-t border-line-alpha">
               <div className="flex flex-wrap gap-3 items-end">
                 <div className="flex flex-col gap-1">
-                  <span className="text-[10px] text-[#3d4f46] dark:text-[#c5d4cb] uppercase tracking-wider font-bold">
+                  <span className="text-[10px] text-secondary uppercase tracking-wider font-bold">
                     다른 폴더로
                   </span>
                   <select
                     value={transferTarget}
                     onChange={(e) => setTransferTarget(e.target.value)}
-                    className="bg-white dark:bg-[#15201c] dark:text-white border border-line-alpha px-3 py-2 text-xs focus:outline-none"
+                    className="bg-[var(--surface)] dark:text-white border border-line-alpha px-3 py-2 text-xs focus:outline-none"
                   >
                     <option value="">폴더 선택...</option>
                     <option value="inbox">일반 메모함</option>
@@ -341,13 +341,13 @@ export default function NoteDialog({
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <span className="text-[10px] text-[#3d4f46] dark:text-[#c5d4cb] uppercase tracking-wider font-bold">
+                  <span className="text-[10px] text-secondary uppercase tracking-wider font-bold">
                     방식
                   </span>
                   <select
                     value={transferMode}
                     onChange={(e) => setTransferMode(e.target.value as 'move' | 'copy')}
-                    className="bg-white dark:bg-[#15201c] dark:text-white border border-line-alpha px-3 py-2 text-xs focus:outline-none"
+                    className="bg-[var(--surface)] dark:text-white border border-line-alpha px-3 py-2 text-xs focus:outline-none"
                   >
                     <option value="move">이동 (폴더 변경)</option>
                     <option value="copy">복사 (복제본 생성)</option>

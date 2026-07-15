@@ -17,7 +17,7 @@ export default function Toast({ message, onDone }: ToastProps) {
   return (
     <div
       role="status"
-      className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] px-4 py-2.5 bg-ink text-paper text-sm font-semibold shadow-lg rounded-sm max-w-[90vw]"
+      className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] px-4 py-2.5 bg-[var(--ink)] text-[var(--paper)] text-sm font-semibold shadow-lg rounded-sm max-w-[90vw]"
     >
       {message}
     </div>

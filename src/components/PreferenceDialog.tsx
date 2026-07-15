@@ -50,15 +50,15 @@ export default function PreferenceDialog({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/55 backdrop-blur-xs">
-      <div className="w-full max-w-lg bg-[#f6f0e3] dark:bg-[#22332b] text-ink border border-line-alpha p-8 md:p-10 shadow-2xl relative animate-fade-in max-h-[90vh] overflow-y-auto">
+      <div className="w-full max-w-lg bg-[#f6f0e3] dark:bg-[var(--surface)] text-ink border border-line-alpha p-8 md:p-10 shadow-2xl relative animate-fade-in max-h-[90vh] overflow-y-auto">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 p-1.5 hover:bg-ink/5 dark:hover:bg-white/5 rounded-full cursor-pointer"
         >
-          <X className="w-5 h-5 text-[#3d4f46] dark:text-[#c5d4cb]" />
+          <X className="w-5 h-5 text-secondary" />
         </button>
 
-        <div className="flex items-center gap-2 mb-4 text-xs font-bold tracking-wider text-forest-green dark:text-green-300">
+        <div className="flex items-center gap-2 mb-4 text-xs font-bold tracking-wider text-forest-green dark:text-[var(--green)]">
           <Settings className="w-4 h-4 text-accent-red" />
           <span>YOUR PREFERENCE CENTER</span>
         </div>
@@ -67,14 +67,14 @@ export default function PreferenceDialog({
           받는 부담은<br />내가 정해요.
         </h2>
 
-        <p className="text-xs text-[#3d4f46] dark:text-[#c5d4cb] mb-6 leading-relaxed">
+        <p className="text-xs text-secondary mb-6 leading-relaxed">
           이 설정은 브라우저에 저장되어 추천과 정렬에만 맞춤 적용됩니다.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Interests */}
           <div>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-forest-green dark:text-green-300 mb-3">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-forest-green dark:text-[var(--green)] mb-3">
               관심 분야 (최대 3개)
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -87,7 +87,7 @@ export default function PreferenceDialog({
                     className={`
                       px-3 py-1.5 text-xs font-medium border cursor-pointer select-none transition-all duration-200
                       ${isChecked
-                        ? 'bg-ink text-white border-ink dark:bg-white dark:text-ink'
+                        ? 'chip-active border'
                         : 'border-line-alpha hover:border-ink dark:hover:border-white text-ink'
                       }
                       ${isDisabled ? 'opacity-40 cursor-not-allowed' : ''}
@@ -109,7 +109,7 @@ export default function PreferenceDialog({
 
           {/* Frequency */}
           <div>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-forest-green dark:text-green-300 mb-3">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-forest-green dark:text-[var(--green)] mb-3">
               선호 발행 빈도
             </h3>
             <div className="flex flex-wrap gap-2.5">
@@ -124,7 +124,7 @@ export default function PreferenceDialog({
                   className={`
                     flex-1 min-w-[80px] p-2.5 text-center text-xs font-medium border cursor-pointer select-none transition-all duration-200
                     ${frequency === opt.value
-                      ? 'bg-ink text-white border-ink dark:bg-white dark:text-ink'
+                      ? 'chip-active border'
                       : 'border-line-alpha hover:border-ink dark:hover:border-white text-ink'
                     }
                   `}

@@ -1,6 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
+/*
+  대비 원칙
+  - 라이트: 밝은 배경 + 진한 글자 (초록 배경에 초록 글자 금지)
+  - 다크: 어두운 배경 + 밝은 글자 (민트 액센트는 장식/강조만)
+  - 활성 칩: bg-ink + text-paper (모드 자동 반전)
+*/
+
 @theme {
   --color-ink: var(--ink);
   --color-paper: var(--paper);
@@ -8,27 +15,59 @@
   --color-accent-red: var(--red);
   --color-forest-green: var(--green);
   --color-line-alpha: var(--line);
-
-  /* 고정 회색 — 다크모드에서 숫자가 뒤집히면 글자가 안 보임. 유틸은 dark: 접두사로 처리 */
   --color-muted: var(--muted);
   --color-muted-strong: var(--muted-strong);
-
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-tint: var(--surface-tint);
+  --color-on-accent: var(--on-accent);
   --font-serif: "Gowun Batang", serif;
   --font-sans: "IBM Plex Sans KR", sans-serif;
 }
 
+/* ========== LIGHT ========== */
 :root {
-  --ink: #0e1613;
-  --paper: #faf8f2;
-  --warm: #e8d9b8;
-  --red: #b32612;
-  --green: #0f3d2c;
-  --line: rgba(14, 22, 19, 0.2);
-  --muted: #3d4f46;
-  --muted-strong: #2a3831;
+  --ink: #101612;
+  --paper: #faf9f5;
+  --surface: #ffffff;
+  --surface-2: #f3f1ea;
+  --surface-tint: #e7f2eb; /* 연한 민트 섹션 — 글자는 ink/muted */
+  --warm: #efe4c8;
+  --green: #0b6b42; /* 액센트: 라이트 배경 위 진한 초록 */
+  --green-soft: #d8f0e3;
+  --red: #c42a14;
+  --line: rgba(16, 22, 18, 0.16);
+  --muted: #3a4a42; /* 본문 보조 — 연녹 배경에서도 읽힘 */
+  --muted-strong: #24302a;
+  --on-accent: #ffffff; /* 진한 초록 버튼 위 글자 */
+  --live-bg: #132018;
+  --live-fg: #f4faf6;
+  --live-muted: #c5d5cc;
+  --live-accent: #9fe0b8;
 
   --serif: 'Gowun Batang', serif;
   --sans: 'IBM Plex Sans KR', sans-serif;
+}
+
+/* ========== DARK ========== */
+body.dark {
+  --ink: #f3f8f5;
+  --paper: #0d1210;
+  --surface: #161e1a;
+  --surface-2: #1c2621;
+  --surface-tint: #1a2822;
+  --warm: #243029;
+  --green: #8fd9ae; /* 액센트: 다크 배경 위 밝은 민트 */
+  --green-soft: #1e3a2c;
+  --red: #ff8f7c;
+  --line: rgba(243, 248, 245, 0.16);
+  --muted: #c2d2c9;
+  --muted-strong: #e4eee8;
+  --on-accent: #0d1210; /* 밝은 민트 버튼 위 글자 */
+  --live-bg: #0f1613;
+  --live-fg: #f4faf6;
+  --live-muted: #c8d6ce;
+  --live-accent: #9fe0b8;
 }
 
 body {
@@ -38,41 +77,32 @@ body {
   font-family: var(--sans);
   font-size: 16px;
   line-height: 1.65;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.25s ease, color 0.25s ease;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
 
-body.dark {
-  --ink: #f3faf6;
-  --paper: #0c1210;
-  --warm: #1a2822;
-  --green: #8fd9ae;
-  --line: rgba(243, 250, 246, 0.22);
-  --red: #ff8a78;
-  --muted: #c5d4cb;
-  --muted-strong: #dce8e1;
-}
-
-/* Paper grain: 글자 위에 얹히면 흐려 보임 → 뒤로 */
 .paper-grain {
   position: fixed;
   inset: 0;
-  opacity: 0.035;
+  opacity: 0.03;
   z-index: 0;
   pointer-events: none;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
 }
 
-/* 콘텐츠는 grain 위 */
 .site-header,
-main,
 section,
 footer,
-dialog {
+dialog,
+main {
   position: relative;
   z-index: 1;
+}
+
+.site-header {
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
 }
 
 .brand-mark {
@@ -92,42 +122,110 @@ dialog {
 }
 
 @keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.35;
-    transform: scale(0.7);
-  }
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.7); }
 }
 
-/* 가독성: Tailwind gray 유틸이 테마와 꼬일 때 대비 보정 */
-.newsletter-card .description,
-.newsletter-card p {
-  color: var(--muted-strong);
-}
-
-body.dark .newsletter-card .description,
-body.dark .newsletter-card p {
-  color: var(--muted);
-}
-
-body.dark .newsletter-card h3,
-body .newsletter-card h3 {
+/* 카드: 항상 명확한 글자색 */
+.newsletter-card {
+  background: var(--surface) !important;
   color: var(--ink);
 }
-
-/* 카드 본문 대비 강화 */
-.text-readable {
-  color: var(--muted-strong);
+.newsletter-card h3 {
+  color: var(--ink) !important;
+}
+.newsletter-card .description,
+.newsletter-card p {
+  color: var(--muted-strong) !important;
+}
+body.dark .newsletter-card {
+  background: var(--surface) !important;
 }
 
-body.dark .text-readable {
+/* 섹션 표면 유틸 */
+.surface-tint {
+  background: var(--surface-tint);
+  color: var(--ink);
+}
+.surface-tint p,
+.surface-tint .section-sub {
   color: var(--muted);
 }
 
-/* Large text option */
+/* 라이브 데스크 전용 (항상 어두운 작업대 + 밝은 글자) */
+.live-desk {
+  background: var(--live-bg) !important;
+  color: var(--live-fg) !important;
+}
+.live-desk h2,
+.live-desk h3,
+.live-desk strong {
+  color: var(--live-fg) !important;
+}
+.live-desk p,
+.live-desk span,
+.live-desk label {
+  color: var(--live-muted);
+}
+.live-desk .live-accent,
+.live-desk a.live-accent,
+.live-desk a {
+  color: var(--live-accent) !important;
+}
+.live-desk button.live-accent,
+.live-desk .live-accent {
+  color: var(--live-accent);
+}
+/* 민트 버튼: 밝은 배경 + 거의 검정 글자 */
+.live-desk .btn-mint {
+  background: var(--live-accent);
+  color: #0a100e !important;
+  font-weight: 700;
+}
+.live-desk .btn-mint:hover {
+  filter: brightness(1.05);
+}
+.live-desk select {
+  background: #0a100e;
+  color: #f4faf6;
+  border-color: rgba(255, 255, 255, 0.28);
+}
+.live-desk select option {
+  background: #132018;
+  color: #f4faf6;
+}
+
+/* 필터 칩: 활성 = ink 배경 + paper 글자 (모드 자동) */
+.chip-active {
+  background: var(--ink) !important;
+  color: var(--paper) !important;
+  border-color: var(--ink) !important;
+}
+.chip-idle {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+/* 진한 바 (통계 등) */
+.stats-bar {
+  background: #121a16;
+  color: #f4faf6;
+}
+body.dark .stats-bar {
+  background: #0a0f0d;
+  color: #f4faf6;
+}
+.stats-bar .stats-label {
+  color: #b8c9bf !important;
+}
+.stats-bar .stats-value {
+  color: #ffffff !important;
+}
+.stats-bar .stats-accent {
+  color: #9fe0b8 !important;
+}
+
 body.large-text {
   font-size: 18px;
 }
@@ -139,59 +237,28 @@ body.large-text .newsletter-card p {
   line-height: 1.7;
 }
 
-/* Status indicator */
-.status-dot::before {
-  content: '';
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  margin-right: 6px;
-  background-color: var(--green);
-}
-
-.status-dot.paused::before {
-  background-color: #b5a892;
-}
-
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
-  background: var(--paper);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--warm);
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--green);
-}
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--paper); }
+::-webkit-scrollbar-thumb { background: var(--warm); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--green); }
 
 dialog::backdrop {
-  background: rgba(14, 22, 19, 0.6);
+  background: rgba(10, 14, 12, 0.62);
   backdrop-filter: blur(4px);
 }
 
-/* 필터 버튼: 비활성 글자 대비 */
-.filter-chip {
+select option {
+  background: var(--surface);
   color: var(--ink);
-  border: 1px solid var(--line);
-  background: transparent;
-}
-.filter-chip.active {
-  background: var(--ink);
-  color: var(--paper);
-  border-color: var(--ink);
-}
-body.dark .filter-chip.active {
-  background: var(--ink);
-  color: #0c1210;
 }
 
-/* select option 가독성 */
-select option {
-  background: var(--paper);
-  color: var(--ink);
+/* 하드코딩 연녹 글자 on 녹 배경 보정 힌트 */
+.text-on-light {
+  color: var(--ink) !important;
+}
+.text-secondary {
+  color: var(--muted) !important;
+}
+.text-accent-green {
+  color: var(--green) !important;
 }

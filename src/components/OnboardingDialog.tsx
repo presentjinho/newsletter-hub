@@ -29,8 +29,8 @@ export default function OnboardingDialog({ isOpen, onClose, availableInterests }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/55 backdrop-blur-xs">
-      <div className="w-full max-w-lg bg-[#f6f0e3] dark:bg-[#22332b] text-ink border border-line-alpha p-8 md:p-10 shadow-2xl relative animate-fade-in">
-        <div className="flex items-center gap-2 mb-4 text-xs font-bold tracking-wider text-forest-green dark:text-green-300">
+      <div className="w-full max-w-lg bg-[#f6f0e3] dark:bg-[var(--surface)] text-ink border border-line-alpha p-8 md:p-10 shadow-2xl relative animate-fade-in">
+        <div className="flex items-center gap-2 mb-4 text-xs font-bold tracking-wider text-forest-green dark:text-[var(--green)]">
           <Sparkles className="w-4 h-4 text-accent-red" />
           <span>FIRST, A QUICK PICK</span>
         </div>
@@ -39,7 +39,7 @@ export default function OnboardingDialog({ isOpen, onClose, availableInterests }
           어떤 편지를<br />기다리나요?
         </h2>
         
-        <p className="text-sm text-[#2a3831] dark:text-[#d0ddd6] leading-relaxed mb-6">
+        <p className="text-sm text-secondary leading-relaxed mb-6">
           관심사 1~3개를 고르면, 먼저 볼 5개의 뉴스레터를 추천해 드릴게요.
         </p>
 
@@ -54,7 +54,7 @@ export default function OnboardingDialog({ isOpen, onClose, availableInterests }
                   className={`
                     px-4 py-2.5 text-sm font-medium border cursor-pointer select-none transition-all duration-200
                     ${isChecked 
-                      ? 'bg-ink text-white border-ink dark:bg-white dark:text-ink dark:border-white' 
+                      ? 'chip-active border' 
                       : 'border-line-alpha hover:border-ink dark:hover:border-white text-ink'
                     }
                     ${isDisabled ? 'opacity-40 cursor-not-allowed hover:border-line-alpha' : ''}
@@ -89,7 +89,7 @@ export default function OnboardingDialog({ isOpen, onClose, availableInterests }
             <button
               type="button"
               onClick={() => onClose([])}
-              className="w-full text-center text-xs text-[#3d4f46] dark:text-[#c5d4cb] hover:text-ink dark:text-[#5a6b62] dark:text-[#b8c9bf] dark:hover:text-white underline py-2 cursor-pointer"
+              className="w-full text-center text-xs text-secondary hover:text-ink dark:text-secondary dark:hover:text-white underline py-2 cursor-pointer"
             >
               건너뛰기
             </button>

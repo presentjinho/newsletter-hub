@@ -36,19 +36,19 @@ export default function NotesHub({
   const activeSources = Object.keys(notesBySource);
 
   return (
-    <section className="notes-hub bg-[#f4efe4] dark:bg-[#1d2a25] p-8 md:p-14 border-b border-line-alpha" id="notes">
+    <section className="notes-hub bg-[var(--surface-2)] p-8 md:p-14 border-b border-line-alpha" id="notes">
       <div className="max-w-7xl mx-auto">
         
         {/* Header Block */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-8">
           <div className="max-w-2xl">
-            <p className="text-xs font-bold tracking-widest text-forest-green dark:text-green-300 mb-2">
+            <p className="text-xs font-bold tracking-widest text-forest-green dark:text-[var(--green)] mb-2">
               NOTES · GMAIL · PORTAL
             </p>
             <h2 className="font-serif text-3xl md:text-5xl tracking-tight leading-tight mb-4 text-ink">
               메모하고, Gmail로 보내고,<br />원하는 곳으로 이동하기
             </h2>
-            <p className="text-sm text-[#2a3831] dark:text-[#d0ddd6] leading-relaxed">
+            <p className="text-sm text-secondary leading-relaxed">
               작성된 메모들은 브라우저 로컬 저장소에 저장되어 안전하게 유지됩니다.<br />
               지정한 이메일 주소를 사용해 클릭 한 번으로 Gmail 편지 작성 창(compose)으로 내보내거나 백업할 수 있습니다.
             </p>
@@ -57,7 +57,7 @@ export default function NotesHub({
           <div className="flex flex-wrap items-center gap-3">
             <button
               onClick={onOpenInbox}
-              className="px-4 py-3 bg-ink text-white dark:bg-white dark:text-ink hover:opacity-90 transition duration-200 font-bold text-xs flex items-center gap-1.5 cursor-pointer rounded-xs"
+              className="px-4 py-3 bg-ink text-paper hover:opacity-90 transition duration-200 font-bold text-xs flex items-center gap-1.5 cursor-pointer rounded-xs"
             >
               <Inbox className="w-4 h-4" />
               일반 메모함 열기
@@ -65,14 +65,14 @@ export default function NotesHub({
             
             <button
               onClick={onAddNotebook}
-              className="px-4 py-3 bg-[#e7ddc9] dark:bg-[#283a32] text-ink hover:opacity-90 border border-line-alpha transition duration-200 font-bold text-xs flex items-center gap-1.5 cursor-pointer rounded-xs"
+              className="px-4 py-3 bg-[var(--warm)] text-ink hover:opacity-90 border border-line-alpha transition duration-200 font-bold text-xs flex items-center gap-1.5 cursor-pointer rounded-xs"
             >
               <Plus className="w-4 h-4 text-accent-red" />
               새 폴더 추가
             </button>
 
             <div className="flex flex-col gap-1 text-left">
-              <label className="text-[10px] font-bold text-[#3d4f46] dark:text-[#c5d4cb] uppercase tracking-wider">
+              <label className="text-[10px] font-bold text-secondary uppercase tracking-wider">
                 나에게 보낼 Gmail 주소
               </label>
               <input
@@ -97,10 +97,10 @@ export default function NotesHub({
               return (
                 <article
                   key={sourceId}
-                  className="notes-hub-card p-5 border border-line-alpha bg-white/70 dark:bg-[#22332b] flex flex-col justify-between min-h-[190px] transition-all duration-200 hover:shadow-md"
+                  className="notes-hub-card p-5 border border-line-alpha bg-[var(--surface)] flex flex-col justify-between min-h-[190px] transition-all duration-200 hover:shadow-md"
                 >
                   <div>
-                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-forest-green dark:text-green-300 uppercase tracking-wider mb-2">
+                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-forest-green dark:text-[var(--green)] uppercase tracking-wider mb-2">
                       <Folder className="w-3.5 h-3.5 text-accent-red" />
                       <span className="line-clamp-1">{folderName}</span>
                     </div>
@@ -109,13 +109,13 @@ export default function NotesHub({
                       {latestNote.title || '제목 없는 메모'}
                     </h3>
 
-                    <p className="text-xs text-[#3d4f46] dark:text-[#c5d4cb] line-clamp-2 leading-relaxed mb-3">
+                    <p className="text-xs text-secondary line-clamp-2 leading-relaxed mb-3">
                       {latestNote.body || '빈 메모'}
                     </p>
                   </div>
 
                   <div>
-                    <p className="text-[10px] text-[#5a6b62] dark:text-[#b8c9bf] mb-3">
+                    <p className="text-[10px] text-secondary mb-3">
                       {sourceList.length}개의 메모 • {new Date(latestNote.updatedAt).toLocaleDateString('ko-KR', {
                         month: 'short',
                         day: 'numeric',
@@ -129,7 +129,7 @@ export default function NotesHub({
                         onClick={() => onOpenNote(sourceId, latestNote.id)}
                         className="flex-1 py-1.5 text-center text-xs font-bold bg-line-alpha hover:bg-warm transition duration-200 text-ink cursor-pointer flex items-center justify-center gap-1"
                       >
-                        <BookOpen className="w-3 h-3 text-forest-green dark:text-green-300" />
+                        <BookOpen className="w-3 h-3 text-forest-green dark:text-[var(--green)]" />
                         <span>열기 ({sourceList.length})</span>
                       </button>
                       
@@ -147,11 +147,11 @@ export default function NotesHub({
             })
           ) : (
             <div className="col-span-full py-12 text-center bg-white/40 border border-dashed border-line-alpha p-10 flex flex-col items-center justify-center">
-              <Inbox className="w-10 h-10 text-[#5a6b62] dark:text-[#b8c9bf] mb-2" />
-              <p className="text-sm font-medium text-[#3d4f46] dark:text-[#c5d4cb] mb-1">
+              <Inbox className="w-10 h-10 text-secondary mb-2" />
+              <p className="text-sm font-medium text-secondary mb-1">
                 아직 생성된 메모가 존재하지 않습니다.
               </p>
-              <p className="text-xs text-[#5a6b62] dark:text-[#b8c9bf]">
+              <p className="text-xs text-secondary">
                 원하는 편지 카드의 [메모] 또는 상단의 [실시간 확인 작업대]에서 메모를 바로 남겨 보세요!
               </p>
             </div>

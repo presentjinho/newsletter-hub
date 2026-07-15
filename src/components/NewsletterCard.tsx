@@ -43,14 +43,14 @@ export default function NewsletterCard({
   const googleTranslateUrl = `https://translate.google.com/translate?sl=auto&tl=ko&u=${encodeURIComponent(item.url)}`;
 
   return (
-    <article className="newsletter-card bg-white dark:bg-[#1a2822] border-r border-b border-line-alpha p-6 flex flex-col justify-between transition-all duration-200 hover:bg-paper dark:hover:bg-[#22332b]">
+    <article className="newsletter-card bg-[var(--surface)] border-r border-b border-line-alpha p-6 flex flex-col justify-between transition-all duration-200 hover:bg-paper dark:hover:bg-[#22332b]">
       <div>
         {/* Card Header Category & Status */}
         <div className="flex justify-between items-center mb-3">
-          <span className="text-xs font-bold text-forest-green dark:text-green-300">
+          <span className="text-xs font-bold text-forest-green dark:text-[var(--green)]">
             {item.category}
           </span>
-          <span className={`text-[10px] flex items-center gap-1.5 ${item.status === 'alive' ? 'text-forest-green dark:text-green-300' : 'text-gray-500'}`}>
+          <span className={`text-[10px] flex items-center gap-1.5 ${item.status === 'alive' ? 'text-forest-green dark:text-[var(--green)]' : 'text-gray-500'}`}>
             <span className={`inline-block w-1.5 h-1.5 rounded-full ${item.status === 'alive' ? 'bg-forest-green dark:bg-green-400' : 'bg-gray-400'}`} />
             {item.status === 'alive' ? '발행 중' : '확인 필요'}
           </span>
@@ -61,7 +61,7 @@ export default function NewsletterCard({
           <span className="text-[9px] font-bold px-1.5 py-0.5 bg-[#f6ded8] text-accent-red dark:bg-[#4a2c26] uppercase">
             {item.type === 'newsletter' ? '뉴스레터' : item.type === 'magazine' ? '매거진' : '사이트'}
           </span>
-          <span className="text-[9px] font-bold px-1.5 py-0.5 bg-[#e4eadf] text-forest-green dark:bg-[#314b3f]">
+          <span className="text-[9px] font-bold px-1.5 py-0.5 bg-[var(--green-soft)] text-[var(--green)]">
             {item.origin === '글로벌' ? `GLOBAL · ${item.country}` : 'KOREA · 대한민국'}
           </span>
           <span className="text-[10px] text-gray-500 font-mono ml-1">
@@ -74,56 +74,56 @@ export default function NewsletterCard({
           {item.name}
         </h3>
         
-        <p className={`description text-sm leading-relaxed mb-1 text-[#2a3831] dark:text-[#d0ddd6] ${!descOpen && longDesc ? 'line-clamp-2' : ''}`}>
+        <p className={`description text-sm leading-relaxed mb-1 text-secondary ${!descOpen && longDesc ? 'line-clamp-2' : ''}`}>
           {item.description}
         </p>
         {longDesc && (
           <button
             type="button"
             onClick={() => setDescOpen(v => !v)}
-            className="text-[11px] font-bold text-forest-green dark:text-[#8fd9ae] bg-transparent border-0 cursor-pointer mb-2 flex items-center gap-0.5 p-0"
+            className="text-[11px] font-bold text-forest-green dark:text-[var(--green)] bg-transparent border-0 cursor-pointer mb-2 flex items-center gap-0.5 p-0"
           >
             {descOpen ? <>접기 <ChevronUp className="w-3 h-3" /></> : <>더 보기 <ChevronDown className="w-3 h-3" /></>}
           </button>
         )}
 
         {/* Value promise with red border */}
-        <p className="border-l-2 border-accent-red pl-2 py-0.5 my-3 text-xs leading-relaxed text-[#3d4f46] dark:text-[#c5d4cb]">
+        <p className="border-l-2 border-accent-red pl-2 py-0.5 my-3 text-xs leading-relaxed text-secondary">
           {valuePromises[item.category] || '내게 필요한 내용인지 빠르게 확인할 수 있어요.'}
         </p>
       </div>
 
       <div>
         {/* Core details (frequency, length, last checked) */}
-        <div className="flex gap-4 items-center text-xs text-[#3d4f46] dark:text-[#c5d4cb] pt-3 border-t border-line-alpha mb-2">
+        <div className="flex gap-4 items-center text-xs text-secondary pt-3 border-t border-line-alpha mb-2">
           <span>{item.frequency}</span>
           <span>•</span>
-          <span className="text-forest-green dark:text-[#8fd9ae] font-semibold">{readingTimes[item.category] || '3분 읽기'}</span>
+          <span className="text-forest-green dark:text-[var(--green)] font-semibold">{readingTimes[item.category] || '3분 읽기'}</span>
           <span className="ml-auto text-[11px] font-mono font-medium">{formattedFreshness()}</span>
         </div>
 
         {/* Average activity / unsubscribe support */}
-        <p className="text-xs text-forest-green dark:text-[#8fd9ae] font-semibold mb-1">
+        <p className="text-xs text-forest-green dark:text-[var(--green)] font-semibold mb-1">
           {item.type === 'site' ? '평소 활동' : '평균 발행'} · {item.typical}
         </p>
         
-        <p className="text-xs text-[#3d4f46] dark:text-[#c5d4cb] leading-relaxed mb-3">
+        <p className="text-xs text-secondary leading-relaxed mb-3">
           {unsubscribeText[item.type] || '해지 · 메일 하단 수신거부 링크 또는 설정'}
         </p>
 
         {/* Trust Badges */}
         <div className="flex flex-wrap gap-1 mb-4">
           {item.trust.map((t, idx) => (
-            <span key={idx} className="text-[9px] px-1.5 py-0.5 border border-forest-green/20 text-forest-green dark:text-green-300">
+            <span key={idx} className="text-[9px] px-1.5 py-0.5 border border-forest-green/20 text-forest-green dark:text-[var(--green)]">
               {t}
             </span>
           ))}
           {item.sourceScope === 'public' && (
-            <span className="text-[9px] px-1.5 py-0.5 border border-forest-green/20 text-forest-green dark:text-green-300 font-bold">
+            <span className="text-[9px] px-1.5 py-0.5 border border-forest-green/20 text-forest-green dark:text-[var(--green)] font-bold">
               검증 공공 출처
             </span>
           )}
-          <span className="text-[9px] px-1.5 py-0.5 border border-forest-green/20 text-forest-green dark:text-green-300">
+          <span className="text-[9px] px-1.5 py-0.5 border border-forest-green/20 text-forest-green dark:text-[var(--green)]">
             {reuseLabels[item.reuseLevel]}
           </span>
         </div>
@@ -145,7 +145,7 @@ export default function NewsletterCard({
               href={googleTranslateUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-forest-green dark:text-green-300 hover:underline flex items-center gap-0.5"
+              className="text-xs text-forest-green dark:text-[var(--green)] hover:underline flex items-center gap-0.5"
             >
               <Globe className="w-3 h-3" />
               <span>한국어 번역</span>
@@ -154,7 +154,7 @@ export default function NewsletterCard({
 
           <button
             onClick={onToggleSave}
-            className={`text-xs font-bold transition-all duration-200 cursor-pointer ${isSaved ? 'text-accent-red' : 'text-forest-green dark:text-green-300'}`}
+            className={`text-xs font-bold transition-all duration-200 cursor-pointer ${isSaved ? 'text-accent-red' : 'text-forest-green dark:text-[var(--green)]'}`}
           >
             {isSaved ? '저장됨 ✓' : '+ 내 목록'}
           </button>

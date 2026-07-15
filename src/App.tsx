@@ -734,7 +734,7 @@ export default function App() {
       {/* --- HERO BANNER --- */}
       <section className="hero max-w-7xl mx-auto px-6 md:px-12 py-16 md:py-24 relative overflow-hidden flex flex-col justify-between" id="top">
         <div className="max-w-3xl z-10">
-          <p className="text-xs font-bold tracking-widest text-forest-green dark:text-green-300 mb-4">
+          <p className="text-xs font-bold tracking-widest text-forest-green dark:text-[var(--green)] mb-4">
             KOREAN NEWSLETTER DIRECTORY · 매일 오전 7시 갱신
           </p>
           <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl tracking-tight leading-tight mb-6">
@@ -742,7 +742,7 @@ export default function App() {
             <em className="text-accent-red not-italic font-bold">가볍게</em> 모으고,<br />
             편하게 읽어요.
           </h1>
-          <p className="text-base md:text-lg text-[#2a3831] dark:text-[#d0ddd6] leading-relaxed mb-8 max-w-2xl">
+          <p className="text-base md:text-lg text-secondary leading-relaxed mb-8 max-w-2xl">
             수많은 뉴스레터와 공공 공개 자료원들이 어디에 있고, 오늘도 살아있는지 한곳에서 확인하세요.<br />
             남의 편지를 무단 복사하지 않고, 발행사 공식 채널로만 직접 안내하여 안심하고 구독할 수 있습니다.
           </p>
@@ -758,7 +758,7 @@ export default function App() {
 
         <div className="mt-12 text-xs flex items-center gap-2.5 z-10">
           <span className="pulse" />
-          <span className="text-[#2a3831] dark:text-[#d0ddd6]">
+          <span className="text-secondary">
             현재 <strong>{totalActive}</strong>개의 엄선 채널 중, <strong>{totalAlive}</strong>개 정상 발행 상태 확인 완료
           </span>
         </div>
@@ -770,25 +770,25 @@ export default function App() {
       </section>
 
       {/* --- STATISTICS BAR --- */}
-      <section className="bg-ink dark:bg-[#121c18] text-[#f6f1e5] px-6 md:px-12 py-6">
+      <section className="stats-bar px-6 md:px-12 py-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
           <div className="border-l border-white/20 pl-4 py-1">
-            <span className="block text-[10px] text-[#b8c9bf] uppercase tracking-wider mb-0.5">상태 동기화</span>
-            <strong className="text-sm font-semibold text-white">{linkSyncStatus}</strong>
+            <span className="stats-label block text-[10px] uppercase tracking-wider mb-0.5">상태 동기화</span>
+            <strong className="stats-value text-sm font-semibold">{linkSyncStatus}</strong>
           </div>
           <div className="border-l border-white/20 pl-4 py-1">
-            <span className="block text-[10px] text-[#b8c9bf] uppercase tracking-wider mb-0.5">오늘 발행 감각</span>
-            <strong className="text-sm font-semibold text-[#9bcfb3]">
+            <span className="stats-label block text-[10px] uppercase tracking-wider mb-0.5">오늘 발행 감각</span>
+            <strong className="stats-accent text-sm font-semibold">
               {catalog.filter(n => n.daysSince === 0).length}개 채널
             </strong>
           </div>
           <div className="border-l border-white/20 pl-4 py-1">
-            <span className="block text-[10px] text-[#b8c9bf] uppercase tracking-wider mb-0.5">확인 필요 · 주말 큐</span>
-            <strong className="text-sm font-semibold text-accent-red">
+            <span className="stats-label block text-[10px] uppercase tracking-wider mb-0.5">확인 필요 · 주말 큐</span>
+            <strong className="text-sm font-semibold text-[#ff9a8a]">
               {totalNeedsReview} · 주말 {weekendQueue}
             </strong>
           </div>
-          <div className="text-xs text-[#d0ddd6] leading-relaxed">
+          <div className="text-xs text-[#d5e2db] leading-relaxed">
             Ctrl+K 검색 · 구독관리 일괄 정리 · 주말 몰아보기 MD · 백업 JSON
           </div>
         </div>
@@ -828,16 +828,16 @@ export default function App() {
       />
 
       {/* --- TODAY'S PICKS (3 Items) --- */}
-      <section className="bg-[#dce8de] dark:bg-[#1a2e26] p-8 md:p-14 border-b border-line-alpha" id="today">
+      <section className="surface-tint p-8 md:p-14 border-b border-line-alpha" id="today">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           <div className="lg:col-span-4">
-            <p className="text-xs font-bold tracking-widest text-forest-green dark:text-green-300 uppercase mb-2">
+            <p className="text-xs font-bold tracking-widest text-forest-green dark:text-[var(--green)] uppercase mb-2">
               A SMALL MORNING STACK
             </p>
             <h2 className="font-serif text-3xl md:text-4xl tracking-tight mb-3 text-ink">
               오늘 읽을 편지 <span className="text-accent-red font-sans">3</span>
             </h2>
-            <p className="text-sm text-[#4b5a4e] dark:text-gray-300 leading-relaxed">
+            <p className="text-sm text-secondary leading-relaxed">
               최근에 새로운 글이 발행되었고, 가벼운 호흡으로 시작해 보기 좋은 엄선 스택입니다.
             </p>
           </div>
@@ -865,11 +865,11 @@ export default function App() {
 
       {/* --- RECOMMENDED SECTION (Interests Matching) --- */}
       {!prefs.paused && userInterests.length > 0 && recommendedItems.length > 0 && (
-        <section className="bg-[#f8f4ea] dark:bg-[#202c25] p-8 md:p-14 border-b border-line-alpha" id="recommendations">
+        <section className="bg-[var(--surface-2)] p-8 md:p-14 border-b border-line-alpha" id="recommendations">
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
               <div>
-                <p className="text-xs font-bold tracking-widest text-forest-green dark:text-green-300 uppercase mb-1">
+                <p className="text-xs font-bold tracking-widest text-forest-green dark:text-[var(--green)] uppercase mb-1">
                   PICKED FOR YOU
                 </p>
                 <h2 className="font-serif text-2xl md:text-3xl tracking-tight text-ink">
@@ -878,7 +878,7 @@ export default function App() {
               </div>
               <button
                 onClick={() => setPreferencesOpen(true)}
-                className="text-xs font-bold text-forest-green dark:text-green-300 underline cursor-pointer bg-transparent border-0"
+                className="text-xs font-bold text-forest-green dark:text-[var(--green)] underline cursor-pointer bg-transparent border-0"
               >
                 관심 분야 및 빈도 재설정하기
               </button>
@@ -907,10 +907,10 @@ export default function App() {
       )}
 
       {/* --- MAIN DIRECTORY SECTION --- */}
-      <section className="directory bg-white dark:bg-[#1d2a25] p-8 md:p-14 border-b border-line-alpha" id="find">
+      <section className="directory bg-[var(--surface)] p-8 md:p-14 border-b border-line-alpha" id="find">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-xl mb-10">
-            <p className="text-xs font-bold tracking-widest text-forest-green dark:text-green-300 uppercase mb-2">
+            <p className="text-xs font-bold tracking-widest text-forest-green dark:text-[var(--green)] uppercase mb-2">
               THE DIRECTORY
             </p>
             <h2 className="font-serif text-3xl md:text-5xl tracking-tight leading-tight text-ink">
@@ -919,10 +919,10 @@ export default function App() {
           </div>
 
           {/* --- SEARCH & FILTERS CONTROLS --- */}
-          <div className="space-y-6 mb-8 bg-[#fdfaf2] dark:bg-[#203028] p-6 border border-line-alpha rounded-xs">
+          <div className="space-y-6 mb-8 bg-[var(--surface-2)] p-6 border border-line-alpha rounded-xs">
             {/* Search Input */}
             <div className="relative border-b border-ink/40 dark:border-white/40 focus-within:border-accent-red transition duration-200">
-              <Search className="absolute left-0 top-3 h-5 w-5 text-[#5a6b62] dark:text-[#b8c9bf]" />
+              <Search className="absolute left-0 top-3 h-5 w-5 text-secondary" />
               <input
                 ref={searchInputRef}
                 type="search"
@@ -935,7 +935,7 @@ export default function App() {
 
             {/* My subscription status filter */}
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-[10px] font-bold text-[#3d4f46] dark:text-[#c5d4cb] uppercase tracking-widest w-[80px] text-left">
+              <span className="text-[10px] font-bold text-secondary uppercase tracking-widest w-[80px] text-left">
                 내 상태
               </span>
               <div className="flex flex-wrap gap-1.5">
@@ -946,7 +946,7 @@ export default function App() {
                     onClick={() => setSelectedPersonal(s)}
                     className={`px-3 py-1 text-xs border rounded-full transition duration-200 cursor-pointer
                       ${selectedPersonal === s
-                        ? 'bg-ink border-ink text-white dark:bg-white dark:text-ink'
+                        ? 'chip-active border'
                         : 'border-line-alpha text-ink hover:border-ink dark:hover:border-white'
                       }
                     `}
@@ -972,7 +972,7 @@ export default function App() {
                     onClick={() => setSelectedSourceScope(scope.value as any)}
                     className={`px-3 py-1 text-xs border rounded-full transition duration-200 cursor-pointer
                       ${selectedSourceScope === scope.value
-                        ? 'bg-ink border-ink text-white dark:bg-white dark:text-ink'
+                        ? 'chip-active border'
                         : 'border-line-alpha text-ink hover:border-ink dark:hover:border-white'
                       }
                     `}
@@ -995,7 +995,7 @@ export default function App() {
                     onClick={() => setSelectedDiscipline(discipline)}
                     className={`px-3 py-1 text-xs border rounded-full transition duration-200 cursor-pointer
                       ${selectedDiscipline === discipline
-                        ? 'bg-ink border-ink text-white dark:bg-white dark:text-ink'
+                        ? 'chip-active border'
                         : 'border-line-alpha text-ink hover:border-ink dark:hover:border-white'
                       }
                     `}
@@ -1018,7 +1018,7 @@ export default function App() {
                     onClick={() => setSelectedCategory(cat)}
                     className={`px-3 py-1 text-xs border rounded-full transition duration-200 cursor-pointer
                       ${selectedCategory === cat
-                        ? 'bg-ink border-ink text-white dark:bg-white dark:text-ink'
+                        ? 'chip-active border'
                         : 'border-line-alpha text-ink hover:border-ink dark:hover:border-white'
                       }
                     `}
@@ -1041,7 +1041,7 @@ export default function App() {
                     onClick={() => setSelectedTopic(topic)}
                     className={`px-3 py-1 text-xs border border-dashed rounded-full transition duration-200 cursor-pointer
                       ${selectedTopic === topic
-                        ? 'bg-ink border-ink text-white dark:bg-white dark:text-ink'
+                        ? 'chip-active border'
                         : 'border-line-alpha text-ink hover:border-ink dark:hover:border-white'
                       }
                     `}
@@ -1059,7 +1059,7 @@ export default function App() {
                 <select
                   value={selectedFrequency}
                   onChange={(e) => setSelectedFrequency(e.target.value)}
-                  className="bg-white dark:bg-[#15201c] dark:text-white border border-line-alpha px-3 py-2 text-xs focus:outline-none"
+                  className="bg-[var(--surface)] dark:text-white border border-line-alpha px-3 py-2 text-xs focus:outline-none"
                 >
                   <option value="전체">전체 빈도</option>
                   <option value="daily">매일</option>
@@ -1073,7 +1073,7 @@ export default function App() {
                 <select
                   value={selectedOrigin}
                   onChange={(e) => setSelectedOrigin(e.target.value)}
-                  className="bg-white dark:bg-[#15201c] dark:text-white border border-line-alpha px-3 py-2 text-xs focus:outline-none"
+                  className="bg-[var(--surface)] dark:text-white border border-line-alpha px-3 py-2 text-xs focus:outline-none"
                 >
                   <option value="전체">전체 언어</option>
                   <option value="한국">한국어 뉴스레터</option>
@@ -1086,7 +1086,7 @@ export default function App() {
                 <select
                   value={selectedType}
                   onChange={(e) => setSelectedType(e.target.value)}
-                  className="bg-white dark:bg-[#15201c] dark:text-white border border-line-alpha px-3 py-2 text-xs focus:outline-none"
+                  className="bg-[var(--surface)] dark:text-white border border-line-alpha px-3 py-2 text-xs focus:outline-none"
                 >
                   <option value="전체">전체 형식</option>
                   <option value="newsletter">뉴스레터</option>
@@ -1103,7 +1103,7 @@ export default function App() {
                 <select
                   value={selectedCountry}
                   onChange={(e) => setSelectedCountry(e.target.value)}
-                  className="bg-white dark:bg-[#15201c] dark:text-white border border-line-alpha px-2.5 py-1.5 text-xs focus:outline-none"
+                  className="bg-[var(--surface)] dark:text-white border border-line-alpha px-2.5 py-1.5 text-xs focus:outline-none"
                 >
                   {countriesList.map(country => (
                     <option key={country} value={country}>
@@ -1118,7 +1118,7 @@ export default function App() {
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="bg-white dark:bg-[#15201c] dark:text-white border border-line-alpha px-2.5 py-1.5 text-xs focus:outline-none font-semibold"
+                  className="bg-[var(--surface)] dark:text-white border border-line-alpha px-2.5 py-1.5 text-xs focus:outline-none font-semibold"
                 >
                   <option value="recommended">나에게 맞는 추천순</option>
                   <option value="recent">최근 활동 순</option>
@@ -1166,11 +1166,11 @@ export default function App() {
             </div>
           ) : (
             <div className="py-20 text-center bg-white/40 border border-dashed border-line-alpha flex flex-col items-center justify-center p-8">
-              <Info className="w-8 h-8 text-[#5a6b62] dark:text-[#b8c9bf] mb-2" />
-              <p className="text-sm font-semibold text-gray-600 dark:text-[#5a6b62] dark:text-[#b8c9bf] mb-1">
+              <Info className="w-8 h-8 text-secondary mb-2" />
+              <p className="text-sm font-semibold text-gray-600 dark:text-secondary mb-1">
                 검색 조건에 맞는 편지 채널이 존재하지 않습니다.
               </p>
-              <p className="text-xs text-[#5a6b62] dark:text-[#b8c9bf]">
+              <p className="text-xs text-secondary">
                 입력된 키워드 철자를 확인하거나 위의 필터 조건들을 조금 더 넓혀 보세요.
               </p>
             </div>
@@ -1179,17 +1179,17 @@ export default function App() {
       </section>
 
       {/* --- SAVED SHELF SECTION ("내 목록") --- */}
-      <section className="my-list bg-[#e7ddc9] dark:bg-[#283a32] p-8 md:p-14 border-b border-line-alpha" id="my-list">
+      <section className="my-list bg-[var(--warm)] p-8 md:p-14 border-b border-line-alpha" id="my-list">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
             <div className="max-w-xl">
-              <p className="text-xs font-bold tracking-widest text-forest-green dark:text-green-300 uppercase mb-2">
+              <p className="text-xs font-bold tracking-widest text-forest-green dark:text-[var(--green)] uppercase mb-2">
                 YOUR SHELF
               </p>
               <h2 className="font-serif text-3xl md:text-5xl tracking-tight leading-tight text-ink">
                 내가 모아 둔 편지함
               </h2>
-              <p className="text-sm text-[#2a3831] dark:text-[#d0ddd6] mt-2 leading-relaxed">
+              <p className="text-sm text-secondary mt-2 leading-relaxed">
                 보관해 둔 편지 목록입니다. 타 기기나 FreshRSS, NetNewsWire 등 다른 RSS 리더기로 한 번에 전송하고 싶다면 OPML 규격 파일로 내려받으세요.
               </p>
             </div>
@@ -1197,14 +1197,14 @@ export default function App() {
             <div className="flex flex-wrap gap-2.5">
               <button
                 onClick={() => handleExportOpml('saved')}
-                className="px-4 py-3 bg-ink text-white dark:bg-white dark:text-ink hover:opacity-90 font-bold text-xs cursor-pointer rounded-xs"
+                className="px-4 py-3 bg-ink text-paper hover:opacity-90 font-bold text-xs cursor-pointer rounded-xs"
               >
                 내 목록 OPML 내보내기
               </button>
               
               <button
                 onClick={() => handleExportOpml('public')}
-                className="px-4 py-3 bg-white hover:bg-warm text-ink border border-line-alpha font-bold text-xs cursor-pointer rounded-xs"
+                className="px-4 py-3 bg-white hover:bg-[var(--warm)] text-ink border border-line-alpha font-bold text-xs cursor-pointer rounded-xs"
               >
                 검증 공공 출처 OPML 받기
               </button>
@@ -1232,7 +1232,7 @@ export default function App() {
             </div>
           ) : (
             <div className="py-12 text-center bg-white/25 border border-dashed border-line-alpha flex flex-col items-center justify-center p-8">
-              <p className="font-serif text-lg text-[#2a3831] dark:text-[#d0ddd6] mb-2">
+              <p className="font-serif text-lg text-secondary mb-2">
                 보관된 편지가 아직 존재하지 않습니다.
               </p>
               <p className="text-xs text-gray-500 max-w-sm leading-relaxed">
@@ -1260,20 +1260,20 @@ export default function App() {
       <ToolsSection />
 
       {/* --- FOOTER --- */}
-      <footer className="py-12 text-center text-xs text-[#3d4f46] dark:text-[#c5d4cb] bg-paper dark:bg-[#121c18] border-t border-line-alpha flex flex-col items-center justify-center gap-3">
+      <footer className="py-12 text-center text-xs text-secondary bg-paper dark:bg-[#121c18] border-t border-line-alpha flex flex-col items-center justify-center gap-3">
         <p>오늘의 편지함 · 개인 정보 뉴스레터 디렉터리 및 메모작업 공간</p>
-        <p className="text-[10px] text-[#5a6b62] dark:text-[#b8c9bf] max-w-lg">
+        <p className="text-[10px] text-secondary max-w-lg">
           모든 뉴스레터 및 기사의 저작권은 각 원천 발행 기관에 귀속됩니다. 원문 무단 전재 없음. 데이터는 이 브라우저에만 저장됩니다.
         </p>
         <div className="flex flex-wrap gap-3 justify-center items-center">
           <button
             type="button"
             onClick={handleBackupAll}
-            className="text-xs text-forest-green dark:text-[#8fd9ae] hover:underline cursor-pointer bg-transparent border-0 font-semibold"
+            className="text-xs text-forest-green dark:text-[var(--green)] hover:underline cursor-pointer bg-transparent border-0 font-semibold"
           >
             전체 백업 JSON
           </button>
-          <label className="text-xs text-forest-green dark:text-[#8fd9ae] hover:underline cursor-pointer font-semibold">
+          <label className="text-xs text-forest-green dark:text-[var(--green)] hover:underline cursor-pointer font-semibold">
             백업 복원
             <input
               type="file"
@@ -1291,7 +1291,7 @@ export default function App() {
             onClick={() => {
               window.open('https://github.com/presentjinho/newsletter-hub/issues/new/choose', '_blank', 'noopener');
             }}
-            className="text-xs text-forest-green dark:text-[#8fd9ae] hover:underline cursor-pointer bg-transparent border-0 font-semibold"
+            className="text-xs text-forest-green dark:text-[var(--green)] hover:underline cursor-pointer bg-transparent border-0 font-semibold"
           >
             제보 · 피드백
           </button>
