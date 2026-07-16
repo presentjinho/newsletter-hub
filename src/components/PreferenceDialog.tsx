@@ -68,7 +68,8 @@ export default function PreferenceDialog({
         </h2>
 
         <p className="text-xs text-secondary mb-6 leading-relaxed">
-          이 설정은 브라우저에 저장되어 추천과 정렬에만 맞춤 적용됩니다.
+          이 설정은 <strong className="text-ink">현재 프로필</strong> 기준으로 이 브라우저에만 저장됩니다.
+          다른 사람과 PC를 같이 쓰면 상단 프로필에서 이름을 추가하세요.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">

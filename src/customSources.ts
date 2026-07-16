@@ -1,7 +1,6 @@
 import { Newsletter } from './types';
 import { normalizeItem } from './data';
-
-const KEY = 'letter-custom-sources-v1';
+import { loadJSON, saveJSON, SLOTS } from './profileStore';
 
 export type CustomSourceInput = {
   name: string;
@@ -13,9 +12,7 @@ export type CustomSourceInput = {
 
 export function loadCustomSources(): Newsletter[] {
   try {
-    const raw = localStorage.getItem(KEY);
-    if (!raw) return [];
-    const list = JSON.parse(raw) as Partial<Newsletter>[];
+    const list = loadJSON<Partial<Newsletter>[]>(SLOTS.customSources, []);
     if (!Array.isArray(list)) return [];
     return list.map(row =>
       normalizeItem({
@@ -35,33 +32,31 @@ export function loadCustomSources(): Newsletter[] {
 }
 
 export function saveCustomSources(items: Newsletter[]) {
-  localStorage.setItem(
-    KEY,
-    JSON.stringify(
-      items.map(n => ({
-        id: n.id,
-        name: n.name,
-        siteUrl: n.siteUrl,
-        url: n.url,
-        description: n.description,
-        category: n.category,
-        subscribeUrl: n.subscribeUrl,
-        origin: n.origin,
-        country: n.country,
-        language: n.language,
-        type: n.type,
-        deskRole: n.deskRole,
-        interests: n.interests,
-        status: n.status,
-        daysSince: n.daysSince,
-        typical: n.typical,
-        frequency: n.frequency,
-        frequencyGroup: n.frequencyGroup,
-        trust: n.trust,
-        reuseLevel: n.reuseLevel,
-        sourceScope: n.sourceScope,
-      }))
-    )
+  saveJSON(
+    SLOTS.customSources,
+    items.map(n => ({
+      id: n.id,
+      name: n.name,
+      siteUrl: n.siteUrl,
+      url: n.url,
+      description: n.description,
+      category: n.category,
+      subscribeUrl: n.subscribeUrl,
+      origin: n.origin,
+      country: n.country,
+      language: n.language,
+      type: n.type,
+      deskRole: n.deskRole,
+      interests: n.interests,
+      status: n.status,
+      daysSince: n.daysSince,
+      typical: n.typical,
+      frequency: n.frequency,
+      frequencyGroup: n.frequencyGroup,
+      trust: n.trust,
+      reuseLevel: n.reuseLevel,
+      sourceScope: n.sourceScope,
+    }))
   );
 }
 
@@ -73,7 +68,6 @@ export function normalizeSiteUrl(raw: string): string | null {
   try {
     const u = new URL(url);
     u.hash = '';
-    // trailing slash 통일
     let path = u.pathname;
     if (path.length > 1 && path.endsWith('/')) path = path.slice(0, -1);
     u.pathname = path || '/';

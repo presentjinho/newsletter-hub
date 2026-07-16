@@ -184,8 +184,9 @@ export default function AdvancedBottom({
             본문을 서버에 보관하거나 검색 가능하게 아카이브하지 않습니다. 막히면 사이트 새 탭을 사용하세요.
           </p>
           <p>
-            <strong className="text-ink">개인 데이터:</strong> 관심사·메모·구독 상태·내 출처는 이 브라우저 localStorage에만 저장됩니다.
-            별도 로그인·서버 업로드 없음. 백업 JSON은 사용자가 직접 내려받을 때만 생깁니다.
+            <strong className="text-ink">개인 데이터:</strong> 관심사·메모·구독 상태·내 출처는 이 브라우저에만 저장됩니다.
+            상단 <strong className="text-ink">프로필</strong>로 같은 PC에서도 사람별 공간을 나눌 수 있습니다 (서버 계정 아님).
+            백업 JSON은 현재 프로필 데이터를 내려받습니다.
           </p>
           <p>
             <strong className="text-ink">Gmail:</strong> Google 계정 비밀번호를 받지 않습니다. 공식 메일 작성 창(compose) URL만 엽니다.

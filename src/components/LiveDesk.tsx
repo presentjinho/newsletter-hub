@@ -26,6 +26,7 @@ import {
 import { fetchReadable, lastFetcherName } from '../readerFetch';
 import { isInfoSource } from '../data';
 import { openExternal } from '../safeLink';
+import { loadString, saveString, SLOTS } from '../profileStore';
 
 /** 불안정·대부분 차단되는 UI는 숨김 (iframe 끼워보기, 무료 문장 번역 API) */
 const SHOW_EXPERIMENTAL = false;
@@ -83,7 +84,7 @@ export default function LiveDesk({
   const [readerError, setReaderError] = useState('');
   const [showLinks, setShowLinks] = useState(false);
   const [zoom, setZoom] = useState(() => {
-    const z = Number(localStorage.getItem('letter-reader-zoom') || '125');
+    const z = Number(loadString(SLOTS.readerZoom, '125') || '125');
     return Number.isFinite(z) ? Math.min(200, Math.max(100, z)) : 125;
   });
   const [fetcherHint, setFetcherHint] = useState('');
@@ -105,7 +106,7 @@ export default function LiveDesk({
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('letter-reader-zoom', String(zoom));
+    saveString(SLOTS.readerZoom, String(zoom));
   }, [zoom]);
 
   // 이메일 뉴스레터는 정보 리더 대상에서 제외

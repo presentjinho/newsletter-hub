@@ -55,6 +55,19 @@ import {
   type CustomSourceInput
 } from './customSources';
 import AddSourceForm from './components/AddSourceForm';
+import ProfileMenu from './components/ProfileMenu';
+import {
+  ensureProfiles,
+  loadJSON,
+  saveJSON,
+  loadString,
+  saveString,
+  SLOTS,
+  getActiveProfile
+} from './profileStore';
+
+// 앱 기동 시 프로필 + 레거시 데이터 이전
+ensureProfiles();
 
 const ALL_INTERESTS = [
   'AI', '재테크', '커리어', '디자인', '시사', '과학', '국제', '건강',
@@ -88,80 +101,41 @@ export default function App() {
   const [toastMsg, setToastMsg] = useState('');
   const searchInputRef = React.useRef<HTMLInputElement | null>(null);
 
-  // Bookmarks & local preferences
+  // Bookmarks & local preferences (프로필별)
   const [savedIds, setSavedIds] = useState<Set<string>>(() => {
-    try {
-      const stored = localStorage.getItem('letter-shelf');
-      return stored ? new Set(JSON.parse(stored)) : new Set();
-    } catch {
-      return new Set();
-    }
+    const arr = loadJSON<string[]>(SLOTS.shelf, []);
+    return new Set(Array.isArray(arr) ? arr : []);
   });
 
-  const [personalStatus, setPersonalStatus] = useState<Record<string, string>>(() => {
-    try {
-      const stored = localStorage.getItem('letter-status');
-      return stored ? JSON.parse(stored) : {};
-    } catch {
-      return {};
-    }
-  });
+  const [personalStatus, setPersonalStatus] = useState<Record<string, string>>(() =>
+    loadJSON(SLOTS.status, {})
+  );
 
-  const [userInterests, setUserInterests] = useState<string[]>(() => {
-    try {
-      const stored = localStorage.getItem('letter-interests');
-      return stored ? JSON.parse(stored) : [];
-    } catch {
-      return [];
-    }
-  });
+  const [userInterests, setUserInterests] = useState<string[]>(() =>
+    loadJSON(SLOTS.interests, [])
+  );
 
-  const [prefs, setPrefs] = useState<Preferences>(() => {
-    try {
-      const stored = localStorage.getItem('letter-preferences');
-      return stored ? JSON.parse(stored) : { frequency: 'all', paused: false };
-    } catch {
-      return { frequency: 'all', paused: false };
-    }
-  });
+  const [prefs, setPrefs] = useState<Preferences>(() =>
+    loadJSON(SLOTS.preferences, { frequency: 'all', paused: false })
+  );
 
   // Notes state
-  const [notes, setNotes] = useState<Note[]>(() => {
-    try {
-      const stored = localStorage.getItem('letter-notes-v1');
-      return stored ? JSON.parse(stored) : [];
-    } catch {
-      return [];
-    }
-  });
+  const [notes, setNotes] = useState<Note[]>(() => loadJSON(SLOTS.notes, []));
 
   const [notebooks, setNotebooks] = useState<Notebook[]>(() => {
-    try {
-      const stored = localStorage.getItem('letter-notebooks-v1');
-      const list = stored ? JSON.parse(stored) : [];
-      if (!list.some((n: any) => n.id === 'inbox')) {
-        list.unshift({ id: 'inbox', name: '일반 메모함' });
-      }
-      return list;
-    } catch {
-      return [{ id: 'inbox', name: '일반 메모함' }];
+    const list = loadJSON<Notebook[]>(SLOTS.notebooks, []);
+    if (!list.some(n => n.id === 'inbox')) {
+      return [{ id: 'inbox', name: '일반 메모함' }, ...list];
     }
+    return list.length ? list : [{ id: 'inbox', name: '일반 메모함' }];
   });
 
   // Workspace selections
-  const [liveSourceId, setLiveSourceId] = useState(() => {
-    return localStorage.getItem('letter-live-source') || '';
-  });
+  const [liveSourceId, setLiveSourceId] = useState(() => loadString(SLOTS.liveSource, ''));
 
   const [gmailSelfEmail, setGmailSelfEmail] = useState(() => {
-    try {
-      const stored = localStorage.getItem('letter-gmail-pref');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        return parsed.selfEmail || '';
-      }
-    } catch {}
-    return '';
+    const g = loadJSON<{ selfEmail?: string }>(SLOTS.gmail, {});
+    return g.selfEmail || '';
   });
 
   // UI States
@@ -171,10 +145,11 @@ export default function App() {
   const [noteEditorSourceId, setNoteEditorSourceId] = useState('');
   const [noteEditorNoteId, setNoteEditorNoteId] = useState<string | undefined>(undefined);
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    return (localStorage.getItem('letter-theme') as 'light' | 'dark') || 'light';
+    const t = loadString(SLOTS.theme, 'light');
+    return t === 'dark' ? 'dark' : 'light';
   });
   const [textSize, setTextSize] = useState<'normal' | 'large' | 'xl'>(() => {
-    const v = localStorage.getItem('letter-text-size');
+    const v = loadString(SLOTS.textSize, 'normal');
     if (v === 'large' || v === 'xl' || v === 'normal') return v;
     return 'normal';
   });
@@ -196,9 +171,9 @@ export default function App() {
 
   const cardLinkCheck = (id: string): LinkCheckInfo | null => linkCheckMap[id] || null;
 
-  // Onboarding auto-open trigger
+  // Onboarding auto-open trigger (프로필별)
   useEffect(() => {
-    const seen = localStorage.getItem('letter-onboarding-seen');
+    const seen = loadString(SLOTS.onboarding, '');
     if (!seen) {
       setOnboardingOpen(true);
     }
@@ -315,7 +290,7 @@ export default function App() {
   // Theme application
   useEffect(() => {
     document.body.classList.toggle('dark', theme === 'dark');
-    localStorage.setItem('letter-theme', theme);
+    saveString(SLOTS.theme, theme);
   }, [theme]);
 
   // Text size application (사이트 전체 글자)
@@ -323,24 +298,24 @@ export default function App() {
     document.body.classList.toggle('large-text', textSize === 'large');
     document.body.classList.toggle('ui-zoom-lg', textSize === 'large');
     document.body.classList.toggle('ui-zoom-xl', textSize === 'xl');
-    localStorage.setItem('letter-text-size', textSize);
+    saveString(SLOTS.textSize, textSize);
   }, [textSize]);
 
-  // Sync state modifications to localstorage
+  // Sync state → 현재 프로필 저장소
   useEffect(() => {
-    localStorage.setItem('letter-shelf', JSON.stringify([...savedIds]));
+    saveJSON(SLOTS.shelf, [...savedIds]);
   }, [savedIds]);
 
   useEffect(() => {
-    localStorage.setItem('letter-status', JSON.stringify(personalStatus));
+    saveJSON(SLOTS.status, personalStatus);
   }, [personalStatus]);
 
   useEffect(() => {
-    localStorage.setItem('letter-notes-v1', JSON.stringify(notes));
+    saveJSON(SLOTS.notes, notes);
   }, [notes]);
 
   useEffect(() => {
-    localStorage.setItem('letter-notebooks-v1', JSON.stringify(notebooks));
+    saveJSON(SLOTS.notebooks, notebooks);
   }, [notebooks]);
 
   // --- ACTIONS & HANDLERS ---
@@ -408,7 +383,7 @@ export default function App() {
     const cur = catalog.find(n => n.id === liveSourceId);
     if (cur && !isInfoSource(cur)) {
       setLiveSourceId('');
-      localStorage.removeItem('letter-live-source');
+      saveString(SLOTS.liveSource, '');
     }
   }, [catalog, liveSourceId]);
 
@@ -520,8 +495,9 @@ export default function App() {
 
   const handleBackupAll = () => {
     const payload = {
-      version: 2,
+      version: 3,
       exportedAt: new Date().toISOString(),
+      profile: getActiveProfile(),
       savedIds: [...savedIds],
       personalStatus,
       userInterests,
@@ -554,7 +530,7 @@ export default function App() {
         if (Array.isArray(data.notebooks)) setNotebooks(data.notebooks);
         if (typeof data.gmailSelfEmail === 'string') {
           setGmailSelfEmail(data.gmailSelfEmail);
-          localStorage.setItem('letter-gmail-pref', JSON.stringify({ selfEmail: data.gmailSelfEmail }));
+          saveJSON(SLOTS.gmail, { selfEmail: data.gmailSelfEmail });
         }
         if (data.theme === 'light' || data.theme === 'dark') setTheme(data.theme);
         if (data.textSize === 'normal' || data.textSize === 'large' || data.textSize === 'xl') setTextSize(data.textSize);
@@ -575,17 +551,17 @@ export default function App() {
   const handleOnboardingClose = (selectedInterests: string[]) => {
     if (selectedInterests.length > 0) {
       setUserInterests(selectedInterests);
-      localStorage.setItem('letter-interests', JSON.stringify(selectedInterests));
+      saveJSON(SLOTS.interests, selectedInterests);
     }
-    localStorage.setItem('letter-onboarding-seen', 'true');
+    saveString(SLOTS.onboarding, 'true');
     setOnboardingOpen(false);
   };
 
   const handlePreferencesSave = (selectedInterests: string[], updatedPrefs: Preferences) => {
     setUserInterests(selectedInterests);
     setPrefs(updatedPrefs);
-    localStorage.setItem('letter-interests', JSON.stringify(selectedInterests));
-    localStorage.setItem('letter-preferences', JSON.stringify(updatedPrefs));
+    saveJSON(SLOTS.interests, selectedInterests);
+    saveJSON(SLOTS.preferences, updatedPrefs);
     setPreferencesOpen(false);
   };
 
@@ -758,7 +734,7 @@ export default function App() {
 
   const handleGmailEmailSave = (email: string) => {
     setGmailSelfEmail(email);
-    localStorage.setItem('letter-gmail-pref', JSON.stringify({ selfEmail: email }));
+    saveJSON(SLOTS.gmail, { selfEmail: email });
   };
 
   const handleRefreshLinkStatus = () => {
@@ -940,7 +916,8 @@ export default function App() {
           <span>오늘의 편지함</span>
         </a>
 
-        <nav className="flex items-center gap-6 md:gap-8 overflow-x-auto max-w-[65%] whitespace-nowrap" aria-label="주요 메뉴">
+        <nav className="flex items-center gap-4 md:gap-6 overflow-x-auto max-w-[72%] whitespace-nowrap" aria-label="주요 메뉴">
+          <ProfileMenu onSwitched={() => window.location.reload()} />
           <a href="#live" className="text-xs font-bold no-underline focus-ring">실시간</a>
           <a href="#subscriptions" className="text-xs font-bold no-underline flex items-center gap-1 focus-ring">
             구독관리
@@ -1005,7 +982,7 @@ export default function App() {
           <p className="text-xs font-bold tracking-widest text-forest-green dark:text-[var(--green)] mb-4">
             정보 디렉터리 · 국가·산업별 안정 출처 · 뉴스레터는 선택 표시
           </p>
-          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl tracking-tight leading-tight mb-6">
+          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl tracking-tight leading-tight mb-6 text-ink">
             세계 곳곳의 정보를<br />
             <em className="text-accent-red not-italic font-bold">가볍게</em> 모으고,<br />
             편하게 읽어요.
@@ -1017,7 +994,7 @@ export default function App() {
 
           <a
             href="#find"
-            className="inline-flex items-center gap-12 font-bold text-base text-ink no-underline border-b border-ink dark:border-white pb-2 hover:border-accent-red hover:text-accent-red transition-all duration-200"
+            className="inline-flex items-center gap-12 font-bold text-base text-ink no-underline border-b border-ink dark:border-white/70 pb-2 hover:border-accent-red hover:text-accent-red transition-all duration-200"
           >
             <span>정보 지도 보러가기</span>
             <span className="text-lg text-accent-red">↓</span>
@@ -1069,7 +1046,7 @@ export default function App() {
         activeSourceId={liveSourceId}
         onSelectSource={(id) => {
           setLiveSourceId(id);
-          localStorage.setItem('letter-live-source', id);
+          saveString(SLOTS.liveSource, id);
         }}
         onOpenNote={handleOpenNote}
         onQuickGmail={handleQuickGmail}
@@ -1088,7 +1065,7 @@ export default function App() {
         onToggleSave={handleToggleSave}
         onOpenLive={(id) => {
           setLiveSourceId(id);
-          localStorage.setItem('letter-live-source', id);
+          saveString(SLOTS.liveSource, id);
           document.getElementById('live')?.scrollIntoView({ behavior: 'smooth' });
         }}
         onExportCsv={handleExportSubscriptionCsv}
@@ -1120,7 +1097,7 @@ export default function App() {
                 onToggleSave={() => handleToggleSave(item.id)}
                 onOpenLive={() => {
                   setLiveSourceId(item.id);
-                  localStorage.setItem('letter-live-source', item.id);
+                  saveString(SLOTS.liveSource, item.id);
                   document.getElementById('live')?.scrollIntoView({ behavior: 'smooth' });
                 }}
                 onOpenNote={() => handleOpenNote(item.id)}
@@ -1165,7 +1142,7 @@ export default function App() {
                   onToggleSave={() => handleToggleSave(item.id)}
                   onOpenLive={() => {
                     setLiveSourceId(item.id);
-                    localStorage.setItem('letter-live-source', item.id);
+                    saveString(SLOTS.liveSource, item.id);
                     document.getElementById('live')?.scrollIntoView({ behavior: 'smooth' });
                   }}
                   onOpenNote={() => handleOpenNote(item.id)}
@@ -1544,7 +1521,7 @@ export default function App() {
                   onToggleSave={() => handleToggleSave(item.id)}
                   onOpenLive={() => {
                     setLiveSourceId(item.id);
-                    localStorage.setItem('letter-live-source', item.id);
+                    saveString(SLOTS.liveSource, item.id);
                     document.getElementById('live')?.scrollIntoView({ behavior: 'smooth' });
                   }}
                   onOpenNote={() => handleOpenNote(item.id)}
@@ -1598,7 +1575,7 @@ export default function App() {
                   onToggleSave={() => handleToggleSave(item.id)}
                   onOpenLive={() => {
                     setLiveSourceId(item.id);
-                    localStorage.setItem('letter-live-source', item.id);
+                    saveString(SLOTS.liveSource, item.id);
                     document.getElementById('live')?.scrollIntoView({ behavior: 'smooth' });
                   }}
                   onOpenNote={() => handleOpenNote(item.id)}
