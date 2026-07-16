@@ -349,10 +349,10 @@ function isNoiseLine(line: string): boolean {
 }
 
 /**
- * 붙어 있는 글을 문단으로 재배치.
- * - 짧은 제목성 줄은 단독 문단
- * - 긴 줄은 문장 끝(. ? ! 。) 기준으로 적당히 나눔
- * - 한 덩어리가 너무 길면 줄바꿈
+ * 정보 단위 = 문단 1개.
+ * - 난잡한 덩어리를 문장/목록 단위로 쪼갬
+ * - 한 문단에는 한 가지 정보만 (문장 묶지 않음)
+ * - UI에서 문단 사이에 여백으로 “다음 정보” 구분
  */
 function formatParagraphs(lines: string[]): string {
   const paras: string[] = [];
@@ -361,48 +361,67 @@ function formatParagraphs(lines: string[]): string {
     let L = line.replace(/\s+/g, ' ').trim();
     if (!L || isNoiseLine(L)) continue;
 
-    // "UncategorizedTitle" 처럼 붙은 잔재 한 번 더
     L = L.replace(/^Uncategorized\s*/i, '').trim();
-    if (!L) continue;
+    // 메뉴/브레드크럼 잔재
+    L = L.replace(/^·\s*/, '').trim();
+    if (!L || isNoiseLine(L)) continue;
+    // 너무 짧은 잡토큰 (Share, Menu 등)
+    if (L.length < 8 && !/[가-힣]{2,}/.test(L) && !/[.!?。]$/.test(L)) {
+      if (/^(home|menu|share|more|next|prev|top|skip|login|sign\s*in)$/i.test(L)) continue;
+    }
 
-    // 짧은 헤드라인
-    if (L.length <= 90 && !/[.!?。]\s/.test(L)) {
+    // 목록 기호로 이어진 여러 항목 → 각각 문단
+    if (/[;·•]\s+/.test(L) && L.length > 40) {
+      const bits = L.split(/\s*[;·•]\s+/).map(s => s.trim()).filter(s => s.length >= 8);
+      if (bits.length >= 2) {
+        for (const b of bits) {
+          if (!isNoiseLine(b)) paras.push(b);
+        }
+        continue;
+      }
+    }
+
+    // 짧은 헤드라인 = 단독 정보 단위
+    if (L.length <= 100 && !/[.!?。]\s/.test(L) && !/[.!?。]$/.test(L.slice(0, -1))) {
       paras.push(L);
       continue;
     }
 
-    // 문장 단위 분리 후 2~3문장씩 묶기
+    // ★ 문장 1개 = 문단 1개 (정보 딱딱)
     const sentences = splitSentences(L);
     if (sentences.length <= 1) {
-      paras.push(...wrapLong(L, 280));
+      paras.push(...wrapLong(L, 220));
       continue;
     }
-    let buf = '';
-    let count = 0;
     for (const s of sentences) {
-      if (!s) continue;
-      if (!buf) {
-        buf = s;
-        count = 1;
-      } else if (buf.length + s.length < 320 && count < 3) {
-        buf = `${buf} ${s}`;
-        count += 1;
+      const t = s.trim();
+      if (!t || isNoiseLine(t) || t.length < 4) continue;
+      if (t.length > 240) {
+        paras.push(...wrapLong(t, 220));
       } else {
-        paras.push(buf);
-        buf = s;
-        count = 1;
+        paras.push(t);
       }
     }
-    if (buf) paras.push(buf);
   }
 
-  // 연속 중복 문단 제거
+  // 연속 중복·거의 같은 문단 제거
   const dedup: string[] = [];
   for (const p of paras) {
-    if (dedup.length && dedup[dedup.length - 1] === p) continue;
+    const prev = dedup[dedup.length - 1];
+    if (prev && (prev === p || (prev.length > 20 && p.includes(prev.slice(0, 40))))) continue;
+    if (prev && p.length > 20 && prev.includes(p.slice(0, 40))) continue;
     dedup.push(p);
   }
+  // 문단 사이 빈 줄 = 다음 정보
   return dedup.join('\n\n');
+}
+
+/** 본문을 정보 블록 배열로 (UI용) */
+export function splitInfoBlocks(body: string): string[] {
+  return (body || '')
+    .split(/\n{2,}/)
+    .map(s => s.trim())
+    .filter(Boolean);
 }
 
 function splitSentences(text: string): string[] {

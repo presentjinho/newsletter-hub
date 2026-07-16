@@ -24,6 +24,7 @@ import {
   googleTranslatePageUrl,
   googleTranslateEmbedUrl,
   getCachedTranslation,
+  splitInfoBlocks,
   type CleanedReader
 } from '../readerClean';
 import { fetchReadable, lastFetcherName } from '../readerFetch';
@@ -311,8 +312,9 @@ export default function LiveDesk({
               원문만 깨끗하게<br />읽고 메모해요
             </h2>
             <p className="text-sm text-[var(--live-muted)] leading-relaxed max-w-2xl">
-              #·마크다운·URL 표기는 숨기고 <strong className="text-[var(--live-fg)]">문장만</strong> 보여 줍니다.
-              링크는 접어 두고 궁금할 때만 엽니다. 외국어는 <strong className="text-[var(--live-fg)]">한국어 번역</strong>을 켤 수 있습니다.
+              잡링크·메뉴 찌꺼기를 빼고 <strong className="text-[var(--live-fg)]">정보만</strong> 번호 블록으로 나눕니다.
+              <strong className="text-[var(--live-fg)]">한 블록 = 한 정보</strong>, 다음 블록이 다음 정보입니다.
+              외국어는 페이지 번역(권장) 또는 문장 번역을 쓰세요.
             </p>
             <p className="text-xs live-accent mt-2">
               지금 {timeStr} · {linkSyncStatus}
@@ -558,27 +560,50 @@ export default function LiveDesk({
                         <p className="text-[0.6em] text-[var(--live-muted)] mb-2 font-mono">{fetcherHint}</p>
                       )}
                       {koError && <p className="text-[0.7em] text-[#ff9a8a] mb-3" role="status">{koError}</p>}
+                      <p className="text-[0.65em] text-[var(--live-muted)] mb-4">
+                        정보 {splitInfoBlocks(displayBody).length}건 · 한 블록 = 한 정보 · 다음 블록이 다음 정보
+                      </p>
                       <div
-                        className="text-[var(--live-fg)] leading-relaxed space-y-4"
-                        style={{ fontSize: '0.95em', lineHeight: 1.8 }}
+                        className="text-[var(--live-fg)] flex flex-col gap-0"
+                        style={{ fontSize: '0.95em' }}
+                        role="list"
+                        aria-label="정리된 정보 목록"
                       >
-                        {displayBody.split(/\n{2,}/).map((para, i) => {
+                        {splitInfoBlocks(displayBody).map((para, i) => {
                           const t = para.trim();
                           if (!t) return null;
-                          // 짧은 줄은 소제목 느낌
-                          const isHead = t.length <= 80 && !/[.!?。]\s/.test(t) && !t.startsWith('·');
+                          const isHead =
+                            t.length <= 80 &&
+                            !/[.!?。]/.test(t) &&
+                            !t.startsWith('·');
                           return (
-                            <p
+                            <div
                               key={i}
-                              className={
-                                isHead
-                                  ? 'm-0 mt-2 mb-1 font-semibold text-[var(--live-fg)] tracking-tight'
-                                  : 'm-0 whitespace-pre-wrap break-words text-[var(--live-fg)]/95'
-                              }
-                              style={isHead ? { fontSize: '1.05em', lineHeight: 1.45 } : undefined}
+                              role="listitem"
+                              className="border-b border-white/10 last:border-0 py-4 first:pt-0"
                             >
-                              {t}
-                            </p>
+                              <div className="flex gap-3 items-start">
+                                <span
+                                  className="shrink-0 mt-0.5 text-[10px] font-mono font-bold live-accent tabular-nums w-7 text-right"
+                                  aria-hidden="true"
+                                >
+                                  {String(i + 1).padStart(2, '0')}
+                                </span>
+                                <p
+                                  className={
+                                    isHead
+                                      ? 'm-0 font-semibold tracking-tight text-[var(--live-fg)]'
+                                      : 'm-0 whitespace-pre-wrap break-words text-[var(--live-fg)]/95 leading-relaxed'
+                                  }
+                                  style={{
+                                    lineHeight: isHead ? 1.4 : 1.75,
+                                    fontSize: isHead ? '1.05em' : undefined
+                                  }}
+                                >
+                                  {t}
+                                </p>
+                              </div>
+                            </div>
                           );
                         })}
                       </div>
