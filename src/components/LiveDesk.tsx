@@ -5,7 +5,6 @@ import {
   FileText,
   Mail,
   Languages,
-  Eye,
   ZoomIn,
   ZoomOut,
   BookOpen,
@@ -20,16 +19,16 @@ import { Newsletter, Note } from '../types';
 import {
   cleanReaderText,
   likelyNeedsKorean,
-  translateToKorean,
   googleTranslatePageUrl,
-  googleTranslateEmbedUrl,
-  getCachedTranslation,
   splitInfoBlocks,
   type CleanedReader
 } from '../readerClean';
 import { fetchReadable, lastFetcherName } from '../readerFetch';
 import { isInfoSource } from '../data';
 import { openExternal } from '../safeLink';
+
+/** 불안정·대부분 차단되는 UI는 숨김 (iframe 끼워보기, 무료 문장 번역 API) */
+const SHOW_EXPERIMENTAL = false;
 
 interface LiveDeskProps {
   newsletters: Newsletter[];
@@ -41,8 +40,6 @@ interface LiveDeskProps {
   onRefreshLinkStatus: () => void;
   linkSyncStatus: string;
 }
-
-type ViewMode = 'reader' | 'iframe' | 'page-ko';
 
 function ReaderSkeleton() {
   return (
@@ -70,47 +67,6 @@ function ReaderSkeleton() {
   );
 }
 
-function EmbedFallbackBar({
-  title,
-  onOpenTab,
-  onReader,
-  extra
-}: {
-  title: string;
-  onOpenTab: () => void;
-  onReader: () => void;
-  extra?: React.ReactNode;
-}) {
-  return (
-    <div
-      role="status"
-      className="px-4 py-3 border-b border-amber-400/40 bg-amber-950/50 flex flex-wrap items-center justify-between gap-3"
-    >
-      <p className="text-xs text-[#ffe8c8] leading-relaxed max-w-xl m-0">
-        <strong className="text-[#fff3d6]">{title}</strong>
-        {' '}많은 사이트가 iframe 삽입을 막습니다. 화면이 비거나 연결 거부면 정상입니다.
-      </p>
-      <div className="flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={onOpenTab}
-          className="px-3 py-1.5 text-xs font-bold rounded-sm btn-mint cursor-pointer border-0 flex items-center gap-1"
-        >
-          <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" /> 새 탭에서 열기
-        </button>
-        <button
-          type="button"
-          onClick={onReader}
-          className="px-3 py-1.5 text-xs font-bold rounded-sm border border-white/30 text-[var(--live-fg)] bg-black/30 cursor-pointer"
-        >
-          앱 안 리더
-        </button>
-        {extra}
-      </div>
-    </div>
-  );
-}
-
 export default function LiveDesk({
   newsletters,
   activeSourceId,
@@ -122,16 +78,10 @@ export default function LiveDesk({
   linkSyncStatus
 }: LiveDeskProps) {
   const [timeStr, setTimeStr] = useState('');
-  const [viewMode, setViewMode] = useState<ViewMode>('reader');
   const [rawText, setRawText] = useState('');
   const [readerLoading, setReaderLoading] = useState(false);
   const [readerError, setReaderError] = useState('');
   const [showLinks, setShowLinks] = useState(false);
-  const [showKo, setShowKo] = useState(false);
-  const [koText, setKoText] = useState('');
-  const [koLoading, setKoLoading] = useState(false);
-  const [koError, setKoError] = useState('');
-  const [koProgress, setKoProgress] = useState(0);
   const [zoom, setZoom] = useState(() => {
     const z = Number(localStorage.getItem('letter-reader-zoom') || '125');
     return Number.isFinite(z) ? Math.min(200, Math.max(100, z)) : 125;
@@ -180,9 +130,6 @@ export default function LiveDesk({
     setReaderLoading(true);
     setReaderError('');
     setRawText('');
-    setKoText('');
-    setShowKo(false);
-    setKoError('');
     setFetcherHint('');
     try {
       const text = await fetchReadable(url, ctrl.signal);
@@ -192,7 +139,7 @@ export default function LiveDesk({
     } catch (e) {
       if ((e as Error).name !== 'AbortError') {
         setReaderError(
-          '앱 안 리더로 불러오지 못했습니다 (jina·allorigins·corsproxy·codetabs 전부 실패). 사이트 차단·네트워크 제한일 수 있어요. 새 탭 원문 또는 페이지 번역을 쓰세요.'
+          '앱 안 리더로 불러오지 못했습니다. 「사이트」또는 「새 탭 번역」으로 읽어 주세요.'
         );
       }
     } finally {
@@ -201,11 +148,7 @@ export default function LiveDesk({
   }, []);
 
   useEffect(() => {
-    setViewMode('reader');
     setShowLinks(false);
-    setShowKo(false);
-    setKoText('');
-    setKoError('');
     setFetcherHint('');
     if (!activeNewsletter) {
       setRawText('');
@@ -228,7 +171,7 @@ export default function LiveDesk({
         }
       } catch (e) {
         if (!cancelled && (e as Error).name !== 'AbortError') {
-          setReaderError('앱 안 리더로 불러오지 못했습니다. 새 탭 원문 또는 페이지 번역을 쓰세요.');
+          setReaderError('앱 안 리더로 불러오지 못했습니다. 「사이트」새 탭으로 열어 주세요.');
         }
       } finally {
         if (!cancelled) setReaderLoading(false);
@@ -240,55 +183,9 @@ export default function LiveDesk({
     };
   }, [activeNewsletter?.id, activeNewsletter?.siteUrl, activeNewsletter?.url]);
 
-  const runTranslate = async () => {
-    if (!cleaned.body) return;
-    if (koText) {
-      setShowKo(true);
-      return;
-    }
-    // 캐시 즉시
-    const cached = getCachedTranslation(cleaned.body);
-    if (cached) {
-      setKoText(cached);
-      setShowKo(true);
-      setKoError('');
-      return;
-    }
-
-    const ctrl = new AbortController();
-    setKoLoading(true);
-    setKoError('');
-    setKoProgress(0);
-    try {
-      const result = await translateToKorean(cleaned.body, ctrl.signal, setKoProgress);
-      setKoText(result.text);
-      setShowKo(true);
-      if (result.partial) {
-        setKoError(
-          `일부 구간은 원문 유지 (${result.translatedChunks}/${result.totalChunks} 번역). 끊긴 게 아니라 실패 구간을 원문으로 남겨 둔 것입니다. 전체 번역은 「페이지 번역」을 쓰세요.`
-        );
-      } else {
-        setKoError('');
-      }
-    } catch (e) {
-      if ((e as Error).name === 'AbortError') return;
-      // API 막힘 → 페이지 번역 모드로 전환 (가장 안정)
-      setShowKo(false);
-      setKoError(
-        '앱 안 문장 번역 API가 이 환경에서 불안정합니다. 「페이지 번역」으로 전환합니다. (Google이 페이지 전체를 번역)'
-      );
-      setViewMode('page-ko');
-    } finally {
-      setKoLoading(false);
-      setKoProgress(0);
-    }
-  };
-
   const openOriginal = () => {
     if (!activeNewsletter) return;
-    if (!openExternal(siteOf(activeNewsletter))) {
-      /* toast 없음 — 상위 없음 */
-    }
+    openExternal(siteOf(activeNewsletter));
   };
   const openSubscribe = () => {
     if (!activeNewsletter) return;
@@ -304,7 +201,8 @@ export default function LiveDesk({
   const zoomOut = () => setZoom(z => Math.max(100, z - 10));
   const zoomReset = () => setZoom(125);
 
-  const displayBody = showKo && koText ? koText : cleaned.body;
+  const displayBody = cleaned.body;
+  void SHOW_EXPERIMENTAL;
 
   return (
     <section className="live-desk p-8 md:p-14 border-b border-white/15" id="live">
@@ -316,9 +214,8 @@ export default function LiveDesk({
               원문만 깨끗하게<br />읽고 메모해요
             </h2>
             <p className="text-sm text-[var(--live-muted)] leading-relaxed max-w-2xl">
-              잡링크·메뉴 찌꺼기를 빼고 <strong className="text-[var(--live-fg)]">정보만</strong> 번호 블록으로 나눕니다.
-              <strong className="text-[var(--live-fg)]">한 블록 = 한 정보</strong>, 다음 블록이 다음 정보입니다.
-              외국어는 페이지 번역(권장) 또는 문장 번역을 쓰세요.
+              잡링크·메뉴를 빼고 <strong className="text-[var(--live-fg)]">정보만</strong> 번호 블록으로 보여 줍니다.
+              안 되는 끼워보기·불안정 번역은 숨겼습니다. 외국어는 <strong className="text-[var(--live-fg)]">새 탭 번역</strong>을 쓰세요.
             </p>
             <p className="text-xs live-accent mt-2">
               지금 {timeStr} · {linkSyncStatus}
@@ -360,7 +257,7 @@ export default function LiveDesk({
                     </button>
                   )}
                   <button type="button" onClick={openTranslate} className="px-3 py-2 bg-white/10 text-xs font-bold text-[var(--live-fg)] border border-white/20 rounded-sm cursor-pointer flex items-center gap-1.5">
-                    <Languages className="w-3.5 h-3.5" /> 번역 탭
+                    <Languages className="w-3.5 h-3.5" /> 새 탭 번역
                   </button>
                   <button type="button" onClick={() => onOpenNote(activeNewsletter.id)} className="px-3 py-2 bg-white/10 text-xs font-bold text-[var(--live-fg)] border border-white/20 rounded-sm cursor-pointer flex items-center gap-1.5">
                     <FileText className="w-3.5 h-3.5" /> 메모
@@ -392,35 +289,9 @@ export default function LiveDesk({
         {activeNewsletter && (
           <div className="p-3 bg-black/25 border border-white/15 text-sm text-[var(--live-muted)] mb-4 flex flex-wrap gap-x-4 gap-y-2 items-center rounded-sm">
             <span className="font-bold text-[var(--live-fg)]">{activeNewsletter.name}</span>
-            <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={() => setViewMode('reader')}
-                className={`px-2.5 py-1 text-xs font-bold rounded-sm border cursor-pointer flex items-center gap-1 ${
-                  viewMode === 'reader' ? 'bg-[#9fe0b8] text-[#0a100e] border-[#9fe0b8]' : 'bg-transparent text-[var(--live-fg)] border-white/25'
-                }`}
-              >
-                <BookOpen className="w-3.5 h-3.5" /> 앱 안 리더
-              </button>
-              <button
-                type="button"
-                onClick={() => setViewMode('page-ko')}
-                className={`px-2.5 py-1 text-xs font-bold rounded-sm border cursor-pointer flex items-center gap-1 ${
-                  viewMode === 'page-ko' ? 'bg-[#9fe0b8] text-[#0a100e] border-[#9fe0b8]' : 'bg-transparent text-[var(--live-fg)] border-white/25'
-                }`}
-              >
-                <Languages className="w-3.5 h-3.5" /> 페이지 번역
-              </button>
-              <button
-                type="button"
-                onClick={() => setViewMode('iframe')}
-                className={`px-2.5 py-1 text-xs font-bold rounded-sm border cursor-pointer flex items-center gap-1 ${
-                  viewMode === 'iframe' ? 'bg-[#9fe0b8] text-[#0a100e] border-[#9fe0b8]' : 'bg-transparent text-[var(--live-fg)] border-white/25'
-                }`}
-              >
-                <Eye className="w-3.5 h-3.5" /> 원문 끼워보기
-              </button>
-            </div>
+            <span className="text-[11px] text-[var(--live-muted)]">
+              앱 안 리더 · 안 되면 사이트/번역 새 탭
+            </span>
           </div>
         )}
 
@@ -430,97 +301,25 @@ export default function LiveDesk({
               <div className="flex-1 flex flex-col items-center justify-center p-10">
                 <Globe2 className="w-10 h-10 live-accent mb-3 opacity-80" />
                 <p className="text-base text-[var(--live-muted)] text-center max-w-md leading-relaxed">
-                  출처를 고르면 본문만 정리해서 보여 줍니다. 외국어는 「한국어로 번역」또는 더 안정적인 「페이지 번역」을 쓰세요.
+                  출처를 고르면 본문을 정보 블록으로 정리합니다. 외국어는 「새 탭 번역」을 쓰세요.
                 </p>
-              </div>
-            ) : viewMode === 'page-ko' ? (
-              <div className="flex flex-col flex-1">
-                <EmbedFallbackBar
-                  title="페이지 번역 (Google)"
-                  onOpenTab={openTranslate}
-                  onReader={() => setViewMode('reader')}
-                  extra={
-                    <button
-                      type="button"
-                      onClick={openOriginal}
-                      className="px-3 py-1.5 text-xs font-bold rounded-sm border border-white/30 text-[var(--live-fg)] bg-black/30 cursor-pointer"
-                    >
-                      원문 새 탭
-                    </button>
-                  }
-                />
-                <div className="px-4 py-2 border-b border-white/10 bg-black/30 flex flex-wrap items-center justify-between gap-2">
-                  <span className="text-xs font-bold live-accent flex items-center gap-1.5">
-                    <Languages className="w-3.5 h-3.5" aria-hidden="true" />
-                    문장 API보다 안정 · 무료 API 실패 시 권장 경로
-                  </span>
-                </div>
-                <iframe
-                  src={googleTranslateEmbedUrl(siteOf(activeNewsletter))}
-                  title={`${activeNewsletter.name} 한국어 번역 페이지`}
-                  className="w-full flex-1 min-h-[480px] border-0 bg-white"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
-              </div>
-            ) : viewMode === 'iframe' ? (
-              <div className="flex flex-col flex-1">
-                <EmbedFallbackBar
-                  title="원문 끼워보기"
-                  onOpenTab={openOriginal}
-                  onReader={() => setViewMode('reader')}
-                  extra={
-                    <button
-                      type="button"
-                      onClick={() => setViewMode('page-ko')}
-                      className="px-3 py-1.5 text-xs font-bold rounded-sm border border-white/30 text-[var(--live-fg)] bg-black/30 cursor-pointer flex items-center gap-1"
-                    >
-                      <Languages className="w-3.5 h-3.5" aria-hidden="true" /> 페이지 번역
-                    </button>
-                  }
-                />
-                <iframe
-                  src={siteOf(activeNewsletter)}
-                  title={`${activeNewsletter.name} 원문`}
-                  sandbox="allow-scripts allow-popups allow-forms allow-popups-to-escape-sandbox"
-                  referrerPolicy="no-referrer"
-                  className="w-full flex-1 min-h-[480px] border-0 bg-white"
-                />
               </div>
             ) : (
               <div className="flex flex-col flex-1 min-h-[520px]">
                 <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2 border-b border-white/10 bg-black/30">
                   <span className="text-xs font-bold live-accent flex items-center gap-1.5">
                     <BookOpen className="w-3.5 h-3.5" />
-                    원문 보기 · 기호·링크 정리됨
+                    정보 블록 · 정리된 원문
                   </span>
                   <div className="flex flex-wrap gap-2 items-center">
-                    {needsKo && (
-                      <>
-                        <button
-                          type="button"
-                          onClick={() => setViewMode('page-ko')}
-                          className="px-2.5 py-1 text-xs font-bold rounded-sm border border-[#9fe0b8] bg-[#9fe0b8] text-[#0a100e] cursor-pointer flex items-center gap-1"
-                        >
-                          <Languages className="w-3.5 h-3.5" aria-hidden="true" />
-                          페이지 번역 (권장)
-                        </button>
-                        <button
-                          type="button"
-                          disabled={koLoading || readerLoading}
-                          onClick={() => {
-                            if (showKo) setShowKo(false);
-                            else runTranslate();
-                          }}
-                          className="px-2.5 py-1 text-xs font-bold rounded-sm border border-white/25 text-[var(--live-fg)] bg-black/20 cursor-pointer flex items-center gap-1 disabled:opacity-50"
-                        >
-                          <Languages className="w-3.5 h-3.5" aria-hidden="true" />
-                          {koLoading ? `문장 번역 ${koProgress}%` : showKo ? '원문 보기' : '문장 번역 (실험)'}
-                        </button>
-                      </>
-                    )}
-                    {!needsKo && activeNewsletter.origin === '글로벌' && (
-                      <button type="button" onClick={() => setViewMode('page-ko')} className="px-2.5 py-1 text-xs font-bold rounded-sm border border-white/20 text-[var(--live-fg)] cursor-pointer flex items-center gap-1">
-                        <Languages className="w-3.5 h-3.5" /> 페이지 번역
+                    {(needsKo || activeNewsletter.origin === '글로벌') && (
+                      <button
+                        type="button"
+                        onClick={openTranslate}
+                        className="px-2.5 py-1 text-xs font-bold rounded-sm border border-[#9fe0b8] bg-[#9fe0b8] text-[#0a100e] cursor-pointer flex items-center gap-1"
+                      >
+                        <Languages className="w-3.5 h-3.5" aria-hidden="true" />
+                        새 탭 한국어 번역
                       </button>
                     )}
                     <button
@@ -542,10 +341,10 @@ export default function LiveDesk({
                       <p className="text-sm text-[var(--live-muted)] leading-relaxed">{readerError}</p>
                       <div className="flex flex-wrap gap-2 justify-center">
                         <button type="button" onClick={openOriginal} className="px-4 py-2 btn-mint text-sm rounded-sm cursor-pointer flex items-center gap-2 border-0">
-                          <ExternalLink className="w-4 h-4" aria-hidden="true" /> 새 탭 원문
+                          <ExternalLink className="w-4 h-4" aria-hidden="true" /> 사이트 새 탭
                         </button>
-                        <button type="button" onClick={() => setViewMode('page-ko')} className="px-4 py-2 text-sm font-bold rounded-sm border border-white/30 text-[var(--live-fg)] bg-black/30 cursor-pointer flex items-center gap-2">
-                          <Languages className="w-4 h-4" aria-hidden="true" /> 페이지 번역
+                        <button type="button" onClick={openTranslate} className="px-4 py-2 text-sm font-bold rounded-sm border border-white/30 text-[var(--live-fg)] bg-black/30 cursor-pointer flex items-center gap-2">
+                          <Languages className="w-4 h-4" aria-hidden="true" /> 새 탭 번역
                         </button>
                       </div>
                     </div>
@@ -557,15 +356,11 @@ export default function LiveDesk({
                           {cleaned.title}
                         </h3>
                       )}
-                      {showKo && (
-                        <p className="text-[0.65em] live-accent mb-4 font-bold">한국어 번역 표시 중 · 품질은 자동 번역 수준입니다</p>
-                      )}
-                      {fetcherHint && !showKo && (
+                      {fetcherHint && (
                         <p className="text-[0.6em] text-[var(--live-muted)] mb-2 font-mono">{fetcherHint}</p>
                       )}
-                      {koError && <p className="text-[0.7em] text-[#ff9a8a] mb-3" role="status">{koError}</p>}
                       <p className="text-[0.65em] text-[var(--live-muted)] mb-4">
-                        정보 {splitInfoBlocks(displayBody).length}건 · 한 블록 = 한 정보 · 다음 블록이 다음 정보
+                        정보 {splitInfoBlocks(displayBody).length}건 · 한 블록 = 한 정보
                       </p>
                       <div
                         className="text-[var(--live-fg)] flex flex-col gap-0"
@@ -658,6 +453,14 @@ export default function LiveDesk({
                         본문은 열람용으로 정리한 것이며 저작권은 발행사에 있습니다. 레이아웃·이미지는 사이트 열기로 확인하세요.
                       </p>
                     </article>
+                  )}
+                  {!readerLoading && !readerError && !displayBody && (
+                    <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
+                      <p className="text-sm text-[var(--live-muted)]">정리할 본문이 없습니다. 사이트에서 직접 읽어 주세요.</p>
+                      <button type="button" onClick={openOriginal} className="px-4 py-2 btn-mint text-sm rounded-sm cursor-pointer border-0">
+                        사이트 새 탭
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>
