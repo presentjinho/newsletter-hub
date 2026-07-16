@@ -167,7 +167,7 @@ export default function SubscriptionDesk({
             <p className="text-xs text-secondary mb-4 max-w-md mx-auto leading-relaxed">
               디렉터리 카드에서 <strong className="text-ink">내 구독 상태</strong>를 바꾸거나
               <strong className="text-ink"> + 내 목록</strong>에 저장하면 여기에 나타납니다.
-              (상태·목록은 현재 프로필·이 브라우저에만 저장됩니다.)
+              (상태·목록은 이 브라우저에만 저장됩니다.)
             </p>
             <a
               href="#find"

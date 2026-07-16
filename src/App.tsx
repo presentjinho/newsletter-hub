@@ -55,19 +55,19 @@ import {
   type CustomSourceInput
 } from './customSources';
 import AddSourceForm from './components/AddSourceForm';
-import ProfileMenu from './components/ProfileMenu';
 import {
-  ensureProfiles,
+  ensureBrowserStore,
   loadJSON,
   saveJSON,
   loadString,
   saveString,
   SLOTS,
-  getActiveProfile
-} from './profileStore';
+  registerFlush,
+  getLastWriteError
+} from './browserStore';
 
-// 앱 기동 시 프로필 + 레거시 데이터 이전
-ensureProfiles();
+// 앱 기동 시 저장소 이전·미러 준비
+ensureBrowserStore();
 
 const ALL_INTERESTS = [
   'AI', '재테크', '커리어', '디자인', '시사', '과학', '국제', '건강',
@@ -301,9 +301,11 @@ export default function App() {
     saveString(SLOTS.textSize, textSize);
   }, [textSize]);
 
-  // Sync state → 현재 프로필 저장소
+  // Sync state → 브라우저 저장 (메인 + 미러)
   useEffect(() => {
-    saveJSON(SLOTS.shelf, [...savedIds]);
+    if (!saveJSON(SLOTS.shelf, [...savedIds]) && getLastWriteError()) {
+      showToast('저장 공간이 부족하거나 차단됨 — 백업 JSON을 받아 두세요');
+    }
   }, [savedIds]);
 
   useEffect(() => {
@@ -311,12 +313,43 @@ export default function App() {
   }, [personalStatus]);
 
   useEffect(() => {
-    saveJSON(SLOTS.notes, notes);
+    if (!saveJSON(SLOTS.notes, notes) && getLastWriteError()) {
+      showToast('메모 저장 실패 — 저장소 용량을 확인하세요');
+    }
   }, [notes]);
 
   useEffect(() => {
     saveJSON(SLOTS.notebooks, notebooks);
   }, [notebooks]);
+
+  // 탭 숨김/종료 시 한 번 더 플러시
+  useEffect(() => {
+    return registerFlush(() => ({
+      [SLOTS.shelf]: [...savedIds],
+      [SLOTS.status]: personalStatus,
+      [SLOTS.notes]: notes,
+      [SLOTS.notebooks]: notebooks,
+      [SLOTS.interests]: userInterests,
+      [SLOTS.preferences]: prefs,
+      [SLOTS.gmail]: { selfEmail: gmailSelfEmail },
+      [SLOTS.liveSource]: liveSourceId,
+      [SLOTS.theme]: theme,
+      [SLOTS.textSize]: textSize,
+      [SLOTS.customSources]: customSources
+    }));
+  }, [
+    savedIds,
+    personalStatus,
+    notes,
+    notebooks,
+    userInterests,
+    prefs,
+    gmailSelfEmail,
+    liveSourceId,
+    theme,
+    textSize,
+    customSources
+  ]);
 
   // --- ACTIONS & HANDLERS ---
 
@@ -495,9 +528,9 @@ export default function App() {
 
   const handleBackupAll = () => {
     const payload = {
-      version: 3,
+      version: 4,
       exportedAt: new Date().toISOString(),
-      profile: getActiveProfile(),
+      storage: 'browser-local',
       savedIds: [...savedIds],
       personalStatus,
       userInterests,
@@ -917,7 +950,6 @@ export default function App() {
         </a>
 
         <nav className="flex items-center gap-4 md:gap-6 overflow-x-auto max-w-[72%] whitespace-nowrap" aria-label="주요 메뉴">
-          <ProfileMenu onSwitched={() => window.location.reload()} />
           <a href="#live" className="text-xs font-bold no-underline focus-ring">실시간</a>
           <a href="#subscriptions" className="text-xs font-bold no-underline flex items-center gap-1 focus-ring">
             구독관리

@@ -68,8 +68,8 @@ export default function PreferenceDialog({
         </h2>
 
         <p className="text-xs text-secondary mb-6 leading-relaxed">
-          이 설정은 <strong className="text-ink">현재 프로필</strong> 기준으로 이 브라우저에만 저장됩니다.
-          다른 사람과 PC를 같이 쓰면 상단 프로필에서 이름을 추가하세요.
+          이 설정은 <strong className="text-ink">이 브라우저</strong>에만 저장됩니다 (서버 없음).
+          다른 기기에서는 맨 아래 백업 JSON으로 옮기면 됩니다.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">

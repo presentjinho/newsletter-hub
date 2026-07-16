@@ -1,6 +1,6 @@
 import { Newsletter } from './types';
 import { normalizeItem } from './data';
-import { loadJSON, saveJSON, SLOTS } from './profileStore';
+import { loadJSON, saveJSON, SLOTS } from './browserStore';
 
 export type CustomSourceInput = {
   name: string;

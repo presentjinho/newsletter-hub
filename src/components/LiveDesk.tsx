@@ -26,7 +26,7 @@ import {
 import { fetchReadable, lastFetcherName } from '../readerFetch';
 import { isInfoSource } from '../data';
 import { openExternal } from '../safeLink';
-import { loadString, saveString, SLOTS } from '../profileStore';
+import { loadString, saveString, SLOTS } from '../browserStore';
 
 /** 불안정·대부분 차단되는 UI는 숨김 (iframe 끼워보기, 무료 문장 번역 API) */
 const SHOW_EXPERIMENTAL = false;
