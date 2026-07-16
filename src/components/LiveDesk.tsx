@@ -29,6 +29,7 @@ import {
 } from '../readerClean';
 import { fetchReadable, lastFetcherName } from '../readerFetch';
 import { isInfoSource } from '../data';
+import { openExternal } from '../safeLink';
 
 interface LiveDeskProps {
   newsletters: Newsletter[];
@@ -284,16 +285,19 @@ export default function LiveDesk({
   };
 
   const openOriginal = () => {
-    if (activeNewsletter) window.open(siteOf(activeNewsletter), '_blank', 'noopener,noreferrer');
+    if (!activeNewsletter) return;
+    if (!openExternal(siteOf(activeNewsletter))) {
+      /* toast 없음 — 상위 없음 */
+    }
   };
   const openSubscribe = () => {
     if (!activeNewsletter) return;
     const sub = subOf(activeNewsletter);
-    if (sub) window.open(sub, '_blank', 'noopener,noreferrer');
+    if (sub) openExternal(sub);
   };
   const openTranslate = () => {
     if (!activeNewsletter) return;
-    window.open(googleTranslatePageUrl(siteOf(activeNewsletter)), '_blank', 'noopener,noreferrer');
+    openExternal(googleTranslatePageUrl(siteOf(activeNewsletter)));
   };
 
   const zoomIn = () => setZoom(z => Math.min(200, z + 10));

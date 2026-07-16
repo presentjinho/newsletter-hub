@@ -1,7 +1,7 @@
 {
   "name": "newsletter-hub",
   "private": true,
-  "version": "1.4.0",
+  "version": "1.4.1",
   "type": "module",
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "clean": "node -e \"const fs=require('fs');['dist'].forEach(p=>fs.rmSync(p,{recursive:true,force:true}))\"",
     "lint": "tsc --noEmit",
-    "check-links": "node scripts/check-newsletters.mjs"
+    "check-links": "node scripts/check-all-links.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

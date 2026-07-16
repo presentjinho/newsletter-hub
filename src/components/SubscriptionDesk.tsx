@@ -243,6 +243,7 @@ export default function SubscriptionDesk({
                       href={item.siteUrl || item.url}
                       target="_blank"
                       rel="noopener noreferrer"
+                      referrerPolicy="no-referrer"
                       className="text-xs font-bold text-forest-green dark:text-[var(--green)] flex items-center gap-1 no-underline"
                     >
                       <ExternalLink className="w-3 h-3" /> 사이트
@@ -252,6 +253,7 @@ export default function SubscriptionDesk({
                         href={item.subscribeUrl}
                         target="_blank"
                         rel="noopener noreferrer"
+                        referrerPolicy="no-referrer"
                         className="text-xs font-bold text-accent-red flex items-center gap-1 no-underline"
                       >
                         구독

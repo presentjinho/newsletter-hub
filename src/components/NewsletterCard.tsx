@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ExternalLink, ChevronDown, ChevronUp, Globe, Radio } from 'lucide-react';
 import { Newsletter } from '../types';
 import { valuePromises, readingTimes, unsubscribeText, reuseLabels } from '../data';
+import { externalAnchorProps } from '../safeLink';
 
 export type LinkCheckInfo = {
   status: string;
@@ -194,8 +195,7 @@ export default function NewsletterCard({
           {sub ? (
             <a
               href={sub}
-              target="_blank"
-              rel="noopener noreferrer"
+              {...externalAnchorProps}
               className="text-xs font-bold px-3 py-2 bg-accent-red text-white dark:text-[#1a0a08] rounded-sm hover:opacity-95 flex items-center gap-1 no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-red"
             >
               <span>구독 페이지</span>
@@ -204,8 +204,7 @@ export default function NewsletterCard({
           ) : null}
           <a
             href={site}
-            target="_blank"
-            rel="noopener noreferrer"
+            {...externalAnchorProps}
             className="text-xs font-bold px-3 py-2 bg-ink text-paper rounded-sm hover:opacity-90 flex items-center gap-1 no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-red"
           >
             <span>사이트 열기</span>
@@ -217,8 +216,7 @@ export default function NewsletterCard({
           {item.origin === '글로벌' && (
             <a
               href={googleTranslateUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+              {...externalAnchorProps}
               className="text-xs font-semibold text-forest-green dark:text-[var(--green)] hover:underline flex items-center gap-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
             >
               <Globe className="w-3 h-3" aria-hidden="true" />
