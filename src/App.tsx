@@ -934,44 +934,44 @@ export default function App() {
       </a>
 
       {/* --- SITE HEADER --- */}
-      <header className="site-header border-b border-line h-[74px] px-6 md:px-12 flex justify-between items-center bg-paper/90 sticky top-0 backdrop-blur-xs z-40">
-        <a href="#top" className="brand flex items-center font-bold tracking-tight text-ink no-underline text-lg">
+      <header className="site-header border-b border-line h-[74px] px-6 md:px-12 flex justify-between items-center sticky top-0 backdrop-blur-xs z-40">
+        <a href="#top" className="brand flex items-center font-bold tracking-tight no-underline text-lg">
           <span className="brand-mark" aria-hidden="true">✦</span>
           <span>오늘의 편지함</span>
         </a>
 
         <nav className="flex items-center gap-6 md:gap-8 overflow-x-auto max-w-[65%] whitespace-nowrap" aria-label="주요 메뉴">
-          <a href="#live" className="text-xs font-bold text-ink no-underline hover:text-accent-red focus-ring">실시간</a>
-          <a href="#subscriptions" className="text-xs font-bold text-ink no-underline hover:text-accent-red flex items-center gap-1 focus-ring">
+          <a href="#live" className="text-xs font-bold no-underline focus-ring">실시간</a>
+          <a href="#subscriptions" className="text-xs font-bold no-underline flex items-center gap-1 focus-ring">
             구독관리
             {weekendQueue > 0 && (
-              <span className="text-[10px] bg-forest-green/15 text-forest-green px-1.5 py-0.5 font-bold rounded-full">
+              <span className="text-[10px] bg-forest-green/15 text-forest-green dark:text-[var(--green)] px-1.5 py-0.5 font-bold rounded-full">
                 주말{weekendQueue}
               </span>
             )}
           </a>
-          <a href="#find" className="text-xs font-bold text-ink no-underline hover:text-accent-red focus-ring">디렉터리</a>
-          <a href="#notes" className="text-xs font-bold text-ink no-underline hover:text-accent-red flex items-center gap-1 focus-ring">
+          <a href="#find" className="text-xs font-bold no-underline focus-ring">디렉터리</a>
+          <a href="#notes" className="text-xs font-bold no-underline flex items-center gap-1 focus-ring">
             <span>메모</span>
             <span className="text-[10px] bg-accent-red/10 text-accent-red px-1.5 py-0.5 font-bold rounded-full">
               {notes.length}
             </span>
           </a>
-          <a href="#my-list" className="text-xs font-bold text-ink no-underline hover:text-accent-red flex items-center gap-1 focus-ring">
+          <a href="#my-list" className="text-xs font-bold no-underline flex items-center gap-1 focus-ring">
             <span>내 목록</span>
-            <span className="text-[10px] bg-forest-green/10 text-forest-green px-1.5 py-0.5 font-bold rounded-full">
+            <span className="text-[10px] bg-forest-green/10 text-forest-green dark:text-[var(--green)] px-1.5 py-0.5 font-bold rounded-full">
               {savedIds.size}
             </span>
           </a>
-          <a href="#add-source" className="text-xs font-bold text-ink no-underline hover:text-accent-red focus-ring">사이트 추가</a>
-          <a href="#advanced" className="text-xs font-bold text-ink/60 no-underline hover:text-accent-red focus-ring">부가·백업</a>
+          <a href="#add-source" className="text-xs font-bold no-underline focus-ring">사이트 추가</a>
+          <a href="#advanced" className="text-xs font-bold no-underline opacity-80 focus-ring">부가·백업</a>
           
           <span className="w-px h-3.5 bg-line-alpha" aria-hidden="true" />
 
           <button
             type="button"
             onClick={() => setPreferencesOpen(true)}
-            className="text-xs font-bold text-ink/70 hover:text-ink bg-transparent border-0 cursor-pointer focus-ring"
+            className="text-xs font-bold bg-transparent border-0 cursor-pointer focus-ring"
           >
             내 설정
           </button>
@@ -981,7 +981,7 @@ export default function App() {
             onClick={() =>
               setTextSize(prev => (prev === 'normal' ? 'large' : prev === 'large' ? 'xl' : 'normal'))
             }
-            className="text-xs font-bold text-ink/70 hover:text-ink bg-transparent border-0 cursor-pointer focus-ring"
+            className="text-xs font-bold bg-transparent border-0 cursor-pointer focus-ring"
             title="사이트 전체 글자 크기 순환"
             aria-label={`글자 크기 변경 (현재 ${textSize})`}
           >
@@ -991,7 +991,7 @@ export default function App() {
           <button
             type="button"
             onClick={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')}
-            className="text-xs font-bold text-ink/70 hover:text-ink bg-transparent border-0 cursor-pointer focus-ring"
+            className="text-xs font-bold bg-transparent border-0 cursor-pointer focus-ring"
             aria-label={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
           >
             {theme === 'dark' ? '라이트 모드' : '다크 모드'}

@@ -162,6 +162,47 @@ main {
   background: color-mix(in srgb, var(--paper) 92%, transparent);
 }
 
+/* 헤더·브랜드: 테마 ink 강제 (다크에서 흰 글자) */
+.site-header,
+.site-header .brand,
+.site-header nav a,
+.site-header nav button {
+  color: var(--ink);
+}
+.site-header nav a:hover,
+.site-header nav button:hover {
+  color: var(--red);
+}
+body.dark .site-header {
+  background: color-mix(in srgb, #0d1210 94%, transparent);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+body.dark .site-header .brand,
+body.dark .site-header nav a,
+body.dark .site-header nav button {
+  color: #f5faf7 !important; /* 상단 메뉴 가독성 */
+}
+body.dark .site-header nav a.text-ink\/60,
+body.dark .site-header nav a[href="#advanced"] {
+  color: #dce8e2 !important;
+}
+body.dark .site-header nav a:hover,
+body.dark .site-header nav button:hover {
+  color: var(--red) !important;
+}
+/* 히어로 상단 제목·본문 */
+body.dark .hero h1 {
+  color: #f5faf7;
+}
+body.dark .hero .text-secondary,
+body.dark .hero p {
+  color: #c5d4cb;
+}
+body.dark .hero a.text-ink {
+  color: #f5faf7;
+  border-color: rgba(245, 250, 247, 0.55);
+}
+
 .brand-mark {
   color: var(--red);
   font-size: 18px;
