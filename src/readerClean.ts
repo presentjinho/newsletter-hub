@@ -463,7 +463,8 @@ async function tryLingva(text: string, signal: AbortSignal): Promise<string> {
     'https://lingva.ml',
     'https://lingva.thedaviddelta.com',
     'https://translate.plausibility.cloud',
-    'https://lingva.pussthecat.org'
+    'https://lingva.pussthecat.org',
+    'https://lingva.garudalinux.org'
   ];
   for (const host of hosts) {
     try {

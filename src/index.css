@@ -83,6 +83,63 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* a11y */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -100px;
+  z-index: 100;
+  padding: 0.6rem 1rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-decoration: none;
+  border-radius: 2px;
+}
+.skip-link:focus {
+  top: 0.75rem;
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+select:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+}
+
+.text-size-large { font-size: 17.5px; }
+.text-size-xl { font-size: 19px; }
+.text-size-normal { font-size: 16px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 .paper-grain {
   position: fixed;
   inset: 0;

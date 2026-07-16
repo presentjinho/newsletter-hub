@@ -35,7 +35,7 @@ import {
 // Component imports
 import OnboardingDialog from './components/OnboardingDialog';
 import PreferenceDialog from './components/PreferenceDialog';
-import NewsletterCard from './components/NewsletterCard';
+import NewsletterCard, { type LinkCheckInfo } from './components/NewsletterCard';
 import LiveDesk from './components/LiveDesk';
 import NotesHub from './components/NotesHub';
 import NoteDialog from './components/NoteDialog';
@@ -156,8 +156,17 @@ export default function App() {
 
   const [linkSyncStatus, setLinkSyncStatus] = useState('상태 파일 대기');
   const [catalog, setCatalog] = useState<Newsletter[]>(newsletters);
+  const [linkCheckMap, setLinkCheckMap] = useState<Record<string, LinkCheckInfo>>({});
+  const [linkCheckedAt, setLinkCheckedAt] = useState('');
+  /** 모바일: 상세 필터 기본 접힘 */
+  const [filtersOpen, setFiltersOpen] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    return window.matchMedia('(min-width: 768px)').matches;
+  });
 
   const showToast = (msg: string) => setToastMsg(msg);
+
+  const cardLinkCheck = (id: string): LinkCheckInfo | null => linkCheckMap[id] || null;
 
   // Onboarding auto-open trigger
   useEffect(() => {
@@ -180,7 +189,7 @@ export default function App() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  // link-status.json 실제 반영
+  // link-status.json 실제 반영 (Actions 일일 스냅샷)
   const applyLinkStatusFile = async () => {
     setLinkSyncStatus('동기화 중…');
     try {
@@ -188,19 +197,37 @@ export default function App() {
       const res = await fetch(`${base}data/link-status.json`, { cache: 'no-store' });
       if (!res.ok) throw new Error(String(res.status));
       const data = await res.json();
-      const bad = new Set(
-        (data.results || [])
-          .filter((r: { status?: string }) => r.status === 'needs-review')
-          .map((r: { id: string }) => r.id)
+      const checkedAt: string = data.checkedAt || new Date().toISOString();
+      setLinkCheckedAt(checkedAt);
+      const map: Record<string, LinkCheckInfo> = {};
+      for (const r of data.results || []) {
+        if (!r?.id) continue;
+        map[r.id] = {
+          status: r.status || 'needs-review',
+          httpStatus: r.httpStatus,
+          checkedAt
+        };
+      }
+      setLinkCheckMap(map);
+      const badIds = new Set(
+        Object.entries(map)
+          .filter(([, v]) => v.status === 'needs-review')
+          .map(([id]) => id)
       );
       setCatalog(prev =>
-        prev.map(n => (bad.has(n.id) ? { ...n, status: 'needs-review' as const } : n))
+        prev.map(n => {
+          const check = map[n.id];
+          if (!check) return n;
+          if (check.status === 'needs-review') return { ...n, status: 'needs-review' as const };
+          if (check.status === 'reachable' && n.status === 'needs-review') {
+            return { ...n, status: 'alive' as const };
+          }
+          return n;
+        })
       );
-      const when = data.checkedAt
-        ? new Date(data.checkedAt).toLocaleString('ko-KR')
-        : new Date().toLocaleTimeString('ko-KR');
-      setLinkSyncStatus(`동기화 완료 · ${when}` + (bad.size ? ` · 확인 필요 ${bad.size}` : ''));
-      showToast(bad.size ? `확인 필요 ${bad.size}건 표시` : '링크 상태 동기화 완료');
+      const when = new Date(checkedAt).toLocaleString('ko-KR');
+      setLinkSyncStatus(`동기화 완료 · ${when}` + (badIds.size ? ` · 확인 필요 ${badIds.size}` : ''));
+      showToast(badIds.size ? `확인 필요 ${badIds.size}건 표시` : '링크 상태 동기화 완료');
     } catch {
       setLinkSyncStatus('동기화 실패 (로컬/네트워크) — 새 탭 원문은 가능');
       showToast('상태 파일 동기화 실패 — 원문 링크는 그대로 사용하세요');
@@ -721,19 +748,23 @@ export default function App() {
   const weekendQueue = Object.values(personalStatus).filter(s => s === '나중에').length;
 
   return (
-    <div className="relative min-h-screen text-ink selection:bg-accent-red/20 selection:text-ink">
+    <div className={`relative min-h-screen text-ink selection:bg-accent-red/20 selection:text-ink text-size-${textSize}`}>
       <div className="paper-grain" aria-hidden="true" />
+
+      <a href="#find" className="skip-link">
+        디렉터리로 건너뛰기
+      </a>
 
       {/* --- SITE HEADER --- */}
       <header className="site-header border-b border-line h-[74px] px-6 md:px-12 flex justify-between items-center bg-paper/90 sticky top-0 backdrop-blur-xs z-40">
         <a href="#top" className="brand flex items-center font-bold tracking-tight text-ink no-underline text-lg">
-          <span className="brand-mark">✦</span>
+          <span className="brand-mark" aria-hidden="true">✦</span>
           <span>오늘의 편지함</span>
         </a>
 
-        <nav className="flex items-center gap-6 md:gap-8 overflow-x-auto max-w-[65%] whitespace-nowrap">
-          <a href="#live" className="text-xs font-bold text-ink no-underline hover:text-accent-red">실시간</a>
-          <a href="#subscriptions" className="text-xs font-bold text-ink no-underline hover:text-accent-red flex items-center gap-1">
+        <nav className="flex items-center gap-6 md:gap-8 overflow-x-auto max-w-[65%] whitespace-nowrap" aria-label="주요 메뉴">
+          <a href="#live" className="text-xs font-bold text-ink no-underline hover:text-accent-red focus-ring">실시간</a>
+          <a href="#subscriptions" className="text-xs font-bold text-ink no-underline hover:text-accent-red flex items-center gap-1 focus-ring">
             구독관리
             {weekendQueue > 0 && (
               <span className="text-[10px] bg-forest-green/15 text-forest-green px-1.5 py-0.5 font-bold rounded-full">
@@ -741,43 +772,48 @@ export default function App() {
               </span>
             )}
           </a>
-          <a href="#find" className="text-xs font-bold text-ink no-underline hover:text-accent-red">디렉터리</a>
-          <a href="#notes" className="text-xs font-bold text-ink no-underline hover:text-accent-red flex items-center gap-1">
+          <a href="#find" className="text-xs font-bold text-ink no-underline hover:text-accent-red focus-ring">디렉터리</a>
+          <a href="#notes" className="text-xs font-bold text-ink no-underline hover:text-accent-red flex items-center gap-1 focus-ring">
             <span>메모</span>
             <span className="text-[10px] bg-accent-red/10 text-accent-red px-1.5 py-0.5 font-bold rounded-full">
               {notes.length}
             </span>
           </a>
-          <a href="#my-list" className="text-xs font-bold text-ink no-underline hover:text-accent-red flex items-center gap-1">
+          <a href="#my-list" className="text-xs font-bold text-ink no-underline hover:text-accent-red flex items-center gap-1 focus-ring">
             <span>내 목록</span>
             <span className="text-[10px] bg-forest-green/10 text-forest-green px-1.5 py-0.5 font-bold rounded-full">
               {savedIds.size}
             </span>
           </a>
-          <a href="#stack" className="text-xs font-bold text-ink no-underline hover:text-accent-red">보강 도구</a>
+          <a href="#stack" className="text-xs font-bold text-ink no-underline hover:text-accent-red focus-ring">보강 도구</a>
           
-          <span className="w-px h-3.5 bg-line-alpha" />
+          <span className="w-px h-3.5 bg-line-alpha" aria-hidden="true" />
 
           <button
+            type="button"
             onClick={() => setPreferencesOpen(true)}
-            className="text-xs font-bold text-ink/70 hover:text-ink bg-transparent border-0 cursor-pointer"
+            className="text-xs font-bold text-ink/70 hover:text-ink bg-transparent border-0 cursor-pointer focus-ring"
           >
             내 설정
           </button>
           
           <button
+            type="button"
             onClick={() =>
               setTextSize(prev => (prev === 'normal' ? 'large' : prev === 'large' ? 'xl' : 'normal'))
             }
-            className="text-xs font-bold text-ink/70 hover:text-ink bg-transparent border-0 cursor-pointer"
+            className="text-xs font-bold text-ink/70 hover:text-ink bg-transparent border-0 cursor-pointer focus-ring"
             title="사이트 전체 글자 크기 순환"
+            aria-label={`글자 크기 변경 (현재 ${textSize})`}
           >
             {textSize === 'normal' ? '글자 크게' : textSize === 'large' ? '글자 더크게' : '기본 글자'}
           </button>
 
           <button
+            type="button"
             onClick={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')}
-            className="text-xs font-bold text-ink/70 hover:text-ink bg-transparent border-0 cursor-pointer"
+            className="text-xs font-bold text-ink/70 hover:text-ink bg-transparent border-0 cursor-pointer focus-ring"
+            aria-label={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
           >
             {theme === 'dark' ? '라이트 모드' : '다크 모드'}
           </button>
@@ -813,6 +849,7 @@ export default function App() {
           <span className="pulse" />
           <span className="text-secondary">
             현재 <strong>{totalActive}</strong>개의 엄선 채널 중, <strong>{totalAlive}</strong>개 정상 발행 상태 확인 완료
+            {linkCheckedAt ? ` · 링크 점검 ${new Date(linkCheckedAt).toLocaleDateString('ko-KR')}` : ''}
           </span>
         </div>
 
@@ -910,6 +947,7 @@ export default function App() {
                 onOpenNote={() => handleOpenNote(item.id)}
                 personalState={personalStatus[item.id] || '관심 있음'}
                 onChangePersonalState={(stat) => handleStatusChange(item.id, stat)}
+                lastLinkCheck={cardLinkCheck(item.id)}
               />
             ))}
           </div>
@@ -952,6 +990,7 @@ export default function App() {
                   onOpenNote={() => handleOpenNote(item.id)}
                   personalState={personalStatus[item.id] || '관심 있음'}
                   onChangePersonalState={(stat) => handleStatusChange(item.id, stat)}
+                  lastLinkCheck={cardLinkCheck(item.id)}
                 />
               ))}
             </div>
@@ -972,21 +1011,24 @@ export default function App() {
           </div>
 
           {/* --- SEARCH & FILTERS CONTROLS --- */}
-          <div className="space-y-6 mb-8 bg-[var(--surface-2)] p-6 border border-line-alpha rounded-xs">
+          <div className="space-y-4 mb-8 bg-[var(--surface-2)] p-6 border border-line-alpha rounded-xs">
             {/* Search Input */}
             <div className="relative border-b border-ink/40 dark:border-white/40 focus-within:border-accent-red transition duration-200">
-              <Search className="absolute left-0 top-3 h-5 w-5 text-secondary" />
+              <Search className="absolute left-0 top-3 h-5 w-5 text-secondary" aria-hidden="true" />
+              <label htmlFor="directory-search" className="sr-only">디렉터리 검색</label>
               <input
+                id="directory-search"
                 ref={searchInputRef}
                 type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="검색 (Ctrl+K) · 제목, 분류, 키워드…"
-                className="w-full pl-8 py-3 text-sm md:text-base text-ink dark:text-white bg-transparent focus:outline-none"
+                className="w-full pl-8 py-3 text-sm md:text-base text-ink dark:text-white bg-transparent focus:outline-none focus-ring"
+                autoComplete="off"
               />
             </div>
 
-            {/* 정보 vs 뉴스레터 — 기본 정보 매체 */}
+            {/* 매체 종류는 항상 노출 */}
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-[10px] font-bold text-secondary uppercase tracking-widest w-[80px] text-left">
                 매체 종류
@@ -1001,7 +1043,7 @@ export default function App() {
                     key={value}
                     type="button"
                     onClick={() => setMediaKind(value)}
-                    className={`px-3 py-1 text-xs border rounded-full transition duration-200 cursor-pointer
+                    className={`px-3 py-1 text-xs border rounded-full transition duration-200 cursor-pointer focus-ring
                       ${mediaKind === value
                         ? 'chip-active border'
                         : 'border-line-alpha text-ink hover:border-ink dark:hover:border-white'
@@ -1014,6 +1056,30 @@ export default function App() {
               </div>
             </div>
 
+            <div className="flex flex-wrap items-center justify-between gap-2 border-t border-line-alpha/40 pt-3">
+              <button
+                type="button"
+                onClick={() => setFiltersOpen(v => !v)}
+                className="flex items-center gap-2 text-xs font-bold text-forest-green dark:text-[var(--green)] bg-transparent border-0 cursor-pointer focus-ring px-0 py-1"
+                aria-expanded={filtersOpen}
+                aria-controls="directory-filters-panel"
+              >
+                <SlidersHorizontal className="w-4 h-4" aria-hidden="true" />
+                {filtersOpen ? '상세 필터 접기' : '상세 필터 펼치기'}
+                <ChevronDown className={`w-4 h-4 transition-transform ${filtersOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+              </button>
+              {!filtersOpen && (
+                <span className="text-[10px] text-secondary">
+                  모바일 기본 접힘 · 검색·매체 종류는 위에 유지
+                </span>
+              )}
+            </div>
+
+            <div
+              id="directory-filters-panel"
+              hidden={!filtersOpen}
+              className={filtersOpen ? 'space-y-6' : undefined}
+            >
             {/* My subscription status filter */}
             <div className="flex flex-wrap items-center gap-2 border-t border-line-alpha/40 pt-3">
               <span className="text-[10px] font-bold text-secondary uppercase tracking-widest w-[80px] text-left">
@@ -1257,6 +1323,7 @@ export default function App() {
                 </select>
               </div>
             </div>
+            </div>
           </div>
 
           {/* Results count indicator */}
@@ -1292,6 +1359,7 @@ export default function App() {
                   onOpenNote={() => handleOpenNote(item.id)}
                   personalState={personalStatus[item.id] || '관심 있음'}
                   onChangePersonalState={(stat) => handleStatusChange(item.id, stat)}
+                  lastLinkCheck={cardLinkCheck(item.id)}
                 />
               ))}
             </div>
@@ -1358,6 +1426,7 @@ export default function App() {
                   onOpenNote={() => handleOpenNote(item.id)}
                   personalState={personalStatus[item.id] || '관심 있음'}
                   onChangePersonalState={(stat) => handleStatusChange(item.id, stat)}
+                  lastLinkCheck={cardLinkCheck(item.id)}
                 />
               ))}
             </div>

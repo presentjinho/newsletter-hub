@@ -21,6 +21,7 @@ jobs:
         run: |
           git config user.name "newsletter-directory-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/data/link-status.json data/link-status.json
+          git add public/data/link-status.json
+          if [ -f data/link-status.json ]; then git add data/link-status.json; fi
           git diff --cached --quiet || git commit -m "chore: refresh newsletter link status"
           git push
