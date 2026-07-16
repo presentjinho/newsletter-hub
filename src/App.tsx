@@ -194,7 +194,14 @@ export default function App() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  // link-status.json 실제 반영 (Actions 일일 스냅샷)
+  /** 관심 등록: 내 목록·구독 상태·온보딩 관심사 태그 일치 */
+  const isTrackedInterest = (n: Newsletter) => {
+    if (savedIds.has(n.id) || personalStatus[n.id]) return true;
+    if (userInterests.length > 0 && n.interests.some(t => userInterests.includes(t))) return true;
+    return false;
+  };
+
+  // link-status.json 반영 — 「확인 필요」는 관심 등록 항목에만 표시
   const applyLinkStatusFile = async () => {
     setLinkSyncStatus('동기화 중…');
     try {
@@ -214,16 +221,25 @@ export default function App() {
         };
       }
       setLinkCheckMap(map);
-      const badIds = new Set(
-        Object.entries(map)
-          .filter(([, v]) => v.status === 'needs-review')
-          .map(([id]) => id)
-      );
+      let trackedBad = 0;
       setCatalog(prev =>
         prev.map(n => {
           const check = map[n.id];
-          if (!check) return n;
-          if (check.status === 'needs-review') return { ...n, status: 'needs-review' as const };
+          const tracked =
+            savedIds.has(n.id) ||
+            !!personalStatus[n.id] ||
+            (userInterests.length > 0 && n.interests.some(t => userInterests.includes(t)));
+          if (!check) {
+            if (n.status === 'needs-review' && !tracked) return { ...n, status: 'alive' as const };
+            return n;
+          }
+          if (check.status === 'needs-review') {
+            if (tracked) {
+              trackedBad += 1;
+              return { ...n, status: 'needs-review' as const };
+            }
+            return { ...n, status: n.status === 'needs-review' ? ('alive' as const) : n.status };
+          }
           if (check.status === 'reachable' && n.status === 'needs-review') {
             return { ...n, status: 'alive' as const };
           }
@@ -231,8 +247,15 @@ export default function App() {
         })
       );
       const when = new Date(checkedAt).toLocaleString('ko-KR');
-      setLinkSyncStatus(`동기화 완료 · ${when}` + (badIds.size ? ` · 확인 필요 ${badIds.size}` : ''));
-      showToast(badIds.size ? `확인 필요 ${badIds.size}건 표시` : '링크 상태 동기화 완료');
+      setLinkSyncStatus(
+        `동기화 완료 · ${when}` +
+          (trackedBad ? ` · 관심 중 확인 필요 ${trackedBad}` : ' · 관심 항목 링크 OK')
+      );
+      showToast(
+        trackedBad
+          ? `관심 등록 중 확인 필요 ${trackedBad}건`
+          : '링크 상태 동기화 완료 (확인 필요는 관심 항목만)'
+      );
     } catch {
       setLinkSyncStatus('동기화 실패 (로컬/네트워크) — 새 탭 원문은 가능');
       showToast('상태 파일 동기화 실패 — 원문 링크는 그대로 사용하세요');
@@ -243,6 +266,28 @@ export default function App() {
     applyLinkStatusFile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // 관심 목록이 바뀌면 확인 필요 재적용
+  useEffect(() => {
+    if (!Object.keys(linkCheckMap).length) return;
+    setCatalog(prev =>
+      prev.map(n => {
+        const check = linkCheckMap[n.id];
+        const tracked = isTrackedInterest(n);
+        if (check?.status === 'needs-review' && tracked) {
+          return { ...n, status: 'needs-review' as const };
+        }
+        if (n.status === 'needs-review' && !tracked) {
+          return { ...n, status: 'alive' as const };
+        }
+        if (check?.status === 'reachable' && n.status === 'needs-review') {
+          return { ...n, status: 'alive' as const };
+        }
+        return n;
+      })
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [savedIds, personalStatus, userInterests, linkCheckMap]);
 
   // Theme application
   useEffect(() => {
@@ -781,7 +826,10 @@ export default function App() {
 
   const totalActive = catalog.length;
   const totalAlive = catalog.filter(n => n.status === 'alive').length;
-  const totalNeedsReview = catalog.filter(n => n.status === 'needs-review').length;
+  /** 확인 필요 = 관심 등록(목록·상태·관심사) + 링크 needs-review 만 */
+  const totalNeedsReview = catalog.filter(
+    n => n.status === 'needs-review' && isTrackedInterest(n)
+  ).length;
   const weekendQueue = Object.values(personalStatus).filter(s => s === '나중에').length;
 
   return (
@@ -910,7 +958,7 @@ export default function App() {
             </strong>
           </div>
           <div className="border-l border-white/20 pl-4 py-1">
-            <span className="stats-label block text-[10px] uppercase tracking-wider mb-0.5">확인 필요 · 주말 큐</span>
+            <span className="stats-label block text-[10px] uppercase tracking-wider mb-0.5">관심 중 확인 필요 · 주말 큐</span>
             <strong className="text-sm font-semibold text-[#ff9a8a]">
               {totalNeedsReview} · 주말 {weekendQueue}
             </strong>
@@ -984,7 +1032,9 @@ export default function App() {
                 onOpenNote={() => handleOpenNote(item.id)}
                 personalState={personalStatus[item.id] || '관심 있음'}
                 onChangePersonalState={(stat) => handleStatusChange(item.id, stat)}
-                lastLinkCheck={cardLinkCheck(item.id)}
+                lastLinkCheck={
+                  isTrackedInterest(item) ? cardLinkCheck(item.id) : null
+                }
               />
             ))}
           </div>
@@ -1027,7 +1077,9 @@ export default function App() {
                   onOpenNote={() => handleOpenNote(item.id)}
                   personalState={personalStatus[item.id] || '관심 있음'}
                   onChangePersonalState={(stat) => handleStatusChange(item.id, stat)}
-                  lastLinkCheck={cardLinkCheck(item.id)}
+                  lastLinkCheck={
+                    isTrackedInterest(item) ? cardLinkCheck(item.id) : null
+                  }
                 />
               ))}
             </div>
@@ -1396,7 +1448,9 @@ export default function App() {
                   onOpenNote={() => handleOpenNote(item.id)}
                   personalState={personalStatus[item.id] || '관심 있음'}
                   onChangePersonalState={(stat) => handleStatusChange(item.id, stat)}
-                  lastLinkCheck={cardLinkCheck(item.id)}
+                  lastLinkCheck={
+                    isTrackedInterest(item) ? cardLinkCheck(item.id) : null
+                  }
                 />
               ))}
             </div>
@@ -1463,7 +1517,9 @@ export default function App() {
                   onOpenNote={() => handleOpenNote(item.id)}
                   personalState={personalStatus[item.id] || '관심 있음'}
                   onChangePersonalState={(stat) => handleStatusChange(item.id, stat)}
-                  lastLinkCheck={cardLinkCheck(item.id)}
+                  lastLinkCheck={
+                    isTrackedInterest(item) ? cardLinkCheck(item.id) : null
+                  }
                 />
               ))}
             </div>
