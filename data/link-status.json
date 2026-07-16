@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-07-16T02:32:49.659Z",
+  "checkedAt": "2026-07-16T05:24:49.416Z",
   "count": 315,
-  "reachable": 315,
-  "needsReview": 0,
+  "reachable": 310,
+  "needsReview": 5,
   "results": [
     {
       "id": "newneek",
@@ -57,7 +57,7 @@
       "id": "morning-brew",
       "url": "https://www.morningbrew.com/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200
     },
     {
       "id": "tldr",
@@ -118,7 +118,7 @@
       "id": "yozm-it",
       "url": "https://yozm.wishket.com/magazine/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 405
     },
     {
       "id": "disquiet",
@@ -142,8 +142,7 @@
       "id": "the-atlantic",
       "url": "https://www.theatlantic.com/",
       "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.theatlantic.com/world/"
+      "httpStatus": 200
     },
     {
       "id": "mit-tech-review",
@@ -242,7 +241,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=68ec2de1-f1da-4ecc-942b-2fe7b36aa52f"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=c331614d-2eb7-4f76-a3f2-8363f1ac83f2"
     },
     {
       "id": "nomadicmatt",
@@ -254,8 +253,7 @@
       "id": "ign",
       "url": "https://www.ign.com/",
       "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://kr.ign.com/"
+      "httpStatus": 200
     },
     {
       "id": "rogerebert",
@@ -290,15 +288,14 @@
     {
       "id": "hrinsight",
       "url": "https://www.hrinsight.co.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "joseilbo",
       "url": "https://joseilbo.com/",
       "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.joseilbo.com/index.php"
+      "httpStatus": 403,
+      "finalUrl": "https://www.joseilbo.com/"
     },
     {
       "id": "ikpnews",
@@ -316,7 +313,7 @@
       "id": "dailyvet",
       "url": "https://www.dailyvet.co.kr/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "ibabynews",
@@ -388,8 +385,7 @@
       "id": "france-24",
       "url": "https://www.france24.com/",
       "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.france24.com/en/"
+      "httpStatus": 403
     },
     {
       "id": "al-jazeera",
@@ -591,7 +587,7 @@
       "url": "https://theconversation.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://theconversation.com/global"
+      "finalUrl": "https://theconversation.com/us"
     },
     {
       "id": "propublica",
@@ -782,7 +778,7 @@
       "id": "ind-fash-us-bof",
       "url": "https://www.businessoffashion.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "ind-fash-uk-drapers",
@@ -799,8 +795,9 @@
     {
       "id": "ind-pharma-us-fda",
       "url": "https://www.fda.gov/news-events",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review",
+      "httpStatus": 404,
+      "finalUrl": "https://www.fda.gov/apology_objects/abuse-detection-apology.html"
     },
     {
       "id": "ind-pharma-ch-swissmedic",
@@ -878,8 +875,7 @@
       "id": "ind-media-fr-france24",
       "url": "https://www.france24.com/",
       "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.france24.com/en/"
+      "httpStatus": 403
     },
     {
       "id": "ind-media-br-agencia",
@@ -898,8 +894,7 @@
       "id": "ind-game-us-ign",
       "url": "https://www.ign.com/",
       "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://kr.ign.com/"
+      "httpStatus": 200
     },
     {
       "id": "ind-game-jp-famitsu",
@@ -928,8 +923,7 @@
     {
       "id": "ind-ag-us-usda",
       "url": "https://www.usda.gov/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "ind-ag-br-embrapa",
@@ -959,7 +953,7 @@
       "id": "ind-nl-us-morning-brew",
       "url": "https://www.morningbrew.com/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200
     },
     {
       "id": "ind-nl-us-tldr",
@@ -1056,7 +1050,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200
     },
     {
       "id": "edu-eu-fun",
@@ -1148,14 +1142,13 @@
       "id": "art-us-pinterest",
       "url": "https://www.pinterest.com/",
       "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://kr.pinterest.com/"
+      "httpStatus": 200
     },
     {
       "id": "art-us-deviantart",
       "url": "https://www.deviantart.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "art-us-artstation",
@@ -1470,14 +1463,13 @@
       "id": "cat-health-us-cdc",
       "url": "https://www.cdc.gov/",
       "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.cdc.gov/index.html"
+      "httpStatus": 403
     },
     {
       "id": "cat-health-us-nih",
       "url": "https://www.nih.gov/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200
     },
     {
       "id": "cat-health-us-medline",
@@ -1596,8 +1588,7 @@
       "id": "cat-fin-imf",
       "url": "https://www.imf.org/",
       "status": "reachable",
-      "httpStatus": 403,
-      "finalUrl": "https://www.imf.org/en/home"
+      "httpStatus": 403
     },
     {
       "id": "cat-fin-worldbank",
@@ -1630,7 +1621,7 @@
       "id": "cat-job-us-bls",
       "url": "https://www.bls.gov/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "cat-cul-kr-nl",
@@ -1684,9 +1675,7 @@
     {
       "id": "cat-spo-olympics",
       "url": "https://olympics.com/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.olympics.com/en/"
+      "status": "needs-review"
     },
     {
       "id": "cat-spo-fifa",
@@ -1719,7 +1708,7 @@
       "url": "https://www.japan.travel/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://www.japan.travel/ko/kr/"
+      "finalUrl": "https://www.japan.travel/en/us/"
     },
     {
       "id": "cat-travel-us-nps",
@@ -1764,8 +1753,7 @@
     {
       "id": "cat-food-us-usda",
       "url": "https://www.usda.gov/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-parent-kr-mogef",
@@ -1802,7 +1790,7 @@
       "id": "cat-auto-us-nhtsa",
       "url": "https://www.nhtsa.gov/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "cat-home-kr-reb",
@@ -1926,7 +1914,7 @@
       "id": "cat-crypto-us-sec",
       "url": "https://www.sec.gov/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "cat-pet-kr-animal",
@@ -1950,8 +1938,7 @@
       "id": "cat-browse-pinterest",
       "url": "https://www.pinterest.com/",
       "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://kr.pinterest.com/"
+      "httpStatus": 200
     }
   ]
 }
