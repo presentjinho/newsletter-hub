@@ -95,12 +95,17 @@ export default function NewsletterCard({
           <span className="text-[9px] font-bold px-1.5 py-0.5 bg-[#f6ded8] text-accent-red dark:bg-[#4a2c26] uppercase">
             {item.type === 'newsletter' ? '뉴스레터' : item.type === 'magazine' ? '매거진' : '사이트'}
           </span>
+          {item.id.startsWith('custom_') && (
+            <span className="text-[9px] font-bold px-1.5 py-0.5 bg-accent-red/15 text-accent-red">
+              내가 추가
+            </span>
+          )}
           {item.deskRole === 'browse' && (
             <span className="text-[9px] font-bold px-1.5 py-0.5 border border-line-alpha text-secondary">
               탐색용 · 리더 제외
             </span>
           )}
-          {item.deskRole !== 'browse' && item.type !== 'newsletter' && (
+          {item.deskRole !== 'browse' && item.type !== 'newsletter' && !item.id.startsWith('custom_') && (
             <span className="text-[9px] font-bold px-1.5 py-0.5 bg-[var(--green-soft)] text-[var(--green)]">
               정보·대시보드
             </span>

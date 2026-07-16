@@ -51,8 +51,10 @@ import {
   loadCustomSources,
   saveCustomSources,
   makeCustomSource,
+  hostKey,
   type CustomSourceInput
 } from './customSources';
+import AddSourceForm from './components/AddSourceForm';
 
 const ALL_INTERESTS = [
   'AI', '재테크', '커리어', '디자인', '시사', '과학', '국제', '건강',
@@ -467,7 +469,21 @@ export default function App() {
   const handleAddCustom = (input: CustomSourceInput): boolean => {
     const item = makeCustomSource(input);
     if (!item) {
-      showToast('URL을 확인해 주세요 (https://...)');
+      showToast('URL을 확인해 주세요 (예: example.com 또는 https://...)');
+      return false;
+    }
+    const key = hostKey(item.siteUrl);
+    const dup = catalog.find(
+      n => hostKey(n.siteUrl || n.url) === key || n.siteUrl === item.siteUrl
+    );
+    if (dup && !dup.id.startsWith('custom_')) {
+      showToast(`이미 디렉터리에 있음: 「${dup.name}」 — 내 목록에 저장했어요`);
+      setSavedIds(prev => new Set([...prev, dup.id]));
+      setPersonalStatus(prev => ({ ...prev, [dup.id]: prev[dup.id] || '관심 있음' }));
+      return true;
+    }
+    if (dup && dup.id.startsWith('custom_')) {
+      showToast(`이미 추가한 사이트입니다: 「${dup.name}」`);
       return false;
     }
     setCustomSources(prev => {
@@ -475,15 +491,10 @@ export default function App() {
       saveCustomSources(next);
       return next;
     });
-    setCatalog(prev => {
-      if (prev.some(n => n.id === item.id || n.siteUrl === item.siteUrl)) {
-        return prev.map(n => (n.siteUrl === item.siteUrl ? item : n));
-      }
-      return [...prev, item];
-    });
+    setCatalog(prev => [...prev, item]);
     setSavedIds(prev => new Set([...prev, item.id]));
     setPersonalStatus(prev => ({ ...prev, [item.id]: '관심 있음' }));
-    showToast(`「${item.name}」 추가 · 내 목록에 저장됨`);
+    showToast(`「${item.name}」 추가됨 · 내 목록·디렉터리·실시간에서 사용 가능`);
     return true;
   };
 
@@ -952,6 +963,7 @@ export default function App() {
               {savedIds.size}
             </span>
           </a>
+          <a href="#add-source" className="text-xs font-bold text-ink no-underline hover:text-accent-red focus-ring">사이트 추가</a>
           <a href="#advanced" className="text-xs font-bold text-ink/60 no-underline hover:text-accent-red focus-ring">부가·백업</a>
           
           <span className="w-px h-3.5 bg-line-alpha" aria-hidden="true" />
@@ -1172,13 +1184,21 @@ export default function App() {
       {/* --- MAIN DIRECTORY SECTION --- */}
       <section className="directory bg-[var(--surface)] p-8 md:p-14 border-b border-line-alpha" id="find">
         <div className="max-w-7xl mx-auto">
-          <div className="max-w-xl mb-10">
-            <p className="text-xs font-bold tracking-widest text-forest-green dark:text-[var(--green)] uppercase mb-2">
-              THE DIRECTORY
-            </p>
-            <h2 className="font-serif text-3xl md:text-5xl tracking-tight leading-tight text-ink">
-              오늘, 무슨 편지를<br />기다리고 있나요?
-            </h2>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+            <div className="max-w-xl">
+              <p className="text-xs font-bold tracking-widest text-forest-green dark:text-[var(--green)] uppercase mb-2">
+                THE DIRECTORY
+              </p>
+              <h2 className="font-serif text-3xl md:text-5xl tracking-tight leading-tight text-ink">
+                오늘, 무슨 편지를<br />기다리고 있나요?
+              </h2>
+              <p className="text-sm text-secondary mt-3">
+                목록에 없으면 <strong className="text-ink">원하는 사이트 URL</strong>을 직접 넣을 수 있습니다.
+              </p>
+            </div>
+            <div id="add-source" className="shrink-0">
+              <AddSourceForm onAdd={handleAddCustom} variant="compact" idPrefix="dir-add" />
+            </div>
           </div>
 
           {/* --- SEARCH & FILTERS CONTROLS --- */}
@@ -1562,9 +1582,10 @@ export default function App() {
                 내가 모아 둔 편지함
               </h2>
               <p className="text-sm text-secondary mt-2 leading-relaxed">
-                보관해 둔 목록입니다. OPML·백업 내보내기는 페이지 맨 아래 「부가·백업」에 있습니다.
+                보관해 둔 목록입니다. 없는 사이트는 아래에서 추가하세요. OPML·백업은 맨 아래 「부가·백업」.
               </p>
             </div>
+            <AddSourceForm onAdd={handleAddCustom} variant="compact" idPrefix="shelf-add" />
           </div>
 
           {savedNewsletters.length > 0 ? (

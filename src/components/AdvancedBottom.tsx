@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ExternalLink, Plus, Trash2, Download, Upload, Shield, Wrench } from 'lucide-react';
 import { stackTools } from '../data';
 import { Newsletter } from '../types';
 import { CustomSourceInput } from '../customSources';
 import { externalAnchorProps } from '../safeLink';
+import AddSourceForm from './AddSourceForm';
 
 interface AdvancedBottomProps {
   customSources: Newsletter[];
@@ -28,21 +29,6 @@ export default function AdvancedBottom({
   onExportCsv,
   onExportDigest
 }: AdvancedBottomProps) {
-  const [name, setName] = useState('');
-  const [siteUrl, setSiteUrl] = useState('');
-  const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('시사');
-
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const ok = onAddCustom({ name, siteUrl, description, category });
-    if (ok) {
-      setName('');
-      setSiteUrl('');
-      setDescription('');
-    }
-  };
-
   return (
     <section
       id="advanced"
@@ -64,70 +50,22 @@ export default function AdvancedBottom({
         </div>
 
         {/* 내 출처 추가 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8" id="my-sources">
           <div className="border border-line-alpha bg-[var(--surface)] p-6 rounded-sm">
             <h3 className="text-sm font-bold text-ink mb-1 flex items-center gap-2">
               <Plus className="w-4 h-4 text-accent-red" />
-              내 출처 직접 추가
+              원하는 사이트 추가 (상세)
             </h3>
             <p className="text-xs text-secondary mb-4 leading-relaxed">
-              이 브라우저에만 저장됩니다. 공식 사이트 URL을 넣고, 원문 복제 없이 링크·소개만 등록하세요.
+              디렉터리·내 목록 상단에서도 추가할 수 있습니다. 이 브라우저에만 저장 · 원문 복제 없음.
             </p>
-            <form onSubmit={submit} className="space-y-3">
-              <div>
-                <label htmlFor="custom-name" className="text-[10px] font-bold text-secondary uppercase">이름</label>
-                <input
-                  id="custom-name"
-                  value={name}
-                  onChange={e => setName(e.target.value)}
-                  placeholder="예: 우리 팀 블로그"
-                  className="w-full mt-1 px-3 py-2 text-sm border border-line-alpha bg-paper text-ink"
-                />
-              </div>
-              <div>
-                <label htmlFor="custom-url" className="text-[10px] font-bold text-secondary uppercase">사이트 URL *</label>
-                <input
-                  id="custom-url"
-                  type="url"
-                  required
-                  value={siteUrl}
-                  onChange={e => setSiteUrl(e.target.value)}
-                  placeholder="https://"
-                  className="w-full mt-1 px-3 py-2 text-sm border border-line-alpha bg-paper text-ink"
-                />
-              </div>
-              <div>
-                <label htmlFor="custom-cat" className="text-[10px] font-bold text-secondary uppercase">분야</label>
-                <input
-                  id="custom-cat"
-                  value={category}
-                  onChange={e => setCategory(e.target.value)}
-                  className="w-full mt-1 px-3 py-2 text-sm border border-line-alpha bg-paper text-ink"
-                />
-              </div>
-              <div>
-                <label htmlFor="custom-desc" className="text-[10px] font-bold text-secondary uppercase">한 줄 소개</label>
-                <input
-                  id="custom-desc"
-                  value={description}
-                  onChange={e => setDescription(e.target.value)}
-                  placeholder="내가 쓰는 이유 (선택)"
-                  className="w-full mt-1 px-3 py-2 text-sm border border-line-alpha bg-paper text-ink"
-                />
-              </div>
-              <button
-                type="submit"
-                className="px-4 py-2.5 bg-ink text-paper text-xs font-bold cursor-pointer border-0 rounded-sm"
-              >
-                출처 추가 · 내 목록에도 넣기
-              </button>
-            </form>
+            <AddSourceForm onAdd={onAddCustom} variant="full" idPrefix="adv-add" />
           </div>
 
           <div className="border border-line-alpha bg-[var(--surface)] p-6 rounded-sm">
             <h3 className="text-sm font-bold text-ink mb-3">내가 추가한 출처 ({customSources.length})</h3>
             {customSources.length === 0 ? (
-              <p className="text-xs text-secondary">아직 없습니다. 왼쪽에서 URL을 등록하세요.</p>
+              <p className="text-xs text-secondary">아직 없습니다. 왼쪽 또는 디렉터리에서 URL을 등록하세요.</p>
             ) : (
               <ul className="space-y-2 max-h-64 overflow-y-auto">
                 {customSources.map(s => (

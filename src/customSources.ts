@@ -65,18 +65,44 @@ export function saveCustomSources(items: Newsletter[]) {
   );
 }
 
-export function makeCustomSource(input: CustomSourceInput): Newsletter | null {
-  let url = (input.siteUrl || '').trim();
+/** 비교용 정규화 (중복 방지) */
+export function normalizeSiteUrl(raw: string): string | null {
+  let url = (raw || '').trim();
   if (!url) return null;
   if (!/^https?:\/\//i.test(url)) url = `https://${url}`;
   try {
-    // validate
-    // eslint-disable-next-line no-new
-    new URL(url);
+    const u = new URL(url);
+    u.hash = '';
+    // trailing slash 통일
+    let path = u.pathname;
+    if (path.length > 1 && path.endsWith('/')) path = path.slice(0, -1);
+    u.pathname = path || '/';
+    return u.toString();
   } catch {
     return null;
   }
-  const name = (input.name || '').trim() || new URL(url).hostname;
+}
+
+export function hostKey(raw: string): string {
+  try {
+    return new URL(normalizeSiteUrl(raw) || raw).hostname.replace(/^www\./, '').toLowerCase();
+  } catch {
+    return raw.toLowerCase();
+  }
+}
+
+export function isCustomSourceId(id: string): boolean {
+  return id.startsWith('custom_');
+}
+
+export function makeCustomSource(input: CustomSourceInput): Newsletter | null {
+  const url = normalizeSiteUrl(input.siteUrl || '');
+  if (!url) return null;
+  let sub = (input.subscribeUrl || '').trim();
+  if (sub && !normalizeSiteUrl(sub)) sub = '';
+  else if (sub) sub = normalizeSiteUrl(sub) || '';
+
+  const name = (input.name || '').trim() || new URL(url).hostname.replace(/^www\./, '');
   const id = `custom_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 7)}`;
   const category = (input.category || '시사').trim() || '시사';
   return normalizeItem({
@@ -86,7 +112,7 @@ export function makeCustomSource(input: CustomSourceInput): Newsletter | null {
     url,
     description: (input.description || '').trim() || '내가 등록한 정보 출처입니다.',
     category,
-    subscribeUrl: input.subscribeUrl?.trim() || undefined,
+    subscribeUrl: sub || undefined,
     type: 'site',
     deskRole: 'info',
     origin: '한국',
