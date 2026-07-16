@@ -42,6 +42,11 @@ import NoteDialog from './components/NoteDialog';
 import ToolsSection from './components/ToolsSection';
 import SubscriptionDesk from './components/SubscriptionDesk';
 import Toast from './components/Toast';
+import {
+  isValidEmail,
+  openGmailCompose,
+  openGoogleMailLogin
+} from './gmailCompose';
 
 export default function App() {
   // --- STATE DECLARATIONS ---
@@ -279,6 +284,8 @@ export default function App() {
         copy.delete(id);
       } else {
         copy.add(id);
+        // 목록 저장 시 구독 대시보드에도 나타나도록 기본 상태 기록
+        setPersonalStatus(ps => (ps[id] ? ps : { ...ps, [id]: '관심 있음' }));
       }
       return copy;
     });
@@ -289,6 +296,7 @@ export default function App() {
       ...prev,
       [id]: stat
     }));
+    showToast(`${stat}으로 기록 · 구독 관리에 반영`);
   };
 
   const handleBulkStatus = (ids: string[], status: string) => {
@@ -512,7 +520,7 @@ export default function App() {
     }
   };
 
-  // Gmail Compose Link Maker
+  // Gmail Compose (브라우저 Google 세션 · OAuth 서버 없음)
   const formatGmailBody = (note: Note) => {
     const sourceItem = catalog.find(n => n.id === note.sourceId);
     const dateStr = new Date(note.updatedAt || note.createdAt).toLocaleString('ko-KR');
@@ -526,21 +534,52 @@ export default function App() {
       `---`,
       note.body,
       `---`,
-      `본 메일은 오늘의 편지함(K-Newsletter Hub)에서 편리한 편지 내보내기를 통해 생성되었습니다.`
+      `본 메일은 오늘의 편지함에서 내보내기로 생성되었습니다.`
     ].filter(Boolean).join('\n\n');
   };
 
   const handleSendGmail = (note: Note) => {
-    const subject = encodeURIComponent(`[오늘의 편지함] ${note.title || getSourceName(note.sourceId)}`);
-    const bodyText = encodeURIComponent(formatGmailBody(note));
-    const url = `https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=${encodeURIComponent(gmailSelfEmail)}&su=${subject}&body=${bodyText}`;
-    window.open(url, '_blank', 'noopener');
+    const to = gmailSelfEmail.trim();
+    if (to && !isValidEmail(to)) {
+      showToast('Gmail 주소 형식을 확인해 주세요 (예: you@gmail.com)');
+      document.getElementById('notes')?.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+    if (!to) {
+      showToast('받을 주소가 비어 있음 · 작성 창 to 칸에 직접 입력하세요');
+    }
+    const result = openGmailCompose({
+      to,
+      subject: `[오늘의 편지함] ${note.title || getSourceName(note.sourceId)}`,
+      body: formatGmailBody(note)
+    });
+    if (!result.ok) {
+      showToast('팝업이 막혔습니다. 브라우저에서 팝업 허용 후 다시 시도하세요');
+      return;
+    }
+    if (result.truncated) {
+      showToast('Gmail 창 열림 · 본문이 길어서 일부만 전달됨 — 필요 시 복사 사용');
+    } else if (result.usedLoginChooser) {
+      showToast('Google 계정 선택/로그인 후 메일 작성 창으로 이어집니다');
+    } else {
+      showToast('Gmail 작성 창을 열었습니다');
+    }
+  };
+
+  const handleGoogleMailLogin = () => {
+    const ok = openGoogleMailLogin();
+    showToast(
+      ok
+        ? 'Google 로그인/계정 선택 창을 열었습니다. 로그인 후 이 탭으로 돌아와 Gmail 전송을 누르세요'
+        : '창을 열 수 없습니다. 팝업 차단을 해제해 주세요'
+    );
   };
 
   const handleSendMailto = (note: Note) => {
+    const to = gmailSelfEmail.trim();
     const subject = encodeURIComponent(`[오늘의 편지함] ${note.title}`);
-    const bodyText = encodeURIComponent(formatGmailBody(note));
-    window.location.href = `mailto:${encodeURIComponent(gmailSelfEmail)}?subject=${subject}&body=${bodyText}`;
+    const bodyText = encodeURIComponent(formatGmailBody(note).slice(0, 1600));
+    window.location.href = `mailto:${encodeURIComponent(to)}?subject=${subject}&body=${bodyText}`;
   };
 
   const handleCopyNote = async (note: Note): Promise<boolean> => {
@@ -639,13 +678,11 @@ export default function App() {
   };
 
   const handleQuickGmail = (sourceId: string) => {
+    // 클릭 제스처 안에서 바로 열기 (setTimeout 쓰면 팝업 차단됨)
     const folderName = getSourceName(sourceId);
     const newNote = handleCreateNote(sourceId, `${folderName} 빠른 메모`, '');
+    handleSendGmail(newNote);
     handleOpenNote(sourceId, newNote.id);
-    // Open Gmail compose helper quickly
-    setTimeout(() => {
-      handleSendGmail(newNote);
-    }, 150);
   };
 
   // Filter Newsletters logic (catalog includes live link-status overrides)
@@ -1449,6 +1486,7 @@ export default function App() {
         notebooks={notebooks}
         gmailSelfEmail={gmailSelfEmail}
         onGmailEmailChange={handleGmailEmailSave}
+        onGoogleLogin={handleGoogleMailLogin}
         onOpenInbox={() => handleOpenNote('inbox')}
         onAddNotebook={handleAddNotebook}
         onOpenNote={handleOpenNote}

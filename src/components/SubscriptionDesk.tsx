@@ -164,9 +164,17 @@ export default function SubscriptionDesk({
           <div className="py-14 text-center border border-dashed border-line-alpha bg-white/50 dark:bg-black/20 rounded-sm">
             <Filter className="w-8 h-8 mx-auto mb-2 opacity-40" />
             <p className="text-sm text-secondary mb-1">아직 관리 중인 구독이 없습니다.</p>
-            <p className="text-xs text-secondary">
-              카드에서 상태(구독 중/나중에/해지함)를 고르거나 내 목록에 저장하세요.
+            <p className="text-xs text-secondary mb-4 max-w-md mx-auto leading-relaxed">
+              디렉터리 카드에서 <strong className="text-ink">내 구독 상태</strong>를 바꾸거나
+              <strong className="text-ink"> + 내 목록</strong>에 저장하면 여기에 나타납니다.
+              (상태·목록은 이 브라우저 localStorage에만 저장됩니다.)
             </p>
+            <a
+              href="#find"
+              className="inline-flex px-4 py-2 text-xs font-bold bg-ink text-paper no-underline rounded-sm"
+            >
+              디렉터리에서 상태 고르기 ↓
+            </a>
           </div>
         ) : (
           <>
