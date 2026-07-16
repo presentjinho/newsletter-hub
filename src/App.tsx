@@ -1124,9 +1124,9 @@ export default function App() {
               </span>
               <div className="flex flex-wrap gap-1.5">
                 {([
-                  ['info', '정보 매체 (기본)'],
+                  ['info', '뉴스·정보 (대시보드용)'],
                   ['newsletter', '이메일 뉴스레터만'],
-                  ['all', '전부']
+                  ['all', '전부 (탐색·갤러리 포함)']
                 ] as const).map(([value, label]) => (
                   <button
                     key={value}

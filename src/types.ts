@@ -31,6 +31,11 @@ export interface Newsletter {
   stability?: 'high' | 'medium';
   /** 산업 축 (반도체, 자동차 등) — 국가 다각화 필터 */
   industry?: string;
+  /**
+   * info = 뉴스·기관 정보 (실시간 리더·기본 디렉터리)
+   * browse = 갤러리·커뮤니티 탐색용 (디렉터리「전부」에서만, 리더 제외)
+   */
+  deskRole?: 'info' | 'browse';
 }
 
 export interface Note {

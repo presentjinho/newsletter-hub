@@ -337,7 +337,7 @@ export default function LiveDesk({
                 ))}
               </select>
               <p className="text-[10px] text-[var(--live-muted)]">
-                이메일 뉴스레터는 제외 · 사이트·매거진·공공 정보만 (구독은 디렉터리 카드의 구독 페이지)
+                뉴스·기관 정보 출처만 · 갤러리/커뮤니티(pixiv 등)는 제외 · 구독은 카드의 구독 페이지
               </p>
             </div>
 

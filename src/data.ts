@@ -1,5 +1,6 @@
 import { Newsletter } from './types';
 import { industryRaw, industryList as industryListSeed } from './industryCatalog';
+import { expandRaw } from './catalogExpand';
 
 /** 기존 카드: url이 구독 페이지인 경우 분리 힌트 */
 const subscribeHints: Record<string, { siteUrl: string; subscribeUrl: string }> = {
@@ -216,10 +217,11 @@ function normalizeItem(item: Partial<Newsletter>): Newsletter {
     sourceScope: isPublic ? 'public' : 'general',
     stability: item.stability || (isPublic ? 'high' : 'medium'),
     industry: item.industry,
+    deskRole: item.deskRole || 'info',
   };
 }
 
-// 기존 + 산업별 상위국 카탈로그 (id 중복 시 industry 쪽이 덮어씀)
+// 기존 + 산업 + 전카테고리 확장 (나중 행이 필드 보강)
 const mergedRaw = (() => {
   const map = new Map<string, Partial<Newsletter>>();
   for (const row of rawNewsletters) {
@@ -227,7 +229,11 @@ const mergedRaw = (() => {
   }
   for (const row of industryRaw) {
     if (!row.id) continue;
-    // industry 전용 id는 추가, 동일 id면 industry 필드로 보강
+    const prev = map.get(row.id);
+    map.set(row.id, prev ? { ...prev, ...row } : row);
+  }
+  for (const row of expandRaw) {
+    if (!row.id) continue;
     const prev = map.get(row.id);
     map.set(row.id, prev ? { ...prev, ...row } : row);
   }
@@ -245,10 +251,20 @@ export const industryList = industryListSeed.length > 1
   ? industryListSeed
   : ['전체', ...new Set(newsletters.map(n => n.industry).filter(Boolean) as string[])];
 
-/** 정보 매체: 사이트·매거진·공공 (이메일 뉴스레터 제외) — 첫 화면·리더용 */
+/**
+ * 대시보드·실시간 리더용 정보 매체.
+ * - 이메일 뉴스레터 제외
+ * - deskRole browse(갤러리·커뮤니티) 제외 → 뉴스·기관 정보만
+ */
 export function isInfoSource(n: Newsletter): boolean {
   if (n.type === 'newsletter') return false;
+  if (n.deskRole === 'browse') return false;
   return n.type === 'site' || n.type === 'magazine' || n.sourceScope === 'public';
+}
+
+/** 디렉터리 탐색용 (browse 포함) */
+export function isDirectorySource(n: Newsletter): boolean {
+  return n.type === 'site' || n.type === 'magazine' || n.sourceScope === 'public' || n.type === 'newsletter';
 }
 
 export const infoSources: Newsletter[] = newsletters.filter(isInfoSource);

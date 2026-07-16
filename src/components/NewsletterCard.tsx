@@ -94,6 +94,16 @@ export default function NewsletterCard({
           <span className="text-[9px] font-bold px-1.5 py-0.5 bg-[#f6ded8] text-accent-red dark:bg-[#4a2c26] uppercase">
             {item.type === 'newsletter' ? '뉴스레터' : item.type === 'magazine' ? '매거진' : '사이트'}
           </span>
+          {item.deskRole === 'browse' && (
+            <span className="text-[9px] font-bold px-1.5 py-0.5 border border-line-alpha text-secondary">
+              탐색용 · 리더 제외
+            </span>
+          )}
+          {item.deskRole !== 'browse' && item.type !== 'newsletter' && (
+            <span className="text-[9px] font-bold px-1.5 py-0.5 bg-[var(--green-soft)] text-[var(--green)]">
+              정보·대시보드
+            </span>
+          )}
           <span className="text-[9px] font-bold px-1.5 py-0.5 bg-[var(--green-soft)] text-[var(--green)]">
             {item.origin === '글로벌' ? `GLOBAL · ${item.country}` : 'KOREA · 대한민국'}
           </span>
