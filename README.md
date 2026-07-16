@@ -69,6 +69,17 @@ npm run lint
 - [docs/GITHUB_X_RESEARCH.md](docs/GITHUB_X_RESEARCH.md) — 조사 노트
 - [docs/FREE_PUBLIC_SOURCES.md](docs/FREE_PUBLIC_SOURCES.md) — 공개 출처
 
+## 이용·저작권·개인정보 (요약)
+
+- **디렉터리**: 출처 이름·공식 URL·짧은 한국어 소개만. 원문 전문·로고 무단 재배포 없음.
+- **앱 안 리더**: 개인 읽기 보조. 서버에 본문 아카이브하지 않음. 막히면 사이트 새 탭.
+- **개인 데이터**: 관심사·메모·구독 상태·내 출처는 브라우저 `localStorage`만. 로그인 서버 없음.
+- **Gmail**: compose 창 URL만 (비밀번호 수집 없음).
+- **삭제·정정**: GitHub Issues.
+- 상세: 사이트 맨 아래 고지, `docs/REUSE_POLICY.md`, `docs/CATALOG_POLICY.md`.
+
+법률 자문이 아닙니다.
+
 ## 라이선스
 
 개인 프로젝트. 원문 복제 없이 공식 링크·자체 소개만 제공.

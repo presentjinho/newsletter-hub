@@ -178,7 +178,7 @@ export const stackTools = [
   { name: 'Listmonk', blurb: '자가 호스팅 발송 도구. 외부 구독 대행용이 아님.', url: 'https://github.com/knadh/listmonk', kind: '발송' }
 ];
 
-function normalizeItem(item: Partial<Newsletter>): Newsletter {
+export function normalizeItem(item: Partial<Newsletter>): Newsletter {
   const id = item.id || '';
   const isPublic = publicSourceIds.has(id) || item.sourceScope === 'public';
   const origin = item.origin || '한국';

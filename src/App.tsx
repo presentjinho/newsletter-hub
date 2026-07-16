@@ -39,14 +39,32 @@ import NewsletterCard, { type LinkCheckInfo } from './components/NewsletterCard'
 import LiveDesk from './components/LiveDesk';
 import NotesHub from './components/NotesHub';
 import NoteDialog from './components/NoteDialog';
-import ToolsSection from './components/ToolsSection';
 import SubscriptionDesk from './components/SubscriptionDesk';
 import Toast from './components/Toast';
+import AdvancedBottom from './components/AdvancedBottom';
 import {
   isValidEmail,
   openGmailCompose,
   openGoogleMailLogin
 } from './gmailCompose';
+import {
+  loadCustomSources,
+  saveCustomSources,
+  makeCustomSource,
+  type CustomSourceInput
+} from './customSources';
+
+const ALL_INTERESTS = [
+  'AI', '재테크', '커리어', '디자인', '시사', '과학', '국제', '건강',
+  '교육', '미술', '환경', '테크', '문화', '법률'
+];
+
+function mergeBaseAndCustom(base: Newsletter[], custom: Newsletter[]): Newsletter[] {
+  const map = new Map<string, Newsletter>();
+  for (const n of base) map.set(n.id, n);
+  for (const n of custom) map.set(n.id, n);
+  return [...map.values()];
+}
 
 export default function App() {
   // --- STATE DECLARATIONS ---
@@ -160,7 +178,10 @@ export default function App() {
   });
 
   const [linkSyncStatus, setLinkSyncStatus] = useState('상태 파일 대기');
-  const [catalog, setCatalog] = useState<Newsletter[]>(newsletters);
+  const [customSources, setCustomSources] = useState<Newsletter[]>(() => loadCustomSources());
+  const [catalog, setCatalog] = useState<Newsletter[]>(() =>
+    mergeBaseAndCustom(newsletters, loadCustomSources())
+  );
   const [linkCheckMap, setLinkCheckMap] = useState<Record<string, LinkCheckInfo>>({});
   const [linkCheckedAt, setLinkCheckedAt] = useState('');
   /** 모바일: 상세 필터 기본 접힘 */
@@ -443,9 +464,52 @@ export default function App() {
     showToast(`주말 몰아보기 ${list.length}개 저장`);
   };
 
+  const handleAddCustom = (input: CustomSourceInput): boolean => {
+    const item = makeCustomSource(input);
+    if (!item) {
+      showToast('URL을 확인해 주세요 (https://...)');
+      return false;
+    }
+    setCustomSources(prev => {
+      const next = [...prev, item];
+      saveCustomSources(next);
+      return next;
+    });
+    setCatalog(prev => {
+      if (prev.some(n => n.id === item.id || n.siteUrl === item.siteUrl)) {
+        return prev.map(n => (n.siteUrl === item.siteUrl ? item : n));
+      }
+      return [...prev, item];
+    });
+    setSavedIds(prev => new Set([...prev, item.id]));
+    setPersonalStatus(prev => ({ ...prev, [item.id]: '관심 있음' }));
+    showToast(`「${item.name}」 추가 · 내 목록에 저장됨`);
+    return true;
+  };
+
+  const handleRemoveCustom = (id: string) => {
+    setCustomSources(prev => {
+      const next = prev.filter(n => n.id !== id);
+      saveCustomSources(next);
+      return next;
+    });
+    setCatalog(prev => prev.filter(n => n.id !== id));
+    setSavedIds(prev => {
+      const copy = new Set(prev);
+      copy.delete(id);
+      return copy;
+    });
+    setPersonalStatus(prev => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+    showToast('내 출처 삭제');
+  };
+
   const handleBackupAll = () => {
     const payload = {
-      version: 1,
+      version: 2,
       exportedAt: new Date().toISOString(),
       savedIds: [...savedIds],
       personalStatus,
@@ -455,7 +519,8 @@ export default function App() {
       notebooks,
       gmailSelfEmail,
       theme,
-      textSize
+      textSize,
+      customSources
     };
     const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
     const a = document.createElement('a');
@@ -482,6 +547,12 @@ export default function App() {
         }
         if (data.theme === 'light' || data.theme === 'dark') setTheme(data.theme);
         if (data.textSize === 'normal' || data.textSize === 'large' || data.textSize === 'xl') setTextSize(data.textSize);
+        if (Array.isArray(data.customSources)) {
+          const customs = data.customSources as Newsletter[];
+          setCustomSources(customs);
+          saveCustomSources(customs);
+          setCatalog(mergeBaseAndCustom(newsletters, customs));
+        }
         showToast('백업 복원 완료');
       } catch {
         showToast('백업 파일을 읽을 수 없습니다');
@@ -780,33 +851,44 @@ export default function App() {
   // 첫 화면: 정보 매체만 (사이트·매거진·공공) — 이메일 뉴스레터 제외
   const infoCatalog = catalog.filter(isInfoSource);
 
-  // Today's Picks — 정보 매체 다양성 (국가·산업 분산)
+  // Today's Picks — 관심·내 목록 우선, 정보 매체, 국가 분산
   const todayPicks = (() => {
     const pool = infoCatalog.filter(item => {
-      if (item.status === 'needs-review') return false;
+      if (item.status === 'needs-review' && isTrackedInterest(item)) return false;
       if (prefs.paused) return false;
+      if (prefs.frequency !== 'all' && item.frequencyGroup !== prefs.frequency) return false;
       return true;
     });
+    const daySeed = new Date().toISOString().slice(0, 10);
     const scored = [...pool].sort((a, b) => {
-      const am = a.interests.filter(t => userInterests.includes(t)).length;
-      const bm = b.interests.filter(t => userInterests.includes(t)).length;
-      const as = (a.stability === 'high' ? 2 : 0) + (a.sourceScope === 'public' ? 1 : 0) + (a.industry ? 1 : 0);
-      const bs = (b.stability === 'high' ? 2 : 0) + (b.sourceScope === 'public' ? 1 : 0) + (b.industry ? 1 : 0);
-      return bm - am || bs - as || a.daysSince - b.daysSince;
+      const score = (n: Newsletter) => {
+        let s = 0;
+        s += n.interests.filter(t => userInterests.includes(t)).length * 10;
+        if (savedIds.has(n.id)) s += 8;
+        if (personalStatus[n.id] === '구독 중') s += 12;
+        if (personalStatus[n.id] === '나중에') s += 6;
+        if (personalStatus[n.id] === '관심 있음') s += 4;
+        if (n.sourceScope === 'public') s += 2;
+        if (n.stability === 'high') s += 2;
+        if (n.daysSince === 0) s += 3;
+        // 날짜 시드로 매일 살짝 섞기
+        s += (n.id.charCodeAt(0) + daySeed.charCodeAt(daySeed.length - 1)) % 3;
+        return s;
+      };
+      return score(b) - score(a) || a.daysSince - b.daysSince;
     });
-    // 국가 중복 줄여 다양하게 3개
-    const picked: typeof scored = [];
+    const picked: Newsletter[] = [];
     const usedCountry = new Set<string>();
     for (const item of scored) {
       if (picked.length >= 3) break;
-      if (usedCountry.has(item.country) && picked.length < 3 && scored.length > 5) continue;
+      if (usedCountry.has(item.country) && picked.length > 0 && scored.length > 8) continue;
       picked.push(item);
       usedCountry.add(item.country);
     }
     if (picked.length < 3) {
       for (const item of scored) {
         if (picked.length >= 3) break;
-        if (!picked.includes(item)) picked.push(item);
+        if (!picked.find(p => p.id === item.id)) picked.push(item);
       }
     }
     return picked.slice(0, 3);
@@ -870,7 +952,7 @@ export default function App() {
               {savedIds.size}
             </span>
           </a>
-          <a href="#stack" className="text-xs font-bold text-ink no-underline hover:text-accent-red focus-ring">보강 도구</a>
+          <a href="#advanced" className="text-xs font-bold text-ink/60 no-underline hover:text-accent-red focus-ring">부가·백업</a>
           
           <span className="w-px h-3.5 bg-line-alpha" aria-hidden="true" />
 
@@ -964,7 +1046,7 @@ export default function App() {
             </strong>
           </div>
           <div className="text-xs text-[#d5e2db] leading-relaxed">
-            Ctrl+K 검색 · 구독관리 일괄 정리 · 주말 몰아보기 MD · 백업 JSON
+            Ctrl+K 검색 · 구독관리 · 관심 기준 오늘 3개 · 백업은 맨 아래
           </div>
         </div>
       </section>
@@ -1480,24 +1562,8 @@ export default function App() {
                 내가 모아 둔 편지함
               </h2>
               <p className="text-sm text-secondary mt-2 leading-relaxed">
-                보관해 둔 편지 목록입니다. 타 기기나 FreshRSS, NetNewsWire 등 다른 RSS 리더기로 한 번에 전송하고 싶다면 OPML 규격 파일로 내려받으세요.
+                보관해 둔 목록입니다. OPML·백업 내보내기는 페이지 맨 아래 「부가·백업」에 있습니다.
               </p>
-            </div>
-
-            <div className="flex flex-wrap gap-2.5">
-              <button
-                onClick={() => handleExportOpml('saved')}
-                className="px-4 py-3 bg-ink text-paper hover:opacity-90 font-bold text-xs cursor-pointer rounded-xs"
-              >
-                내 목록 OPML 내보내기
-              </button>
-              
-              <button
-                onClick={() => handleExportOpml('public')}
-                className="px-4 py-3 bg-white hover:bg-[var(--warm)] text-ink border border-line-alpha font-bold text-xs cursor-pointer rounded-xs"
-              >
-                검증 공공 출처 OPML 받기
-              </button>
             </div>
           </div>
 
@@ -1550,46 +1616,35 @@ export default function App() {
         getSourceName={getSourceName}
       />
 
-      {/* --- SUPPLEMENTARY OPEN SOURCE TOOLS --- */}
-      <ToolsSection />
+      {/* --- 부가·고급·법적 고지 (맨 아래) --- */}
+      <AdvancedBottom
+        customSources={customSources}
+        onAddCustom={handleAddCustom}
+        onRemoveCustom={handleRemoveCustom}
+        onExportOpmlSaved={() => handleExportOpml('saved')}
+        onExportOpmlPublic={() => handleExportOpml('public')}
+        onBackup={handleBackupAll}
+        onRestore={handleRestoreBackup}
+        onExportCsv={handleExportSubscriptionCsv}
+        onExportDigest={handleExportWeekendDigest}
+      />
 
-      {/* --- FOOTER --- */}
-      <footer className="py-12 text-center text-xs text-secondary bg-paper dark:bg-[#121c18] border-t border-line-alpha flex flex-col items-center justify-center gap-3">
-        <p>오늘의 편지함 · 개인 정보 뉴스레터 디렉터리 및 메모작업 공간</p>
-        <p className="text-[10px] text-secondary max-w-lg">
-          모든 뉴스레터 및 기사의 저작권은 각 원천 발행 기관에 귀속됩니다. 원문 무단 전재 없음. 데이터는 이 브라우저에만 저장됩니다.
+      <footer className="py-6 text-center text-xs text-secondary bg-paper dark:bg-[#121c18] border-t border-line-alpha">
+        <p className="mb-1">오늘의 편지함 · 디렉터리 · 메모</p>
+        <p className="text-[10px]">
+          <a href="#legal" className="text-forest-green dark:text-[var(--green)] font-semibold no-underline hover:underline">
+            이용·저작권·개인정보 고지
+          </a>
+          {' · '}
+          <a
+            href="https://github.com/presentjinho/newsletter-hub/issues/new/choose"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-forest-green dark:text-[var(--green)] font-semibold no-underline hover:underline"
+          >
+            삭제·정정 요청
+          </a>
         </p>
-        <div className="flex flex-wrap gap-3 justify-center items-center">
-          <button
-            type="button"
-            onClick={handleBackupAll}
-            className="text-xs text-forest-green dark:text-[var(--green)] hover:underline cursor-pointer bg-transparent border-0 font-semibold"
-          >
-            전체 백업 JSON
-          </button>
-          <label className="text-xs text-forest-green dark:text-[var(--green)] hover:underline cursor-pointer font-semibold">
-            백업 복원
-            <input
-              type="file"
-              accept="application/json,.json"
-              className="hidden"
-              onChange={e => {
-                const f = e.target.files?.[0];
-                if (f) handleRestoreBackup(f);
-                e.target.value = '';
-              }}
-            />
-          </label>
-          <button
-            type="button"
-            onClick={() => {
-              window.open('https://github.com/presentjinho/newsletter-hub/issues/new/choose', '_blank', 'noopener');
-            }}
-            className="text-xs text-forest-green dark:text-[var(--green)] hover:underline cursor-pointer bg-transparent border-0 font-semibold"
-          >
-            제보 · 피드백
-          </button>
-        </div>
       </footer>
 
       <Toast message={toastMsg} onDone={() => setToastMsg('')} />
@@ -1599,7 +1654,7 @@ export default function App() {
       <OnboardingDialog
         isOpen={onboardingOpen}
         onClose={handleOnboardingClose}
-        availableInterests={['AI', '재테크', '커리어', '디자인', '시사', '과학', '국제', '건강']}
+        availableInterests={ALL_INTERESTS}
       />
 
       <PreferenceDialog
@@ -1608,7 +1663,7 @@ export default function App() {
         onSave={handlePreferencesSave}
         currentInterests={userInterests}
         currentPrefs={prefs}
-        availableInterests={['AI', '재테크', '커리어', '디자인', '시사', '과학', '국제', '건강']}
+        availableInterests={ALL_INTERESTS}
       />
 
       <NoteDialog
