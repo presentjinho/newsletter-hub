@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-07-18T05:08:28.386Z",
+  "checkedAt": "2026-07-19T05:36:19.400Z",
   "count": 315,
-  "reachable": 313,
-  "needsReview": 2,
+  "reachable": 308,
+  "needsReview": 7,
   "results": [
     {
       "id": "newneek",
@@ -241,7 +241,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=b74c2584-a629-4a94-b59e-b57842bb8c0b"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=2acfa57e-8a53-44d8-970e-9cd3832055b2"
     },
     {
       "id": "nomadicmatt",
@@ -828,7 +828,7 @@
       "id": "ind-space-us-nasa",
       "url": "https://www.nasa.gov/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 429
     },
     {
       "id": "ind-space-fr-esa",
@@ -924,8 +924,7 @@
     {
       "id": "ind-ag-us-usda",
       "url": "https://www.usda.gov/",
-      "status": "reachable",
-      "httpStatus": 403
+      "status": "needs-review"
     },
     {
       "id": "ind-ag-br-embrapa",
@@ -1304,8 +1303,7 @@
     {
       "id": "art-global-archive",
       "url": "https://archive.org/details/image",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "art-global-unsplash",
@@ -1646,8 +1644,7 @@
     {
       "id": "cat-cul-archive-texts",
       "url": "https://archive.org/details/texts",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-music-imslp",
@@ -1688,9 +1685,7 @@
     {
       "id": "cat-spo-kr-koc",
       "url": "https://www.sports.or.kr/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.sports.or.kr/sports/main/main.do"
+      "status": "needs-review"
     },
     {
       "id": "cat-spo-bbc-sport",
@@ -1755,8 +1750,7 @@
     {
       "id": "cat-food-us-usda",
       "url": "https://www.usda.gov/",
-      "status": "reachable",
-      "httpStatus": 403
+      "status": "needs-review"
     },
     {
       "id": "cat-parent-kr-mogef",
