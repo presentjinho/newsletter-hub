@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-07-19T05:36:19.400Z",
+  "checkedAt": "2026-07-20T05:53:53.525Z",
   "count": 315,
-  "reachable": 308,
-  "needsReview": 7,
+  "reachable": 310,
+  "needsReview": 5,
   "results": [
     {
       "id": "newneek",
@@ -241,7 +241,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=2acfa57e-8a53-44d8-970e-9cd3832055b2"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=192c4d4c-6dbc-4488-974a-db44f8a855fa"
     },
     {
       "id": "nomadicmatt",
@@ -283,7 +283,8 @@
       "id": "foodbank",
       "url": "https://www.foodbank.co.kr/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 200,
+      "finalUrl": "http://se-cu.com/ndsoft/error.html"
     },
     {
       "id": "hrinsight",
@@ -785,7 +786,7 @@
       "id": "ind-fash-uk-drapers",
       "url": "https://www.drapersonline.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "ind-fash-jp-wwdj",
@@ -828,7 +829,7 @@
       "id": "ind-space-us-nasa",
       "url": "https://www.nasa.gov/",
       "status": "reachable",
-      "httpStatus": 429
+      "httpStatus": 200
     },
     {
       "id": "ind-space-fr-esa",
@@ -1303,7 +1304,8 @@
     {
       "id": "art-global-archive",
       "url": "https://archive.org/details/image",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "art-global-unsplash",
@@ -1644,7 +1646,8 @@
     {
       "id": "cat-cul-archive-texts",
       "url": "https://archive.org/details/texts",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-music-imslp",
