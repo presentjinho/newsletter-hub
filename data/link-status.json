@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-07-22T05:33:20.993Z",
+  "checkedAt": "2026-07-23T05:39:02.423Z",
   "count": 315,
-  "reachable": 310,
-  "needsReview": 5,
+  "reachable": 309,
+  "needsReview": 6,
   "results": [
     {
       "id": "newneek",
@@ -208,8 +208,7 @@
     {
       "id": "newstravel",
       "url": "https://www.newstravel.co.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "kinolights",
@@ -241,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=ae337d79-0f6d-4547-8636-c70352576982"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=1b7ed96e-346f-412f-800d-356d796dedbd"
     },
     {
       "id": "nomadicmatt",
@@ -1530,7 +1529,7 @@
       "id": "cat-law-eu-eurlex",
       "url": "https://eur-lex.europa.eu/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 202
     },
     {
       "id": "cat-law-us-congress",
