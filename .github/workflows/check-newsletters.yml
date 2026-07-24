@@ -8,11 +8,18 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: newsletter-link-status
+  cancel-in-progress: false
+
 jobs:
   check-links:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -23,5 +30,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add public/data/link-status.json
           if [ -f data/link-status.json ]; then git add data/link-status.json; fi
-          git diff --cached --quiet || git commit -m "chore: refresh newsletter link status"
-          git push
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore: refresh newsletter link status"
+          git pull --rebase origin main
+          git push origin HEAD:main

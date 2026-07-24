@@ -22,13 +22,7 @@ npm run dev
 
 브라우저: http://localhost:3000/
 
-Gemini 키는 선택. 현재 UI는 디렉터리·메모·Gmail compose 중심이며 `@google/genai`는 이후 AI 기능용 자리.
-
-```bash
-# 선택
-cp .env.example .env.local
-# GEMINI_API_KEY=...
-```
+현재 앱은 외부 AI·서버 API 키 없이 동작합니다.
 
 ## GitHub Pages
 
