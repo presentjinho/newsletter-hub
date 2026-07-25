@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-07-24T05:34:03.994Z",
+  "checkedAt": "2026-07-25T05:28:32.264Z",
   "count": 315,
-  "reachable": 311,
-  "needsReview": 4,
+  "reachable": 309,
+  "needsReview": 6,
   "results": [
     {
       "id": "newneek",
@@ -110,9 +110,7 @@
     {
       "id": "folin",
       "url": "https://folin.co",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://folin.co/"
+      "status": "needs-review"
     },
     {
       "id": "yozm-it",
@@ -241,7 +239,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=f86806b6-c39d-4266-88d5-7f36f3fb99ef"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=e3497492-cae7-4ded-8503-95fcf9f3a22f"
     },
     {
       "id": "nomadicmatt",
@@ -288,8 +286,7 @@
     {
       "id": "hrinsight",
       "url": "https://www.hrinsight.co.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "joseilbo",
@@ -442,7 +439,7 @@
       "id": "nasa-official",
       "url": "https://www.nasa.gov/newsletters/",
       "status": "reachable",
-      "httpStatus": 429
+      "httpStatus": 200
     },
     {
       "id": "noaa-ocean-service",
@@ -1051,7 +1048,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "edu-eu-fun",
@@ -1323,7 +1320,7 @@
       "id": "cat-news-kr-yonhap",
       "url": "https://www.yna.co.kr/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 405
     },
     {
       "id": "cat-news-kr-kbs",
@@ -1372,7 +1369,7 @@
       "id": "cat-news-eu-europarl",
       "url": "https://www.europarl.europa.eu/news/en",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 202
     },
     {
       "id": "cat-news-un",
