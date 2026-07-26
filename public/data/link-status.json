@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-07-25T05:28:32.264Z",
+  "checkedAt": "2026-07-26T05:45:52.206Z",
   "count": 315,
   "reachable": 309,
   "needsReview": 6,
@@ -110,7 +110,9 @@
     {
       "id": "folin",
       "url": "https://folin.co",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://folin.co/"
     },
     {
       "id": "yozm-it",
@@ -239,7 +241,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=e3497492-cae7-4ded-8503-95fcf9f3a22f"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=18d23dd1-8504-40f5-bc18-be7d397c4dba"
     },
     {
       "id": "nomadicmatt",
@@ -286,7 +288,8 @@
     {
       "id": "hrinsight",
       "url": "https://www.hrinsight.co.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "joseilbo",
@@ -1048,7 +1051,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200
     },
     {
       "id": "edu-eu-fun",
@@ -1515,8 +1518,7 @@
     {
       "id": "cat-law-kr-law",
       "url": "https://www.law.go.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-law-kr-assembly",
@@ -1528,7 +1530,7 @@
       "id": "cat-law-eu-eurlex",
       "url": "https://eur-lex.europa.eu/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 202
     },
     {
       "id": "cat-law-us-congress",
@@ -1684,9 +1686,7 @@
     {
       "id": "cat-spo-kr-koc",
       "url": "https://www.sports.or.kr/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.sports.or.kr/sports/main/main.do"
+      "status": "needs-review"
     },
     {
       "id": "cat-spo-bbc-sport",
