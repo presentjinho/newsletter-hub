@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-07-26T05:45:52.206Z",
+  "checkedAt": "2026-07-27T06:06:12.873Z",
   "count": 315,
-  "reachable": 309,
-  "needsReview": 6,
+  "reachable": 306,
+  "needsReview": 9,
   "results": [
     {
       "id": "newneek",
@@ -110,9 +110,7 @@
     {
       "id": "folin",
       "url": "https://folin.co",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://folin.co/"
+      "status": "needs-review"
     },
     {
       "id": "yozm-it",
@@ -241,7 +239,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=18d23dd1-8504-40f5-bc18-be7d397c4dba"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=24c290b2-e192-40ee-bab8-45416d0686bc"
     },
     {
       "id": "nomadicmatt",
@@ -288,8 +286,7 @@
     {
       "id": "hrinsight",
       "url": "https://www.hrinsight.co.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "joseilbo",
@@ -611,8 +608,7 @@
     {
       "id": "ind-semi-kr-etnews",
       "url": "https://www.etnews.com/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "ind-semi-tw-taipeitimes",
@@ -785,7 +781,7 @@
       "id": "ind-fash-uk-drapers",
       "url": "https://www.drapersonline.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "ind-fash-jp-wwdj",
@@ -1518,7 +1514,8 @@
     {
       "id": "cat-law-kr-law",
       "url": "https://www.law.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-law-kr-assembly",
@@ -1849,8 +1846,7 @@
     {
       "id": "cat-semi-kr-kisi",
       "url": "https://www.etnews.com/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-robot-ieee",
