@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-07-28T05:30:00.578Z",
+  "checkedAt": "2026-07-29T05:35:11.725Z",
   "count": 315,
-  "reachable": 304,
-  "needsReview": 11,
+  "reachable": 311,
+  "needsReview": 4,
   "results": [
     {
       "id": "newneek",
@@ -241,7 +241,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=05d719b6-a642-4335-9d08-af5afe3a753c"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=c7ef852d-ad2e-4832-a045-c47b74e85b98"
     },
     {
       "id": "nomadicmatt",
@@ -283,12 +283,14 @@
       "id": "foodbank",
       "url": "https://www.foodbank.co.kr/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 200,
+      "finalUrl": "http://se-cu.com/ndsoft/error.html"
     },
     {
       "id": "hrinsight",
       "url": "https://www.hrinsight.co.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "joseilbo",
@@ -610,7 +612,8 @@
     {
       "id": "ind-semi-kr-etnews",
       "url": "https://www.etnews.com/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "ind-semi-tw-taipeitimes",
@@ -783,7 +786,7 @@
       "id": "ind-fash-uk-drapers",
       "url": "https://www.drapersonline.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "ind-fash-jp-wwdj",
@@ -1686,9 +1689,7 @@
     {
       "id": "cat-spo-kr-koc",
       "url": "https://www.sports.or.kr/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.sports.or.kr/sports/main/main.do"
+      "status": "needs-review"
     },
     {
       "id": "cat-spo-bbc-sport",
@@ -1706,9 +1707,8 @@
     {
       "id": "cat-travel-jp-jnto",
       "url": "https://www.japan.travel/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.japan.travel/en/us/"
+      "status": "needs-review",
+      "httpStatus": 502
     },
     {
       "id": "cat-travel-us-nps",
@@ -1739,12 +1739,16 @@
     {
       "id": "cat-food-kr-mfds",
       "url": "https://www.mfds.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://www.mfds.go.kr/index.do"
     },
     {
       "id": "cat-food-kr-atis",
       "url": "https://www.nongsaro.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://www.nongsaro.go.kr/portal/portalMain.ps?menuId=PS00001"
     },
     {
       "id": "cat-food-us-usda",
@@ -1755,12 +1759,15 @@
     {
       "id": "cat-parent-kr-mogef",
       "url": "https://www.mogef.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-parent-kr-childcare",
       "url": "https://www.childcare.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://www.childcare.go.kr/?menuno=1"
     },
     {
       "id": "cat-edu-kr-moe",
@@ -1845,7 +1852,8 @@
     {
       "id": "cat-semi-kr-kisi",
       "url": "https://www.etnews.com/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-robot-ieee",
@@ -1868,7 +1876,9 @@
     {
       "id": "cat-biz-kr-mss",
       "url": "https://www.mss.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://www.mss.go.kr/site/smba/main.do"
     },
     {
       "id": "cat-biz-us-sba",
@@ -1885,7 +1895,8 @@
     {
       "id": "cat-tax-kr-nts",
       "url": "https://www.nts.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-tax-us-irs",
