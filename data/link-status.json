@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-07-29T05:35:11.725Z",
+  "checkedAt": "2026-07-30T05:22:56.678Z",
   "count": 315,
   "reachable": 311,
   "needsReview": 4,
@@ -241,7 +241,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=c7ef852d-ad2e-4832-a045-c47b74e85b98"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=1d5b2901-e812-4744-9569-e62af291d1d4"
     },
     {
       "id": "nomadicmatt",
@@ -786,7 +786,7 @@
       "id": "ind-fash-uk-drapers",
       "url": "https://www.drapersonline.com/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200
     },
     {
       "id": "ind-fash-jp-wwdj",
@@ -931,8 +931,7 @@
     {
       "id": "ind-ag-br-embrapa",
       "url": "https://www.embrapa.br/en",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "ind-ag-nl-wageningen",
@@ -1520,8 +1519,7 @@
     {
       "id": "cat-law-kr-law",
       "url": "https://www.law.go.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-law-kr-assembly",
@@ -1689,7 +1687,9 @@
     {
       "id": "cat-spo-kr-koc",
       "url": "https://www.sports.or.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://www.sports.or.kr/sports/main/main.do"
     },
     {
       "id": "cat-spo-bbc-sport",
@@ -1707,8 +1707,9 @@
     {
       "id": "cat-travel-jp-jnto",
       "url": "https://www.japan.travel/",
-      "status": "needs-review",
-      "httpStatus": 502
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://www.japan.travel/en/us/"
     },
     {
       "id": "cat-travel-us-nps",
