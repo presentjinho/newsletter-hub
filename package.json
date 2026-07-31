@@ -12,13 +12,13 @@
     "check-links": "node scripts/check-all-links.mjs"
   },
   "dependencies": {
-    "lucide-react": "^1.26.0",
+    "lucide-react": "^1.27.0",
     "react": "^19.0.1",
     "react-dom": "^19.0.1"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
-    "@types/node": "^26.1.1",
+    "@types/node": "^26.1.2",
     "@vitejs/plugin-react": "^6.0.4",
     "autoprefixer": "^10.4.21",
     "tailwindcss": "^4.1.14",
