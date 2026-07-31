@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-07-30T05:22:56.678Z",
+  "checkedAt": "2026-07-31T05:49:22.568Z",
   "count": 315,
   "reachable": 311,
   "needsReview": 4,
@@ -241,7 +241,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=1d5b2901-e812-4744-9569-e62af291d1d4"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=25068634-710c-4b3d-893e-7c9fea0a6afb"
     },
     {
       "id": "nomadicmatt",
@@ -283,8 +283,7 @@
       "id": "foodbank",
       "url": "https://www.foodbank.co.kr/",
       "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "http://se-cu.com/ndsoft/error.html"
+      "httpStatus": 200
     },
     {
       "id": "hrinsight",
@@ -810,8 +809,9 @@
     {
       "id": "ind-pharma-de-pei",
       "url": "https://www.pei.de/EN/home/home-node.html",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review",
+      "httpStatus": 400,
+      "finalUrl": "https://www.pei.de/error_path/400.html?al_req_id=amw25YA9AAgmACgTwsjMzwAAAxI"
     },
     {
       "id": "ind-pharma-uk-mhra",
@@ -1324,7 +1324,7 @@
       "id": "cat-news-kr-yonhap",
       "url": "https://www.yna.co.kr/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 405
     },
     {
       "id": "cat-news-kr-kbs",
@@ -1519,7 +1519,8 @@
     {
       "id": "cat-law-kr-law",
       "url": "https://www.law.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-law-kr-assembly",
@@ -1531,7 +1532,7 @@
       "id": "cat-law-eu-eurlex",
       "url": "https://eur-lex.europa.eu/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 202
     },
     {
       "id": "cat-law-us-congress",
