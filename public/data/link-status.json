@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-07-31T05:49:22.568Z",
+  "checkedAt": "2026-08-01T05:39:34.865Z",
   "count": 315,
   "reachable": 311,
   "needsReview": 4,
@@ -110,9 +110,7 @@
     {
       "id": "folin",
       "url": "https://folin.co",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://folin.co/"
+      "status": "needs-review"
     },
     {
       "id": "yozm-it",
@@ -241,7 +239,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=25068634-710c-4b3d-893e-7c9fea0a6afb"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=de0f06bb-cbbf-4327-985c-f0af0632c9e5"
     },
     {
       "id": "nomadicmatt",
@@ -785,7 +783,7 @@
       "id": "ind-fash-uk-drapers",
       "url": "https://www.drapersonline.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "ind-fash-jp-wwdj",
@@ -809,9 +807,8 @@
     {
       "id": "ind-pharma-de-pei",
       "url": "https://www.pei.de/EN/home/home-node.html",
-      "status": "needs-review",
-      "httpStatus": 400,
-      "finalUrl": "https://www.pei.de/error_path/400.html?al_req_id=amw25YA9AAgmACgTwsjMzwAAAxI"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "ind-pharma-uk-mhra",
@@ -931,7 +928,8 @@
     {
       "id": "ind-ag-br-embrapa",
       "url": "https://www.embrapa.br/en",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "ind-ag-nl-wageningen",
@@ -1324,7 +1322,7 @@
       "id": "cat-news-kr-yonhap",
       "url": "https://www.yna.co.kr/",
       "status": "reachable",
-      "httpStatus": 405
+      "httpStatus": 200
     },
     {
       "id": "cat-news-kr-kbs",
@@ -1532,7 +1530,7 @@
       "id": "cat-law-eu-eurlex",
       "url": "https://eur-lex.europa.eu/",
       "status": "reachable",
-      "httpStatus": 202
+      "httpStatus": 200
     },
     {
       "id": "cat-law-us-congress",
@@ -1688,9 +1686,7 @@
     {
       "id": "cat-spo-kr-koc",
       "url": "https://www.sports.or.kr/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.sports.or.kr/sports/main/main.do"
+      "status": "needs-review"
     },
     {
       "id": "cat-spo-bbc-sport",
