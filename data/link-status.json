@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-08-01T05:39:34.865Z",
+  "checkedAt": "2026-08-02T05:41:46.103Z",
   "count": 315,
-  "reachable": 311,
-  "needsReview": 4,
+  "reachable": 301,
+  "needsReview": 14,
   "results": [
     {
       "id": "newneek",
@@ -110,7 +110,9 @@
     {
       "id": "folin",
       "url": "https://folin.co",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://folin.co/"
     },
     {
       "id": "yozm-it",
@@ -239,7 +241,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=de0f06bb-cbbf-4327-985c-f0af0632c9e5"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=329d64b7-ff80-4384-a0cb-2cddf48278a6"
     },
     {
       "id": "nomadicmatt",
@@ -286,8 +288,7 @@
     {
       "id": "hrinsight",
       "url": "https://www.hrinsight.co.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "joseilbo",
@@ -783,7 +784,7 @@
       "id": "ind-fash-uk-drapers",
       "url": "https://www.drapersonline.com/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200
     },
     {
       "id": "ind-fash-jp-wwdj",
@@ -946,8 +947,8 @@
     {
       "id": "ind-ag-fr-inrae",
       "url": "https://www.inrae.fr/en",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review",
+      "httpStatus": 500
     },
     {
       "id": "ind-nl-us-morning-brew",
@@ -1251,9 +1252,8 @@
     {
       "id": "art-cn-lofter",
       "url": "https://www.lofter.com/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.lofter.com/front/login"
+      "status": "needs-review",
+      "httpStatus": 503
     },
     {
       "id": "art-cn-zcool",
@@ -1504,8 +1504,8 @@
     {
       "id": "cat-env-us-noaa",
       "url": "https://www.noaa.gov/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review",
+      "httpStatus": 500
     },
     {
       "id": "cat-env-eu-eea",
@@ -1737,16 +1737,12 @@
     {
       "id": "cat-food-kr-mfds",
       "url": "https://www.mfds.go.kr/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.mfds.go.kr/index.do"
+      "status": "needs-review"
     },
     {
       "id": "cat-food-kr-atis",
       "url": "https://www.nongsaro.go.kr/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.nongsaro.go.kr/portal/portalMain.ps?menuId=PS00001"
+      "status": "needs-review"
     },
     {
       "id": "cat-food-us-usda",
@@ -1757,15 +1753,12 @@
     {
       "id": "cat-parent-kr-mogef",
       "url": "https://www.mogef.go.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-parent-kr-childcare",
       "url": "https://www.childcare.go.kr/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.childcare.go.kr/?menuno=1"
+      "status": "needs-review"
     },
     {
       "id": "cat-edu-kr-moe",
@@ -1794,8 +1787,7 @@
     {
       "id": "cat-home-kr-reb",
       "url": "https://www.reb.or.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-home-kr-seoul",
@@ -1874,9 +1866,7 @@
     {
       "id": "cat-biz-kr-mss",
       "url": "https://www.mss.go.kr/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.mss.go.kr/site/smba/main.do"
+      "status": "needs-review"
     },
     {
       "id": "cat-biz-us-sba",
@@ -1893,8 +1883,7 @@
     {
       "id": "cat-tax-kr-nts",
       "url": "https://www.nts.go.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-tax-us-irs",
