@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-08-03T05:56:14.596Z",
+  "checkedAt": "2026-08-04T05:29:28.401Z",
   "count": 315,
   "reachable": 309,
   "needsReview": 6,
@@ -208,7 +208,8 @@
     {
       "id": "newstravel",
       "url": "https://www.newstravel.co.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "kinolights",
@@ -240,7 +241,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=498a0104-22f4-47dd-87be-d7e58e060a00"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=5b66152f-c1fa-44c0-8931-6e9d3a5e728c"
     },
     {
       "id": "nomadicmatt",
@@ -293,8 +294,9 @@
     {
       "id": "joseilbo",
       "url": "https://joseilbo.com/",
-      "status": "needs-review",
-      "httpStatus": 599
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://www.joseilbo.com/index.php"
     },
     {
       "id": "ikpnews",
@@ -609,8 +611,7 @@
     {
       "id": "ind-semi-kr-etnews",
       "url": "https://www.etnews.com/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "ind-semi-tw-taipeitimes",
@@ -928,8 +929,7 @@
     {
       "id": "ind-ag-br-embrapa",
       "url": "https://www.embrapa.br/en",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "ind-ag-nl-wageningen",
@@ -1504,8 +1504,8 @@
     {
       "id": "cat-env-us-noaa",
       "url": "https://www.noaa.gov/",
-      "status": "needs-review",
-      "httpStatus": 504
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-env-eu-eea",
@@ -1530,7 +1530,7 @@
       "id": "cat-law-eu-eurlex",
       "url": "https://eur-lex.europa.eu/",
       "status": "reachable",
-      "httpStatus": 202
+      "httpStatus": 200
     },
     {
       "id": "cat-law-us-congress",
@@ -1541,8 +1541,7 @@
     {
       "id": "cat-data-kr-data",
       "url": "https://www.data.go.kr/",
-      "status": "needs-review",
-      "httpStatus": 503
+      "status": "needs-review"
     },
     {
       "id": "cat-data-us-data",
@@ -1852,8 +1851,7 @@
     {
       "id": "cat-semi-kr-kisi",
       "url": "https://www.etnews.com/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-robot-ieee",
