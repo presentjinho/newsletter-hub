@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-08-06T05:31:23.956Z",
+  "checkedAt": "2026-08-07T04:36:13.716Z",
   "count": 315,
-  "reachable": 310,
-  "needsReview": 5,
+  "reachable": 311,
+  "needsReview": 4,
   "results": [
     {
       "id": "newneek",
@@ -241,7 +241,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=01e0fc1e-0b06-445a-a2a2-2aa84fecb17f"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=6c49d496-908a-438f-9469-300de9796617"
     },
     {
       "id": "nomadicmatt",
@@ -282,13 +282,13 @@
     {
       "id": "foodbank",
       "url": "https://www.foodbank.co.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "hrinsight",
       "url": "https://www.hrinsight.co.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "joseilbo",
@@ -1050,7 +1050,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200
     },
     {
       "id": "edu-eu-fun",
@@ -1213,7 +1213,8 @@
     {
       "id": "art-eu-europeana",
       "url": "https://www.europeana.eu/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 403
     },
     {
       "id": "art-eu-tate",
