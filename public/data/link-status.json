@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-08-08T03:50:40.366Z",
+  "checkedAt": "2026-08-09T04:00:07.634Z",
   "count": 315,
   "reachable": 288,
   "needsReview": 27,
@@ -241,7 +241,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=e9e29b1d-cf08-4166-8569-29c33dce34b9"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=3f701c8d-e25a-4f8b-89f1-3b4d39ac81e7"
     },
     {
       "id": "nomadicmatt",
@@ -288,7 +288,8 @@
     {
       "id": "hrinsight",
       "url": "https://www.hrinsight.co.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "joseilbo",
@@ -1671,9 +1672,7 @@
     {
       "id": "cat-spo-kr-koc",
       "url": "https://www.sports.or.kr/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.sports.or.kr/sports/main/main.do"
+      "status": "needs-review"
     },
     {
       "id": "cat-spo-bbc-sport",
