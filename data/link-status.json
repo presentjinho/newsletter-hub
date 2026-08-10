@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-08-09T04:00:07.634Z",
+  "checkedAt": "2026-08-10T04:14:56.627Z",
   "count": 315,
   "reachable": 288,
   "needsReview": 27,
@@ -241,7 +241,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=3f701c8d-e25a-4f8b-89f1-3b4d39ac81e7"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=88ffb6e9-cfab-4b1d-92ec-a431c26927f7"
     },
     {
       "id": "nomadicmatt",
@@ -1049,7 +1049,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "edu-eu-fun",
@@ -1159,7 +1159,7 @@
       "id": "art-us-behance",
       "url": "https://www.behance.net/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 429
     },
     {
       "id": "art-us-dribbble",
@@ -1551,9 +1551,7 @@
     {
       "id": "cat-fin-kr-fss",
       "url": "https://www.fss.or.kr/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.fss.or.kr/fss/main/main.do?menuNo=200000"
+      "status": "needs-review"
     },
     {
       "id": "cat-fin-kr-mosf",
@@ -1672,7 +1670,9 @@
     {
       "id": "cat-spo-kr-koc",
       "url": "https://www.sports.or.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://www.sports.or.kr/sports/main/main.do"
     },
     {
       "id": "cat-spo-bbc-sport",
@@ -1711,7 +1711,7 @@
       "id": "cat-travel-cn-cta",
       "url": "https://whc.unesco.org/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200
     },
     {
       "id": "cat-food-fao",
