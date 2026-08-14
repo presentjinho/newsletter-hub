@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-08-13T04:27:44.282Z",
+  "checkedAt": "2026-08-14T04:25:38.521Z",
   "count": 315,
-  "reachable": 289,
-  "needsReview": 26,
+  "reachable": 285,
+  "needsReview": 30,
   "results": [
     {
       "id": "newneek",
@@ -110,9 +110,7 @@
     {
       "id": "folin",
       "url": "https://folin.co",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://folin.co/"
+      "status": "needs-review"
     },
     {
       "id": "yozm-it",
@@ -241,7 +239,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=0c007375-2f0b-4938-9fb9-41b8e5d29dfb"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=95624e53-0a1f-4e1e-a4a3-d55dc278061a"
     },
     {
       "id": "nomadicmatt",
@@ -1050,7 +1048,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200
     },
     {
       "id": "edu-eu-fun",
@@ -1319,8 +1317,7 @@
     {
       "id": "cat-news-kr-yonhap",
       "url": "https://www.yna.co.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-news-kr-kbs",
@@ -1544,9 +1541,7 @@
     {
       "id": "cat-fin-kr-bok",
       "url": "https://www.bok.or.kr/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.bok.or.kr/portal/main/main.do"
+      "status": "needs-review"
     },
     {
       "id": "cat-fin-kr-fss",
@@ -1785,8 +1780,7 @@
     {
       "id": "cat-photo-kr-photodot",
       "url": "https://www.yna.co.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-design-us-aiga",
