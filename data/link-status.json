@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-08-22T03:13:12.712Z",
+  "checkedAt": "2026-08-23T03:20:45.555Z",
   "count": 315,
-  "reachable": 307,
-  "needsReview": 8,
+  "reachable": 306,
+  "needsReview": 9,
   "results": [
     {
       "id": "newneek",
@@ -205,7 +205,8 @@
     {
       "id": "newstravel",
       "url": "https://www.newstravel.co.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "kinolights",
@@ -237,7 +238,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=09ffbbd7-6f15-4bae-a861-7ec8941cdfd9"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=86c27933-56c2-4685-a3f8-ca3c1679b987"
     },
     {
       "id": "nomadicmatt",
@@ -284,14 +285,14 @@
     {
       "id": "hrinsight",
       "url": "https://www.hrinsight.co.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "joseilbo",
       "url": "https://joseilbo.com/",
-      "status": "needs-review",
-      "httpStatus": 599
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://www.joseilbo.com/index.php"
     },
     {
       "id": "ikpnews",
@@ -698,8 +699,8 @@
     {
       "id": "ind-ene-us-eia",
       "url": "https://www.eia.gov/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review",
+      "httpStatus": 503
     },
     {
       "id": "ind-ene-no-ssb",
@@ -780,7 +781,7 @@
       "id": "ind-fash-uk-drapers",
       "url": "https://www.drapersonline.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "ind-fash-jp-wwdj",
@@ -925,8 +926,7 @@
     {
       "id": "ind-ag-br-embrapa",
       "url": "https://www.embrapa.br/en",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "ind-ag-nl-wageningen",
@@ -1254,7 +1254,8 @@
     {
       "id": "art-cn-zcool",
       "url": "https://www.zcool.com.cn/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "art-cn-dpm",
@@ -1634,7 +1635,7 @@
       "id": "cat-cul-gutenberg",
       "url": "https://www.gutenberg.org/",
       "status": "needs-review",
-      "httpStatus": 504
+      "httpStatus": 503
     },
     {
       "id": "cat-cul-archive-texts",
@@ -1681,9 +1682,7 @@
     {
       "id": "cat-spo-kr-koc",
       "url": "https://www.sports.or.kr/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.sports.or.kr/sports/main/main.do"
+      "status": "needs-review"
     },
     {
       "id": "cat-spo-bbc-sport",
