@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-08-23T03:20:45.555Z",
+  "checkedAt": "2026-08-24T03:22:19.899Z",
   "count": 315,
   "reachable": 306,
   "needsReview": 9,
@@ -109,7 +109,9 @@
     {
       "id": "folin",
       "url": "https://folin.co",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://folin.co/"
     },
     {
       "id": "yozm-it",
@@ -238,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=86c27933-56c2-4685-a3f8-ca3c1679b987"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=84f0dfb9-254a-46cf-b101-e2ac99d701b2"
     },
     {
       "id": "nomadicmatt",
@@ -607,8 +609,7 @@
     {
       "id": "ind-semi-kr-etnews",
       "url": "https://www.etnews.com/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "ind-semi-tw-taipeitimes",
@@ -699,8 +700,8 @@
     {
       "id": "ind-ene-us-eia",
       "url": "https://www.eia.gov/",
-      "status": "needs-review",
-      "httpStatus": 503
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "ind-ene-no-ssb",
@@ -781,7 +782,7 @@
       "id": "ind-fash-uk-drapers",
       "url": "https://www.drapersonline.com/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200
     },
     {
       "id": "ind-fash-jp-wwdj",
@@ -926,7 +927,8 @@
     {
       "id": "ind-ag-br-embrapa",
       "url": "https://www.embrapa.br/en",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "ind-ag-nl-wageningen",
@@ -1526,7 +1528,7 @@
       "id": "cat-law-eu-eurlex",
       "url": "https://eur-lex.europa.eu/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 202
     },
     {
       "id": "cat-law-us-congress",
@@ -1537,8 +1539,7 @@
     {
       "id": "cat-data-kr-data",
       "url": "https://www.data.go.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-data-us-data",
@@ -1634,8 +1635,8 @@
     {
       "id": "cat-cul-gutenberg",
       "url": "https://www.gutenberg.org/",
-      "status": "needs-review",
-      "httpStatus": 503
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-cul-archive-texts",
@@ -1796,9 +1797,7 @@
     {
       "id": "cat-home-kr-seoul",
       "url": "https://land.seoul.go.kr/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://land.seoul.go.kr/land/"
+      "status": "needs-review"
     },
     {
       "id": "cat-photo-kr-photodot",
@@ -1846,8 +1845,7 @@
     {
       "id": "cat-semi-kr-kisi",
       "url": "https://www.etnews.com/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-robot-ieee",
