@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-08-24T03:22:19.899Z",
+  "checkedAt": "2026-08-25T03:18:57.994Z",
   "count": 315,
-  "reachable": 306,
-  "needsReview": 9,
+  "reachable": 298,
+  "needsReview": 17,
   "results": [
     {
       "id": "newneek",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=84f0dfb9-254a-46cf-b101-e2ac99d701b2"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=ae625d91-4c05-43f3-9323-dae03e9ad2a0"
     },
     {
       "id": "nomadicmatt",
@@ -287,7 +287,8 @@
     {
       "id": "hrinsight",
       "url": "https://www.hrinsight.co.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "joseilbo",
@@ -529,8 +530,7 @@
     {
       "id": "xinhua-rss",
       "url": "https://english.news.cn/rss/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "china-daily-rss",
@@ -541,8 +541,7 @@
     {
       "id": "cgtn-rss",
       "url": "https://www.cgtn.com/subscribe/rss.html",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "un-news",
@@ -663,8 +662,7 @@
     {
       "id": "ind-auto-cn-gasgoo",
       "url": "https://autonews.gasgoo.com/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "ind-fin-us-wsj",
@@ -1049,7 +1047,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "edu-eu-fun",
@@ -1262,8 +1260,7 @@
     {
       "id": "art-cn-dpm",
       "url": "https://www.dpm.org.cn/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "art-kr-mmca",
@@ -1528,7 +1525,8 @@
       "id": "cat-law-eu-eurlex",
       "url": "https://eur-lex.europa.eu/",
       "status": "reachable",
-      "httpStatus": 202
+      "httpStatus": 200,
+      "finalUrl": "https://eur-lex.europa.eu/TodayOJ/index.html"
     },
     {
       "id": "cat-law-us-congress",
@@ -1734,16 +1732,12 @@
     {
       "id": "cat-food-kr-mfds",
       "url": "https://www.mfds.go.kr/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.mfds.go.kr/index.do"
+      "status": "needs-review"
     },
     {
       "id": "cat-food-kr-atis",
       "url": "https://www.nongsaro.go.kr/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.nongsaro.go.kr/portal/portalMain.ps?menuId=PS00001"
+      "status": "needs-review"
     },
     {
       "id": "cat-food-us-usda",
@@ -1754,15 +1748,12 @@
     {
       "id": "cat-parent-kr-mogef",
       "url": "https://www.mogef.go.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-parent-kr-childcare",
       "url": "https://www.childcare.go.kr/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.childcare.go.kr/?menuno=1"
+      "status": "needs-review"
     },
     {
       "id": "cat-edu-kr-moe",
@@ -1797,7 +1788,9 @@
     {
       "id": "cat-home-kr-seoul",
       "url": "https://land.seoul.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://land.seoul.go.kr/land/"
     },
     {
       "id": "cat-photo-kr-photodot",
@@ -1868,9 +1861,7 @@
     {
       "id": "cat-biz-kr-mss",
       "url": "https://www.mss.go.kr/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.mss.go.kr/site/smba/main.do"
+      "status": "needs-review"
     },
     {
       "id": "cat-biz-us-sba",
@@ -1887,8 +1878,7 @@
     {
       "id": "cat-tax-kr-nts",
       "url": "https://www.nts.go.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-tax-us-irs",
