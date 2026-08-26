@@ -151,37 +151,9 @@ export default function LiveDesk({
   useEffect(() => {
     setShowLinks(false);
     setFetcherHint('');
-    if (!activeNewsletter) {
-      setRawText('');
-      setReaderError('');
-      return;
-    }
-    let cancelled = false;
-    const ctrl = new AbortController();
-    const target = siteOf(activeNewsletter);
-    (async () => {
-      setReaderLoading(true);
-      setReaderError('');
-      setRawText('');
-      try {
-        const text = await fetchReadable(target, ctrl.signal);
-        if (!cancelled) {
-          setRawText(text);
-          const name = lastFetcherName();
-          if (name) setFetcherHint(`추출: ${name}`);
-        }
-      } catch (e) {
-        if (!cancelled && (e as Error).name !== 'AbortError') {
-          setReaderError('앱 안 리더로 불러오지 못했습니다. 「사이트」새 탭으로 열어 주세요.');
-        }
-      } finally {
-        if (!cancelled) setReaderLoading(false);
-      }
-    })();
-    return () => {
-      cancelled = true;
-      ctrl.abort();
-    };
+    setReaderLoading(false);
+    setRawText('');
+    setReaderError('');
   }, [activeNewsletter?.id, activeNewsletter?.siteUrl, activeNewsletter?.url]);
 
   const openOriginal = () => {
@@ -217,6 +189,10 @@ export default function LiveDesk({
             <p className="text-sm text-[var(--live-muted)] leading-relaxed max-w-2xl">
               잡링크·메뉴를 빼고 <strong className="text-[var(--live-fg)]">정보만</strong> 번호 블록으로 보여 줍니다.
               안 되는 끼워보기·불안정 번역은 숨겼습니다. 외국어는 <strong className="text-[var(--live-fg)]">새 탭 번역</strong>을 쓰세요.
+            </p>
+            <p className="text-xs text-[var(--live-muted)] leading-relaxed max-w-2xl mt-2">
+              출처를 고르는 것만으로는 외부 요청을 보내지 않습니다. 「본문 불러오기」를 누르면 선택한 공개 URL이
+              Jina Reader·AllOrigins·corsproxy.io·CodeTabs 중 응답 가능한 추출 서비스로 전송됩니다.
             </p>
             <p className="text-xs live-accent mt-2">
               지금 {timeStr} · {linkSyncStatus}
@@ -329,7 +305,7 @@ export default function LiveDesk({
                       onClick={() => activeNewsletter && loadReader(siteOf(activeNewsletter))}
                       className="text-xs font-bold text-[var(--live-fg)] underline cursor-pointer bg-transparent border-0 disabled:opacity-50"
                     >
-                      다시 불러오기
+                      {displayBody || readerError ? '다시 불러오기' : '본문 불러오기'}
                     </button>
                   </div>
                 </div>
@@ -457,10 +433,17 @@ export default function LiveDesk({
                   )}
                   {!readerLoading && !readerError && !displayBody && (
                     <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
-                      <p className="text-sm text-[var(--live-muted)]">정리할 본문이 없습니다. 사이트에서 직접 읽어 주세요.</p>
-                      <button type="button" onClick={openOriginal} className="px-4 py-2 btn-mint text-sm rounded-sm cursor-pointer border-0">
-                        사이트 새 탭
-                      </button>
+                      <p className="text-sm text-[var(--live-muted)] max-w-md leading-relaxed">
+                        자동으로 외부에 접속하지 않습니다. 공개 URL을 제3자 추출 서비스로 보내도 괜찮다면 본문을 불러오세요.
+                      </p>
+                      <div className="flex flex-wrap gap-2 justify-center">
+                        <button type="button" onClick={() => loadReader(siteOf(activeNewsletter))} className="px-4 py-2 btn-mint text-sm rounded-sm cursor-pointer border-0">
+                          본문 불러오기
+                        </button>
+                        <button type="button" onClick={openOriginal} className="px-4 py-2 text-sm font-bold rounded-sm border border-white/30 text-[var(--live-fg)] bg-black/30 cursor-pointer">
+                          사이트 새 탭
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>

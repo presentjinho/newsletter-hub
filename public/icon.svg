@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">오늘의 편지함</title>
+  <desc id="desc">초록색 봉투와 새싹</desc>
+  <rect width="512" height="512" rx="112" fill="#f4f0e6"/>
+  <path d="M91 170h330v235H91z" fill="#0b6b42"/>
+  <path d="m91 170 165 131 165-131" fill="none" stroke="#e7dfc8" stroke-width="32" stroke-linejoin="round"/>
+  <path d="M256 201c3-65 43-103 103-98-5 58-38 92-103 98Z" fill="#73b98d"/>
+  <path d="M256 201c-7-48-37-77-83-75 3 45 29 71 83 75Z" fill="#a8cfae"/>
+</svg>

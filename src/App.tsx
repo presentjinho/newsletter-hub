@@ -51,6 +51,7 @@ import {
   loadCustomSources,
   saveCustomSources,
   makeCustomSource,
+  normalizeCustomSources,
   hostKey,
   type CustomSourceInput
 } from './customSources';
@@ -421,12 +422,17 @@ export default function App() {
   }, [catalog, liveSourceId]);
 
   const handleExportSubscriptionCsv = () => {
+    const csvCell = (value: unknown) => {
+      const raw = String(value ?? '');
+      const inert = /^[\s]*[=+\-@\t\r\n]/.test(raw) ? `'${raw}` : raw;
+      return `"${inert.replace(/"/g, '""')}"`;
+    };
     const rows = catalog
       .filter(n => personalStatus[n.id] || savedIds.has(n.id))
       .map(n => {
         const status = personalStatus[n.id] || (savedIds.has(n.id) ? '관심 있음' : '');
         const cells = [n.name, status, n.category, n.frequency, n.country, n.siteUrl || n.url, n.subscribeUrl || '', n.type, n.industry || ''];
-        return cells.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',');
+        return cells.map(csvCell).join(',');
       });
     if (!rows.length) {
       showToast('내보낼 구독 기록이 없습니다');
@@ -568,7 +574,7 @@ export default function App() {
         if (data.theme === 'light' || data.theme === 'dark') setTheme(data.theme);
         if (data.textSize === 'normal' || data.textSize === 'large' || data.textSize === 'xl') setTextSize(data.textSize);
         if (Array.isArray(data.customSources)) {
-          const customs = data.customSources as Newsletter[];
+          const customs = normalizeCustomSources(data.customSources as Partial<Newsletter>[]);
           setCustomSources(customs);
           saveCustomSources(customs);
           setCatalog(mergeBaseAndCustom(newsletters, customs));

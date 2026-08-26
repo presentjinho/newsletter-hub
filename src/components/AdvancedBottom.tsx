@@ -181,7 +181,9 @@ export default function AdvancedBottom({
           </p>
           <p>
             <strong className="text-ink">앱 안 리더:</strong> 개인 읽기 보조로 공개 페이지 텍스트를 정리해 보여 줄 수 있습니다.
-            본문을 서버에 보관하거나 검색 가능하게 아카이브하지 않습니다. 막히면 사이트 새 탭을 사용하세요.
+            출처 선택만으로는 외부 요청을 보내지 않습니다. 사용자가 본문 불러오기를 누르면 공개 URL이 Jina Reader,
+            AllOrigins, corsproxy.io, CodeTabs 중 응답 가능한 제3자 추출 서비스로 전송됩니다. 본문을 이 앱의 서버에 보관하거나
+            검색 가능하게 아카이브하지는 않습니다. 제3자 전송을 원하지 않으면 사이트 새 탭을 사용하세요.
           </p>
           <p>
             <strong className="text-ink">개인 데이터:</strong> 관심사·메모·구독 상태·내 출처는 이 브라우저에만 이중 저장(본문+미러)됩니다.

@@ -14,9 +14,27 @@ export function loadCustomSources(): Newsletter[] {
   try {
     const list = loadJSON<Partial<Newsletter>[]>(SLOTS.customSources, []);
     if (!Array.isArray(list)) return [];
-    return list.map(row =>
-      normalizeItem({
+    return normalizeCustomSources(list);
+  } catch {
+    return [];
+  }
+}
+
+export function normalizeCustomSources(list: Partial<Newsletter>[]): Newsletter[] {
+  return list
+    .slice(0, 500)
+    .map(row => {
+      const siteUrl = normalizeSiteUrl(String(row.siteUrl || row.url || ''));
+      if (!siteUrl) return null;
+      const subscribeUrl = row.subscribeUrl ? normalizeSiteUrl(String(row.subscribeUrl)) || undefined : undefined;
+      return normalizeItem({
         ...row,
+        id: String(row.id || '').startsWith('custom_') ? String(row.id) : `custom_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 7)}`,
+        name: String(row.name || new URL(siteUrl).hostname).slice(0, 120),
+        description: String(row.description || '내가 등록한 정보 출처입니다.').slice(0, 600),
+        siteUrl,
+        url: siteUrl,
+        subscribeUrl,
         type: row.type || 'site',
         deskRole: 'info',
         origin: row.origin || '한국',
@@ -24,11 +42,9 @@ export function loadCustomSources(): Newsletter[] {
         trust: row.trust || ['내가 추가한 출처', '공식 링크 확인'],
         frequency: row.frequency || '수시',
         frequencyGroup: row.frequencyGroup || 'occasional',
-      })
-    );
-  } catch {
-    return [];
-  }
+      });
+    })
+    .filter((row): row is Newsletter => row !== null);
 }
 
 export function saveCustomSources(items: Newsletter[]) {
@@ -67,7 +83,14 @@ export function normalizeSiteUrl(raw: string): string | null {
   if (!/^https?:\/\//i.test(url)) url = `https://${url}`;
   try {
     const u = new URL(url);
+    if (u.protocol !== 'https:' && u.protocol !== 'http:') return null;
+    if (u.username || u.password || u.port) return null;
+    const host = u.hostname.toLowerCase().replace(/\.$/, '');
+    if (!host.includes('.') || host === 'localhost' || /^\d+(?:\.\d+){3}$/.test(host) || host.includes(':')) return null;
+    u.username = '';
+    u.password = '';
     u.hash = '';
+    u.search = '';
     let path = u.pathname;
     if (path.length > 1 && path.endsWith('/')) path = path.slice(0, -1);
     u.pathname = path || '/';
@@ -96,7 +119,7 @@ export function makeCustomSource(input: CustomSourceInput): Newsletter | null {
   if (sub && !normalizeSiteUrl(sub)) sub = '';
   else if (sub) sub = normalizeSiteUrl(sub) || '';
 
-  const name = (input.name || '').trim() || new URL(url).hostname.replace(/^www\./, '');
+  const name = ((input.name || '').trim() || new URL(url).hostname.replace(/^www\./, '')).slice(0, 120);
   const id = `custom_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 7)}`;
   const category = (input.category || '시사').trim() || '시사';
   return normalizeItem({
@@ -104,8 +127,8 @@ export function makeCustomSource(input: CustomSourceInput): Newsletter | null {
     name,
     siteUrl: url,
     url,
-    description: (input.description || '').trim() || '내가 등록한 정보 출처입니다.',
-    category,
+    description: ((input.description || '').trim() || '내가 등록한 정보 출처입니다.').slice(0, 600),
+    category: category.slice(0, 60),
     subscribeUrl: sub || undefined,
     type: 'site',
     deskRole: 'info',

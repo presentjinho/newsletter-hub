@@ -1,11 +1,17 @@
 /* 오늘의 편지함 — 정적 셸 오프라인 캐시 (선택) */
-const CACHE = 'letter-hub-shell-v1';
+const CACHE = 'letter-hub-shell-v2';
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE).then((cache) => {
       const base = self.registration.scope;
-      return cache.addAll([base, `${base}index.html`, `${base}data/link-status.json`].map((u) => u).filter(Boolean)).catch(() => undefined);
+      return cache.addAll([
+        base,
+        `${base}index.html`,
+        `${base}manifest.webmanifest`,
+        `${base}icon.svg`,
+        `${base}data/link-status.json`
+      ]).catch(() => undefined);
     }).then(() => self.skipWaiting())
   );
 });
