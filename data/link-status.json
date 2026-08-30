@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-08-29T09:12:28.183Z",
+  "checkedAt": "2026-08-30T08:27:38.754Z",
   "count": 315,
-  "reachable": 290,
-  "needsReview": 25,
+  "reachable": 288,
+  "needsReview": 27,
   "results": [
     {
       "id": "newneek",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=91b9ad8d-834e-4a02-ba7f-c0622ee6a02a"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=ca1975e8-8a0c-4ee2-8b20-5a3a8d727725"
     },
     {
       "id": "nomadicmatt",
@@ -441,7 +441,7 @@
       "id": "nasa-official",
       "url": "https://www.nasa.gov/newsletters/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 429
     },
     {
       "id": "noaa-ocean-service",
@@ -1049,7 +1049,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "edu-eu-fun",
@@ -1337,7 +1337,7 @@
       "id": "cat-news-kr-sbs",
       "url": "https://news.sbs.co.kr/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "cat-news-us-ap",
@@ -1771,8 +1771,7 @@
     {
       "id": "cat-home-kr-reb",
       "url": "https://www.reb.or.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-home-kr-seoul",
@@ -1890,8 +1889,7 @@
     {
       "id": "cat-pet-kr-animal",
       "url": "https://www.animal.go.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-lead-hbr-free",
