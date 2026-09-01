@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-08-31T08:47:46.309Z",
+  "checkedAt": "2026-09-01T07:57:31.578Z",
   "count": 315,
-  "reachable": 287,
-  "needsReview": 28,
+  "reachable": 286,
+  "needsReview": 29,
   "results": [
     {
       "id": "newneek",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=2967bac0-65ff-4621-8444-5b7f7127bde0"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=c1fefd88-3b26-477b-a651-aa8c37bfc34e"
     },
     {
       "id": "nomadicmatt",
@@ -287,8 +287,7 @@
     {
       "id": "hrinsight",
       "url": "https://www.hrinsight.co.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "joseilbo",
@@ -452,8 +451,7 @@
     {
       "id": "usgs-news",
       "url": "https://www.usgs.gov/news/get-our-news/",
-      "status": "reachable",
-      "httpStatus": 403
+      "status": "needs-review"
     },
     {
       "id": "nist-rss",
@@ -608,8 +606,7 @@
     {
       "id": "ind-semi-kr-etnews",
       "url": "https://www.etnews.com/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "ind-semi-tw-taipeitimes",
@@ -1671,7 +1668,9 @@
     {
       "id": "cat-spo-kr-koc",
       "url": "https://www.sports.or.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://www.sports.or.kr/sports/main/main.do"
     },
     {
       "id": "cat-spo-bbc-sport",
@@ -1769,7 +1768,8 @@
     {
       "id": "cat-home-kr-reb",
       "url": "https://www.reb.or.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-home-kr-seoul",
@@ -1824,8 +1824,7 @@
     {
       "id": "cat-semi-kr-kisi",
       "url": "https://www.etnews.com/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-robot-ieee",
@@ -1887,7 +1886,8 @@
     {
       "id": "cat-pet-kr-animal",
       "url": "https://www.animal.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-lead-hbr-free",
