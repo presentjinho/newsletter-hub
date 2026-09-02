@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-09-01T07:57:31.578Z",
+  "checkedAt": "2026-09-02T07:15:20.791Z",
   "count": 315,
-  "reachable": 286,
-  "needsReview": 29,
+  "reachable": 285,
+  "needsReview": 30,
   "results": [
     {
       "id": "newneek",
@@ -109,9 +109,7 @@
     {
       "id": "folin",
       "url": "https://folin.co",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://folin.co/"
+      "status": "needs-review"
     },
     {
       "id": "yozm-it",
@@ -240,7 +238,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=c1fefd88-3b26-477b-a651-aa8c37bfc34e"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=12563949-7ccd-40dd-a815-ca86c450ce99"
     },
     {
       "id": "nomadicmatt",
@@ -1046,7 +1044,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "edu-eu-fun",
