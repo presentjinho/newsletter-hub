@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-09-06T07:16:20.686Z",
+  "checkedAt": "2026-09-07T07:28:52.048Z",
   "count": 315,
-  "reachable": 286,
-  "needsReview": 29,
+  "reachable": 289,
+  "needsReview": 26,
   "results": [
     {
       "id": "newneek",
@@ -56,7 +56,7 @@
       "id": "morning-brew",
       "url": "https://www.morningbrew.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "tldr",
@@ -109,7 +109,9 @@
     {
       "id": "folin",
       "url": "https://folin.co",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://folin.co/"
     },
     {
       "id": "yozm-it",
@@ -139,7 +141,8 @@
       "id": "the-atlantic",
       "url": "https://www.theatlantic.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 200,
+      "finalUrl": "https://www.theatlantic.com/world/"
     },
     {
       "id": "mit-tech-review",
@@ -238,7 +241,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=d572c43b-e7e2-4d48-a697-7e9561e97d24"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=6536cf5d-e3fe-41ee-b5c3-f74ec51ba633"
     },
     {
       "id": "nomadicmatt",
@@ -250,7 +253,8 @@
       "id": "ign",
       "url": "https://www.ign.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 200,
+      "finalUrl": "https://latam.ign.com/chile"
     },
     {
       "id": "rogerebert",
@@ -285,7 +289,8 @@
     {
       "id": "hrinsight",
       "url": "https://www.hrinsight.co.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "joseilbo",
@@ -425,8 +430,7 @@
       "id": "library-of-congress",
       "url": "https://www.loc.gov/rss/",
       "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.loc.gov/subscribe/"
+      "httpStatus": 403
     },
     {
       "id": "smithsonian-natural-history",
@@ -582,7 +586,7 @@
       "url": "https://theconversation.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://theconversation.com/us"
+      "finalUrl": "https://theconversation.com/global"
     },
     {
       "id": "propublica",
@@ -605,7 +609,8 @@
     {
       "id": "ind-semi-kr-etnews",
       "url": "https://www.etnews.com/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "ind-semi-tw-taipeitimes",
@@ -888,7 +893,8 @@
       "id": "ind-game-us-ign",
       "url": "https://www.ign.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 200,
+      "finalUrl": "https://latam.ign.com/chile"
     },
     {
       "id": "ind-game-jp-famitsu",
@@ -948,7 +954,7 @@
       "id": "ind-nl-us-morning-brew",
       "url": "https://www.morningbrew.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "ind-nl-us-tldr",
@@ -1045,7 +1051,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "edu-eu-fun",
@@ -1112,7 +1118,8 @@
       "id": "edu-global-alison",
       "url": "https://alison.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 200,
+      "finalUrl": "https://alison.com/es"
     },
     {
       "id": "edu-global-wikipedia",
@@ -1137,7 +1144,8 @@
       "id": "art-us-pinterest",
       "url": "https://www.pinterest.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 200,
+      "finalUrl": "https://cl.pinterest.com/"
     },
     {
       "id": "art-us-deviantart",
@@ -1517,8 +1525,7 @@
       "id": "cat-law-eu-eurlex",
       "url": "https://eur-lex.europa.eu/",
       "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://eur-lex.europa.eu/TodayOJ/index.html"
+      "httpStatus": 202
     },
     {
       "id": "cat-law-us-congress",
@@ -1690,7 +1697,7 @@
       "url": "https://www.japan.travel/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://www.japan.travel/en/us/"
+      "finalUrl": "https://www.japan.travel/ko/kr/"
     },
     {
       "id": "cat-travel-us-nps",
@@ -1824,7 +1831,8 @@
     {
       "id": "cat-semi-kr-kisi",
       "url": "https://www.etnews.com/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-robot-ieee",
@@ -1886,8 +1894,7 @@
     {
       "id": "cat-pet-kr-animal",
       "url": "https://www.animal.go.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-lead-hbr-free",
@@ -1905,7 +1912,8 @@
       "id": "cat-browse-pinterest",
       "url": "https://www.pinterest.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 200,
+      "finalUrl": "https://cl.pinterest.com/"
     }
   ]
 }
