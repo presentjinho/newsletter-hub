@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-09-10T07:23:52.082Z",
+  "checkedAt": "2026-09-11T07:22:37.126Z",
   "count": 315,
-  "reachable": 309,
-  "needsReview": 6,
+  "reachable": 308,
+  "needsReview": 7,
   "results": [
     {
       "id": "newneek",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=91c8dac0-0fed-415f-977f-3755b6f699be"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=3fb6f88a-a87b-4b1a-a40b-0d79222ca25d"
     },
     {
       "id": "nomadicmatt",
@@ -281,8 +281,7 @@
     {
       "id": "foodbank",
       "url": "https://www.foodbank.co.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "hrinsight",
@@ -536,8 +535,8 @@
     {
       "id": "china-daily-rss",
       "url": "https://europe.chinadaily.com.cn/rss.html",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review",
+      "httpStatus": 404
     },
     {
       "id": "cgtn-rss",
@@ -555,8 +554,7 @@
     {
       "id": "who-news",
       "url": "https://www.who.int/news",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "imf-blogs",
@@ -610,7 +608,8 @@
     {
       "id": "ind-semi-kr-etnews",
       "url": "https://www.etnews.com/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "ind-semi-tw-taipeitimes",
@@ -719,8 +718,7 @@
     {
       "id": "ind-ene-de-bundesnetz",
       "url": "https://www.bundesnetzagentur.de/EN/Home/home_node.html",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "ind-ene-ca-cer",
@@ -1473,7 +1471,8 @@
       "id": "cat-health-us-medline",
       "url": "https://medlineplus.gov/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 200,
+      "finalUrl": "https://www.medlineplus.gov/"
     },
     {
       "id": "cat-env-kr-me",
@@ -1685,7 +1684,9 @@
     {
       "id": "cat-spo-kr-koc",
       "url": "https://www.sports.or.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://www.sports.or.kr/sports/main/main.do"
     },
     {
       "id": "cat-spo-bbc-sport",
@@ -1849,7 +1850,8 @@
     {
       "id": "cat-semi-kr-kisi",
       "url": "https://www.etnews.com/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-robot-ieee",
