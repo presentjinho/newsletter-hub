@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-09-13T07:32:25.547Z",
+  "checkedAt": "2026-09-14T07:58:56.503Z",
   "count": 315,
-  "reachable": 312,
-  "needsReview": 3,
+  "reachable": 311,
+  "needsReview": 4,
   "results": [
     {
       "id": "newneek",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=336c44cd-4115-4f39-a0d1-13e5c7ee117c"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=a7d60884-752d-4351-a17d-984bdb59547d"
     },
     {
       "id": "nomadicmatt",
@@ -537,8 +537,8 @@
     {
       "id": "china-daily-rss",
       "url": "https://europe.chinadaily.com.cn/rss.html",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review",
+      "httpStatus": 404
     },
     {
       "id": "cgtn-rss",
@@ -1532,7 +1532,7 @@
       "id": "cat-law-eu-eurlex",
       "url": "https://eur-lex.europa.eu/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 202
     },
     {
       "id": "cat-law-us-congress",
