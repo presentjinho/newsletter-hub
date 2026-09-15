@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-09-14T07:58:56.503Z",
+  "checkedAt": "2026-09-15T07:51:28.067Z",
   "count": 315,
   "reachable": 311,
   "needsReview": 4,
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=a7d60884-752d-4351-a17d-984bdb59547d"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=6c77a742-a134-4ee5-bc6d-dbf4016b6e2a"
     },
     {
       "id": "nomadicmatt",
@@ -624,7 +624,7 @@
       "id": "ind-semi-us-semiengineering",
       "url": "https://semiengineering.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "ind-semi-jp-nikkei-asia",
@@ -1052,7 +1052,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200
     },
     {
       "id": "edu-eu-fun",
@@ -1323,7 +1323,7 @@
       "id": "cat-news-kr-yonhap",
       "url": "https://www.yna.co.kr/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 405
     },
     {
       "id": "cat-news-kr-kbs",
