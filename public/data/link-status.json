@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-09-16T07:49:49.847Z",
+  "checkedAt": "2026-09-17T07:47:19.132Z",
   "count": 315,
-  "reachable": 289,
-  "needsReview": 26,
+  "reachable": 308,
+  "needsReview": 7,
   "results": [
     {
       "id": "newneek",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=c5f69876-63ff-4a04-9c89-038e8c1c6caf"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=0534c0f0-4624-4d14-a77d-b65c1bcd7715"
     },
     {
       "id": "nomadicmatt",
@@ -452,8 +452,7 @@
     {
       "id": "usgs-news",
       "url": "https://www.usgs.gov/news/get-our-news/",
-      "status": "reachable",
-      "httpStatus": 403
+      "status": "needs-review"
     },
     {
       "id": "nist-rss",
@@ -506,12 +505,14 @@
     {
       "id": "kdca-health",
       "url": "https://health.kdca.go.kr/healthinfo/biz/health/intrcnYard/histMain.do",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "korea-policy-briefing",
       "url": "https://m.korea.kr/etc/noticeList.do",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "bank-of-japan-rss",
@@ -608,8 +609,7 @@
     {
       "id": "ind-semi-kr-etnews",
       "url": "https://www.etnews.com/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "ind-semi-tw-taipeitimes",
@@ -995,7 +995,7 @@
       "id": "edu-kr-kocw",
       "url": "https://www.kocw.net/",
       "status": "reachable",
-      "httpStatus": 405
+      "httpStatus": 200
     },
     {
       "id": "edu-us-edx",
@@ -1268,7 +1268,8 @@
     {
       "id": "art-kr-mmca",
       "url": "https://www.mmca.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "art-kr-museumgo",
@@ -1440,12 +1441,14 @@
     {
       "id": "cat-health-kr-kdca",
       "url": "https://www.kdca.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-health-kr-mohw",
       "url": "https://www.mohw.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-health-who",
@@ -1469,13 +1472,14 @@
       "id": "cat-health-us-medline",
       "url": "https://medlineplus.gov/",
       "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.medlineplus.gov/"
+      "httpStatus": 200
     },
     {
       "id": "cat-env-kr-me",
       "url": "https://www.me.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://mcee.go.kr/"
     },
     {
       "id": "cat-env-kr-airkorea",
@@ -1511,12 +1515,14 @@
     {
       "id": "cat-law-kr-law",
       "url": "https://www.law.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-law-kr-assembly",
       "url": "https://likms.assembly.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-law-eu-eurlex",
@@ -1533,7 +1539,8 @@
     {
       "id": "cat-data-kr-data",
       "url": "https://www.data.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-data-us-data",
@@ -1558,7 +1565,9 @@
     {
       "id": "cat-fin-kr-mosf",
       "url": "https://www.moef.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://mofe.go.kr/"
     },
     {
       "id": "cat-fin-us-fed",
@@ -1589,7 +1598,8 @@
     {
       "id": "cat-job-kr-moel",
       "url": "https://www.moel.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-job-kr-work24",
@@ -1601,7 +1611,9 @@
     {
       "id": "cat-job-kr-kostat",
       "url": "https://kostat.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://mods.go.kr/index.es?sid=a1"
     },
     {
       "id": "cat-job-us-bls",
@@ -1725,12 +1737,16 @@
     {
       "id": "cat-food-kr-mfds",
       "url": "https://www.mfds.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://www.mfds.go.kr/index.do"
     },
     {
       "id": "cat-food-kr-atis",
       "url": "https://www.nongsaro.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://www.nongsaro.go.kr/portal/portalMain.ps?menuId=PS00001"
     },
     {
       "id": "cat-food-us-usda",
@@ -1741,27 +1757,33 @@
     {
       "id": "cat-parent-kr-mogef",
       "url": "https://www.mogef.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-parent-kr-childcare",
       "url": "https://www.childcare.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://www.childcare.go.kr/?menuno=1"
     },
     {
       "id": "cat-edu-kr-moe",
       "url": "https://www.moe.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-auto-kr-molit",
       "url": "https://www.korea.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-auto-kr-ts",
       "url": "https://www.car.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-auto-us-nhtsa",
@@ -1828,8 +1850,7 @@
     {
       "id": "cat-semi-kr-kisi",
       "url": "https://www.etnews.com/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-robot-ieee",
@@ -1852,7 +1873,9 @@
     {
       "id": "cat-biz-kr-mss",
       "url": "https://www.mss.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://www.mss.go.kr/site/smba/main.do"
     },
     {
       "id": "cat-biz-us-sba",
@@ -1869,7 +1892,8 @@
     {
       "id": "cat-tax-kr-nts",
       "url": "https://www.nts.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-tax-us-irs",
@@ -1880,7 +1904,9 @@
     {
       "id": "cat-crypto-kr-fsc",
       "url": "https://www.fsc.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://www.fsc.go.kr/index"
     },
     {
       "id": "cat-crypto-us-sec",
