@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-09-19T07:25:53.093Z",
+  "checkedAt": "2026-09-20T07:49:35.645Z",
   "count": 315,
-  "reachable": 308,
-  "needsReview": 7,
+  "reachable": 309,
+  "needsReview": 6,
   "results": [
     {
       "id": "newneek",
@@ -92,7 +92,7 @@
       "id": "dense-discovery",
       "url": "https://www.densediscovery.com/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200
     },
     {
       "id": "three-two-one",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=342ae1d9-60f1-4cca-9bb5-339338c1ac61"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=4910921b-b3be-4d80-b739-25c91465a56c"
     },
     {
       "id": "nomadicmatt",
@@ -452,8 +452,8 @@
     {
       "id": "usgs-news",
       "url": "https://www.usgs.gov/news/get-our-news/",
-      "status": "needs-review",
-      "httpStatus": 504
+      "status": "reachable",
+      "httpStatus": 403
     },
     {
       "id": "nist-rss",
@@ -622,7 +622,8 @@
     {
       "id": "ind-semi-us-semiengineering",
       "url": "https://semiengineering.com/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "ind-semi-jp-nikkei-asia",
@@ -996,7 +997,7 @@
       "id": "edu-kr-kocw",
       "url": "https://www.kocw.net/",
       "status": "reachable",
-      "httpStatus": 405
+      "httpStatus": 200
     },
     {
       "id": "edu-us-edx",
@@ -1050,7 +1051,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "edu-eu-fun",
@@ -1068,7 +1069,8 @@
     {
       "id": "edu-eu-iversity",
       "url": "https://iversity.org/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "edu-jp-jmooc",
@@ -1319,8 +1321,7 @@
     {
       "id": "cat-news-kr-yonhap",
       "url": "https://www.yna.co.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-news-kr-kbs",
@@ -1807,8 +1808,7 @@
     {
       "id": "cat-photo-kr-photodot",
       "url": "https://www.yna.co.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-design-us-aiga",
