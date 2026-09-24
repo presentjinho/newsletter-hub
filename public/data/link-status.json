@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-09-23T07:50:34.446Z",
+  "checkedAt": "2026-09-24T07:40:54.241Z",
   "count": 315,
-  "reachable": 311,
-  "needsReview": 4,
+  "reachable": 310,
+  "needsReview": 5,
   "results": [
     {
       "id": "newneek",
@@ -109,9 +109,7 @@
     {
       "id": "folin",
       "url": "https://folin.co",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://folin.co/"
+      "status": "needs-review"
     },
     {
       "id": "yozm-it",
@@ -240,7 +238,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=c3d5b02d-9504-4b6f-a6fc-e5a510d8a2ff"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=2917be43-1d35-4ff9-8d06-6af6f78e2990"
     },
     {
       "id": "nomadicmatt",
