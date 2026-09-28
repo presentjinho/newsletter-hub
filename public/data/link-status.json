@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-09-27T08:18:13.676Z",
+  "checkedAt": "2026-09-28T08:48:20.050Z",
   "count": 315,
-  "reachable": 311,
-  "needsReview": 4,
+  "reachable": 306,
+  "needsReview": 9,
   "results": [
     {
       "id": "newneek",
@@ -109,9 +109,7 @@
     {
       "id": "folin",
       "url": "https://folin.co",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://folin.co/"
+      "status": "needs-review"
     },
     {
       "id": "yozm-it",
@@ -240,7 +238,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=0b051442-67c3-4037-a75e-1843550ee62d"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=16e819de-a558-42b5-bf17-fb698bd00377"
     },
     {
       "id": "nomadicmatt",
@@ -287,8 +285,7 @@
     {
       "id": "hrinsight",
       "url": "https://www.hrinsight.co.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "joseilbo",
@@ -923,8 +920,7 @@
     {
       "id": "ind-ag-us-usda",
       "url": "https://www.usda.gov/",
-      "status": "reachable",
-      "httpStatus": 403
+      "status": "needs-review"
     },
     {
       "id": "ind-ag-br-embrapa",
@@ -1530,7 +1526,7 @@
       "id": "cat-law-eu-eurlex",
       "url": "https://eur-lex.europa.eu/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 202
     },
     {
       "id": "cat-law-us-congress",
@@ -1560,9 +1556,7 @@
     {
       "id": "cat-fin-kr-fss",
       "url": "https://www.fss.or.kr/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.fss.or.kr/fss/main/main.do?menuNo=200000"
+      "status": "needs-review"
     },
     {
       "id": "cat-fin-kr-mosf",
@@ -1753,8 +1747,7 @@
     {
       "id": "cat-food-us-usda",
       "url": "https://www.usda.gov/",
-      "status": "reachable",
-      "httpStatus": 403
+      "status": "needs-review"
     },
     {
       "id": "cat-parent-kr-mogef",
