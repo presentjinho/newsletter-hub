@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-09-28T08:48:20.050Z",
+  "checkedAt": "2026-09-29T08:39:08.682Z",
   "count": 315,
-  "reachable": 306,
-  "needsReview": 9,
+  "reachable": 311,
+  "needsReview": 4,
   "results": [
     {
       "id": "newneek",
@@ -109,7 +109,9 @@
     {
       "id": "folin",
       "url": "https://folin.co",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://folin.co/"
     },
     {
       "id": "yozm-it",
@@ -238,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=16e819de-a558-42b5-bf17-fb698bd00377"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=8987c053-f670-45e2-964d-00e22df6439e"
     },
     {
       "id": "nomadicmatt",
@@ -285,7 +287,8 @@
     {
       "id": "hrinsight",
       "url": "https://www.hrinsight.co.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "joseilbo",
@@ -920,7 +923,8 @@
     {
       "id": "ind-ag-us-usda",
       "url": "https://www.usda.gov/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 403
     },
     {
       "id": "ind-ag-br-embrapa",
@@ -1556,7 +1560,9 @@
     {
       "id": "cat-fin-kr-fss",
       "url": "https://www.fss.or.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://www.fss.or.kr/fss/main/main.do?menuNo=200000"
     },
     {
       "id": "cat-fin-kr-mosf",
@@ -1747,7 +1753,8 @@
     {
       "id": "cat-food-us-usda",
       "url": "https://www.usda.gov/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 403
     },
     {
       "id": "cat-parent-kr-mogef",
