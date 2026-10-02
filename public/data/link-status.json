@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-10-01T09:03:31.258Z",
+  "checkedAt": "2026-10-02T08:39:18.301Z",
   "count": 315,
-  "reachable": 310,
-  "needsReview": 5,
+  "reachable": 306,
+  "needsReview": 9,
   "results": [
     {
       "id": "newneek",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=450669c1-4db7-47b7-84c1-af5d7c0af4fc"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=c7bb5cfb-bb6e-4836-8809-2e13a9f5abba"
     },
     {
       "id": "nomadicmatt",
@@ -282,14 +282,12 @@
       "id": "foodbank",
       "url": "https://www.foodbank.co.kr/",
       "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "http://se-cu.com/ndsoft/error.html"
+      "httpStatus": 200
     },
     {
       "id": "hrinsight",
       "url": "https://www.hrinsight.co.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "joseilbo",
@@ -549,9 +547,8 @@
     {
       "id": "un-news",
       "url": "https://news.un.org/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://news.un.org/en/"
+      "status": "needs-review",
+      "httpStatus": 406
     },
     {
       "id": "who-news",
@@ -784,7 +781,7 @@
       "id": "ind-fash-uk-drapers",
       "url": "https://www.drapersonline.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "ind-fash-jp-wwdj",
@@ -1376,9 +1373,8 @@
     {
       "id": "cat-news-un",
       "url": "https://news.un.org/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://news.un.org/en/"
+      "status": "needs-review",
+      "httpStatus": 406
     },
     {
       "id": "cat-sci-kr-kisti",
@@ -1686,9 +1682,7 @@
     {
       "id": "cat-spo-kr-koc",
       "url": "https://www.sports.or.kr/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.sports.or.kr/sports/main/main.do"
+      "status": "needs-review"
     },
     {
       "id": "cat-spo-bbc-sport",
