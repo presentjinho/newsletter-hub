@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-03T08:15:01.277Z",
+  "checkedAt": "2026-10-04T08:32:37.801Z",
   "count": 315,
   "reachable": 308,
   "needsReview": 7,
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=19b72e3e-0230-47c8-a167-8e396f52b16f"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=d1209063-22c3-46dd-a5f5-b798d09e7ace"
     },
     {
       "id": "nomadicmatt",
@@ -1049,7 +1049,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "edu-eu-fun",
