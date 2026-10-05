@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-10-04T08:32:37.801Z",
+  "checkedAt": "2026-10-05T09:13:44.801Z",
   "count": 315,
-  "reachable": 308,
-  "needsReview": 7,
+  "reachable": 305,
+  "needsReview": 10,
   "results": [
     {
       "id": "newneek",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=d1209063-22c3-46dd-a5f5-b798d09e7ace"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=723bc6ca-da99-46fc-84fa-969917d3ddf5"
     },
     {
       "id": "nomadicmatt",
@@ -609,8 +609,7 @@
     {
       "id": "ind-semi-kr-etnews",
       "url": "https://www.etnews.com/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "ind-semi-tw-taipeitimes",
@@ -1049,7 +1048,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200
     },
     {
       "id": "edu-eu-fun",
@@ -1550,9 +1549,7 @@
     {
       "id": "cat-fin-kr-bok",
       "url": "https://www.bok.or.kr/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.bok.or.kr/portal/main/main.do"
+      "status": "needs-review"
     },
     {
       "id": "cat-fin-kr-fss",
@@ -1849,8 +1846,7 @@
     {
       "id": "cat-semi-kr-kisi",
       "url": "https://www.etnews.com/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-robot-ieee",
