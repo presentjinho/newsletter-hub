@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-10-05T09:13:44.801Z",
+  "checkedAt": "2026-10-06T09:06:39.886Z",
   "count": 315,
-  "reachable": 305,
-  "needsReview": 10,
+  "reachable": 306,
+  "needsReview": 9,
   "results": [
     {
       "id": "newneek",
@@ -109,9 +109,7 @@
     {
       "id": "folin",
       "url": "https://folin.co",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://folin.co/"
+      "status": "needs-review"
     },
     {
       "id": "yozm-it",
@@ -240,7 +238,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=723bc6ca-da99-46fc-84fa-969917d3ddf5"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=193b8e93-a67a-40e3-822a-a0af8ff52449"
     },
     {
       "id": "nomadicmatt",
@@ -609,7 +607,8 @@
     {
       "id": "ind-semi-kr-etnews",
       "url": "https://www.etnews.com/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "ind-semi-tw-taipeitimes",
@@ -1048,7 +1047,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "edu-eu-fun",
@@ -1060,8 +1059,7 @@
     {
       "id": "edu-eu-academy",
       "url": "https://academy.europa.eu/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "edu-eu-iversity",
@@ -1549,7 +1547,9 @@
     {
       "id": "cat-fin-kr-bok",
       "url": "https://www.bok.or.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://www.bok.or.kr/portal/main/main.do"
     },
     {
       "id": "cat-fin-kr-fss",
@@ -1846,7 +1846,8 @@
     {
       "id": "cat-semi-kr-kisi",
       "url": "https://www.etnews.com/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-robot-ieee",
