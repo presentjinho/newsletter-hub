@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-10-06T09:06:39.886Z",
+  "checkedAt": "2026-10-07T08:48:22.464Z",
   "count": 315,
-  "reachable": 306,
-  "needsReview": 9,
+  "reachable": 307,
+  "needsReview": 8,
   "results": [
     {
       "id": "newneek",
@@ -109,7 +109,9 @@
     {
       "id": "folin",
       "url": "https://folin.co",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://folin.co/"
     },
     {
       "id": "yozm-it",
@@ -238,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=193b8e93-a67a-40e3-822a-a0af8ff52449"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=624e25b5-9c80-49d8-a861-f63d52cb9773"
     },
     {
       "id": "nomadicmatt",
@@ -274,7 +276,7 @@
       "id": "petapixel",
       "url": "https://petapixel.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "foodbank",
@@ -993,7 +995,7 @@
       "id": "edu-kr-kocw",
       "url": "https://www.kocw.net/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 405
     },
     {
       "id": "edu-us-edx",
@@ -1047,7 +1049,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200
     },
     {
       "id": "edu-eu-fun",
