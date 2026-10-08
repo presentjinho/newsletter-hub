@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-10-07T08:48:22.464Z",
+  "checkedAt": "2026-10-08T09:05:54.357Z",
   "count": 315,
-  "reachable": 307,
-  "needsReview": 8,
+  "reachable": 310,
+  "needsReview": 5,
   "results": [
     {
       "id": "newneek",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=624e25b5-9c80-49d8-a861-f63d52cb9773"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=293948a3-a798-4872-85e5-64251b192494"
     },
     {
       "id": "nomadicmatt",
@@ -548,8 +548,8 @@
     {
       "id": "un-news",
       "url": "https://news.un.org/",
-      "status": "needs-review",
-      "httpStatus": 406
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "who-news",
@@ -995,7 +995,7 @@
       "id": "edu-kr-kocw",
       "url": "https://www.kocw.net/",
       "status": "reachable",
-      "httpStatus": 405
+      "httpStatus": 200
     },
     {
       "id": "edu-us-edx",
@@ -1061,7 +1061,8 @@
     {
       "id": "edu-eu-academy",
       "url": "https://academy.europa.eu/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 202
     },
     {
       "id": "edu-eu-iversity",
@@ -1373,8 +1374,8 @@
     {
       "id": "cat-news-un",
       "url": "https://news.un.org/",
-      "status": "needs-review",
-      "httpStatus": 406
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-sci-kr-kisti",
@@ -1557,8 +1558,7 @@
       "id": "cat-fin-kr-fss",
       "url": "https://www.fss.or.kr/",
       "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.fss.or.kr/fss/main/main.do?menuNo=200000"
+      "httpStatus": 200
     },
     {
       "id": "cat-fin-kr-mosf",
