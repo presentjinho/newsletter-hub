@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-10-08T09:05:54.357Z",
+  "checkedAt": "2026-10-09T09:13:58.492Z",
   "count": 315,
-  "reachable": 310,
-  "needsReview": 5,
+  "reachable": 307,
+  "needsReview": 8,
   "results": [
     {
       "id": "newneek",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=293948a3-a798-4872-85e5-64251b192494"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=27eb92ed-d9d3-4f5f-8bc9-f6873d5694b5"
     },
     {
       "id": "nomadicmatt",
@@ -287,8 +287,7 @@
     {
       "id": "hrinsight",
       "url": "https://www.hrinsight.co.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "joseilbo",
@@ -549,7 +548,8 @@
       "id": "un-news",
       "url": "https://news.un.org/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 200,
+      "finalUrl": "https://news.un.org/en/"
     },
     {
       "id": "who-news",
@@ -609,8 +609,7 @@
     {
       "id": "ind-semi-kr-etnews",
       "url": "https://www.etnews.com/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "ind-semi-tw-taipeitimes",
@@ -1049,7 +1048,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "edu-eu-fun",
@@ -1375,7 +1374,8 @@
       "id": "cat-news-un",
       "url": "https://news.un.org/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 200,
+      "finalUrl": "https://news.un.org/en/"
     },
     {
       "id": "cat-sci-kr-kisti",
@@ -1848,8 +1848,7 @@
     {
       "id": "cat-semi-kr-kisi",
       "url": "https://www.etnews.com/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-robot-ieee",
