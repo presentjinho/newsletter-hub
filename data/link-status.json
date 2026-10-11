@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-10-10T08:36:55.426Z",
+  "checkedAt": "2026-10-11T09:02:03.006Z",
   "count": 315,
-  "reachable": 309,
-  "needsReview": 6,
+  "reachable": 307,
+  "needsReview": 8,
   "results": [
     {
       "id": "newneek",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=091a4c03-1128-46bf-a6e4-14e4b14afc27"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=5ec18430-f79b-4e7c-8693-4400b2918d57"
     },
     {
       "id": "nomadicmatt",
@@ -610,8 +610,7 @@
     {
       "id": "ind-semi-kr-etnews",
       "url": "https://www.etnews.com/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "ind-semi-tw-taipeitimes",
@@ -783,7 +782,7 @@
       "id": "ind-fash-uk-drapers",
       "url": "https://www.drapersonline.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "ind-fash-jp-wwdj",
@@ -1540,7 +1539,8 @@
     {
       "id": "cat-data-kr-data",
       "url": "https://www.data.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-data-us-data",
@@ -1559,7 +1559,8 @@
       "id": "cat-fin-kr-fss",
       "url": "https://www.fss.or.kr/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 200,
+      "finalUrl": "https://www.fss.or.kr/fss/main/main.do?menuNo=200000"
     },
     {
       "id": "cat-fin-kr-mosf",
@@ -1750,8 +1751,7 @@
     {
       "id": "cat-food-us-usda",
       "url": "https://www.usda.gov/",
-      "status": "reachable",
-      "httpStatus": 403
+      "status": "needs-review"
     },
     {
       "id": "cat-parent-kr-mogef",
@@ -1849,8 +1849,7 @@
     {
       "id": "cat-semi-kr-kisi",
       "url": "https://www.etnews.com/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-robot-ieee",
