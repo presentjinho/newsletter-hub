@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-10-11T09:02:03.006Z",
+  "checkedAt": "2026-10-12T09:21:06.380Z",
   "count": 315,
-  "reachable": 307,
-  "needsReview": 8,
+  "reachable": 309,
+  "needsReview": 6,
   "results": [
     {
       "id": "newneek",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=5ec18430-f79b-4e7c-8693-4400b2918d57"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=3c4ef569-725d-43e1-a132-4a06ed618563"
     },
     {
       "id": "nomadicmatt",
@@ -610,7 +610,8 @@
     {
       "id": "ind-semi-kr-etnews",
       "url": "https://www.etnews.com/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "ind-semi-tw-taipeitimes",
@@ -782,7 +783,7 @@
       "id": "ind-fash-uk-drapers",
       "url": "https://www.drapersonline.com/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200
     },
     {
       "id": "ind-fash-jp-wwdj",
@@ -1049,7 +1050,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "edu-eu-fun",
@@ -1528,7 +1529,7 @@
       "id": "cat-law-eu-eurlex",
       "url": "https://eur-lex.europa.eu/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 202
     },
     {
       "id": "cat-law-us-congress",
@@ -1849,7 +1850,8 @@
     {
       "id": "cat-semi-kr-kisi",
       "url": "https://www.etnews.com/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-robot-ieee",
