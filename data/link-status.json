@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-10-13T09:32:09.001Z",
+  "checkedAt": "2026-10-14T07:45:28.455Z",
   "count": 315,
-  "reachable": 309,
-  "needsReview": 6,
+  "reachable": 307,
+  "needsReview": 8,
   "results": [
     {
       "id": "newneek",
@@ -226,8 +226,8 @@
     {
       "id": "dallem",
       "url": "https://dallem.stibee.com/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review",
+      "httpStatus": 504
     },
     {
       "id": "munhak-newsletter",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://www.nature.com/?error=cookies_not_supported&code=e7440144-1676-4d63-ae8f-f589a111fe92"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=73449c79-eba0-4f81-9a4e-0cf289e472d9"
     },
     {
       "id": "nomadicmatt",
@@ -452,8 +452,7 @@
     {
       "id": "usgs-news",
       "url": "https://www.usgs.gov/news/get-our-news/",
-      "status": "reachable",
-      "httpStatus": 403
+      "status": "needs-review"
     },
     {
       "id": "nist-rss",
@@ -622,7 +621,8 @@
     {
       "id": "ind-semi-us-semiengineering",
       "url": "https://semiengineering.com/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "ind-semi-jp-nikkei-asia",
@@ -724,8 +724,7 @@
     {
       "id": "ind-ene-ca-cer",
       "url": "https://www.cer-rec.gc.ca/en/index.html",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "ind-ai-us-openai-blog",
@@ -1049,7 +1048,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "edu-eu-fun",
@@ -1491,7 +1490,8 @@
       "id": "cat-env-unep",
       "url": "https://www.unep.org/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 200,
+      "finalUrl": "https://www.unep.org/en"
     },
     {
       "id": "cat-env-ipcc",
