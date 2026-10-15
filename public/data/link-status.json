@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-10-14T07:45:28.455Z",
+  "checkedAt": "2026-10-15T07:32:54.733Z",
   "count": 315,
-  "reachable": 307,
-  "needsReview": 8,
+  "reachable": 309,
+  "needsReview": 6,
   "results": [
     {
       "id": "newneek",
@@ -226,8 +226,8 @@
     {
       "id": "dallem",
       "url": "https://dallem.stibee.com/",
-      "status": "needs-review",
-      "httpStatus": 504
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "munhak-newsletter",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=73449c79-eba0-4f81-9a4e-0cf289e472d9"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=1631bb06-22a2-4a5c-b886-680ba155f6ae"
     },
     {
       "id": "nomadicmatt",
@@ -724,7 +724,8 @@
     {
       "id": "ind-ene-ca-cer",
       "url": "https://www.cer-rec.gc.ca/en/index.html",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "ind-ai-us-openai-blog",
@@ -1048,7 +1049,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200
     },
     {
       "id": "edu-eu-fun",
