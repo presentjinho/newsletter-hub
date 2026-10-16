@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-10-15T07:32:54.733Z",
+  "checkedAt": "2026-10-16T07:18:14.538Z",
   "count": 315,
-  "reachable": 309,
-  "needsReview": 6,
+  "reachable": 308,
+  "needsReview": 7,
   "results": [
     {
       "id": "newneek",
@@ -92,7 +92,7 @@
       "id": "dense-discovery",
       "url": "https://www.densediscovery.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "three-two-one",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=1631bb06-22a2-4a5c-b886-680ba155f6ae"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=56505fab-faac-4a01-b416-d84cd0c584bc"
     },
     {
       "id": "nomadicmatt",
@@ -287,8 +287,7 @@
     {
       "id": "hrinsight",
       "url": "https://www.hrinsight.co.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "joseilbo",
