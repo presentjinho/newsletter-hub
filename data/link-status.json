@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-17T07:03:26.681Z",
+  "checkedAt": "2026-10-18T07:19:08.242Z",
   "count": 315,
   "reachable": 308,
   "needsReview": 7,
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=265eb41d-0b3d-43ee-9905-2b68fd2a2c07"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=aa872428-0f53-4a38-8feb-fca4203aed5a"
     },
     {
       "id": "nomadicmatt",
@@ -512,7 +512,8 @@
     {
       "id": "korea-policy-briefing",
       "url": "https://m.korea.kr/etc/noticeList.do",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "bank-of-japan-rss",
@@ -1515,8 +1516,7 @@
     {
       "id": "cat-law-kr-law",
       "url": "https://www.law.go.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-law-kr-assembly",
@@ -1528,7 +1528,7 @@
       "id": "cat-law-eu-eurlex",
       "url": "https://eur-lex.europa.eu/",
       "status": "reachable",
-      "httpStatus": 202
+      "httpStatus": 200
     },
     {
       "id": "cat-law-us-congress",
