@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-20T07:43:46.882Z",
+  "checkedAt": "2026-10-21T07:47:03.599Z",
   "count": 315,
   "reachable": 309,
   "needsReview": 6,
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=0a7534f8-4e41-4a92-94f7-fd746618b0d3"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=3d554353-e8ec-4bbd-9083-d5e7d9bd7591"
     },
     {
       "id": "nomadicmatt",
@@ -452,7 +452,8 @@
     {
       "id": "usgs-news",
       "url": "https://www.usgs.gov/news/get-our-news/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 403
     },
     {
       "id": "nist-rss",
@@ -782,7 +783,7 @@
       "id": "ind-fash-uk-drapers",
       "url": "https://www.drapersonline.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "ind-fash-jp-wwdj",
@@ -1146,8 +1147,8 @@
     {
       "id": "art-us-deviantart",
       "url": "https://www.deviantart.com/",
-      "status": "reachable",
-      "httpStatus": 403
+      "status": "needs-review",
+      "httpStatus": 503
     },
     {
       "id": "art-us-artstation",
