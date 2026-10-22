@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-10-21T07:47:03.599Z",
+  "checkedAt": "2026-10-22T07:41:52.882Z",
   "count": 315,
-  "reachable": 309,
-  "needsReview": 6,
+  "reachable": 306,
+  "needsReview": 9,
   "results": [
     {
       "id": "newneek",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=3d554353-e8ec-4bbd-9083-d5e7d9bd7591"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=24a48f48-c224-4976-83ce-826167d8dcac"
     },
     {
       "id": "nomadicmatt",
@@ -452,8 +452,7 @@
     {
       "id": "usgs-news",
       "url": "https://www.usgs.gov/news/get-our-news/",
-      "status": "reachable",
-      "httpStatus": 403
+      "status": "needs-review"
     },
     {
       "id": "nist-rss",
@@ -495,7 +494,7 @@
       "id": "ec-digital-newsletter",
       "url": "https://digital-strategy.ec.europa.eu/en/newsletters",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "kbs-world-rss",
@@ -783,7 +782,7 @@
       "id": "ind-fash-uk-drapers",
       "url": "https://www.drapersonline.com/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200
     },
     {
       "id": "ind-fash-jp-wwdj",
@@ -1063,7 +1062,8 @@
       "id": "edu-eu-academy",
       "url": "https://academy.europa.eu/",
       "status": "reachable",
-      "httpStatus": 202
+      "httpStatus": 403,
+      "finalUrl": "https://sorry.ec.europa.eu/"
     },
     {
       "id": "edu-eu-iversity",
@@ -1147,8 +1147,8 @@
     {
       "id": "art-us-deviantart",
       "url": "https://www.deviantart.com/",
-      "status": "needs-review",
-      "httpStatus": 503
+      "status": "reachable",
+      "httpStatus": 403
     },
     {
       "id": "art-us-artstation",
@@ -1263,8 +1263,7 @@
     {
       "id": "art-cn-dpm",
       "url": "https://www.dpm.org.cn/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "art-kr-mmca",
@@ -1559,9 +1558,7 @@
     {
       "id": "cat-fin-kr-fss",
       "url": "https://www.fss.or.kr/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.fss.or.kr/fss/main/main.do?menuNo=200000"
+      "status": "needs-review"
     },
     {
       "id": "cat-fin-kr-mosf",
@@ -1685,9 +1682,7 @@
     {
       "id": "cat-spo-kr-koc",
       "url": "https://www.sports.or.kr/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.sports.or.kr/sports/main/main.do"
+      "status": "needs-review"
     },
     {
       "id": "cat-spo-bbc-sport",
