@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-10-26T07:55:04.308Z",
+  "checkedAt": "2026-10-27T08:00:24.957Z",
   "count": 315,
-  "reachable": 305,
-  "needsReview": 10,
+  "reachable": 304,
+  "needsReview": 11,
   "results": [
     {
       "id": "newneek",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=0bb9a976-a9be-4ade-b005-618f55800e86"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=8cc90e17-d1e2-4c90-b366-6ae6793d3848"
     },
     {
       "id": "nomadicmatt",
@@ -528,7 +528,8 @@
     {
       "id": "xinhua-rss",
       "url": "https://english.news.cn/rss/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "china-daily-rss",
@@ -1046,7 +1047,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "edu-eu-fun",
@@ -1259,8 +1260,7 @@
     {
       "id": "art-cn-dpm",
       "url": "https://www.dpm.org.cn/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "art-kr-mmca",
@@ -1494,7 +1494,7 @@
       "id": "cat-env-ipcc",
       "url": "https://www.ipcc.ch/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "cat-env-us-noaa",
@@ -1791,8 +1791,7 @@
     {
       "id": "cat-home-kr-reb",
       "url": "https://www.reb.or.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-home-kr-seoul",
