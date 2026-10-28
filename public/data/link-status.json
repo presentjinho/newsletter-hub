@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-10-27T08:00:24.957Z",
+  "checkedAt": "2026-10-28T08:41:32.908Z",
   "count": 315,
-  "reachable": 304,
-  "needsReview": 11,
+  "reachable": 308,
+  "needsReview": 7,
   "results": [
     {
       "id": "newneek",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=8cc90e17-d1e2-4c90-b366-6ae6793d3848"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=3cc7bdcb-2d52-44ee-a187-91a770992379"
     },
     {
       "id": "nomadicmatt",
@@ -287,14 +287,14 @@
     {
       "id": "hrinsight",
       "url": "https://www.hrinsight.co.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "joseilbo",
       "url": "https://joseilbo.com/",
       "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.joseilbo.com/index.php"
+      "httpStatus": 403
     },
     {
       "id": "ikpnews",
@@ -451,7 +451,8 @@
     {
       "id": "usgs-news",
       "url": "https://www.usgs.gov/news/get-our-news/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 403
     },
     {
       "id": "nist-rss",
@@ -608,7 +609,8 @@
     {
       "id": "ind-semi-kr-etnews",
       "url": "https://www.etnews.com/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "ind-semi-tw-taipeitimes",
@@ -716,8 +718,7 @@
     {
       "id": "ind-ene-de-bundesnetz",
       "url": "https://www.bundesnetzagentur.de/EN/Home/home_node.html",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "ind-ene-ca-cer",
@@ -1047,7 +1048,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200
     },
     {
       "id": "edu-eu-fun",
@@ -1168,8 +1169,7 @@
     {
       "id": "art-us-wikiart",
       "url": "https://www.wikiart.org/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "art-us-met",
@@ -1260,7 +1260,8 @@
     {
       "id": "art-cn-dpm",
       "url": "https://www.dpm.org.cn/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "art-kr-mmca",
@@ -1791,7 +1792,8 @@
     {
       "id": "cat-home-kr-reb",
       "url": "https://www.reb.or.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-home-kr-seoul",
@@ -1846,7 +1848,8 @@
     {
       "id": "cat-semi-kr-kisi",
       "url": "https://www.etnews.com/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-robot-ieee",
