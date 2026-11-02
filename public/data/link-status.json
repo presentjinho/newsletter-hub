@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-11-01T09:22:11.465Z",
+  "checkedAt": "2026-11-02T09:38:20.226Z",
   "count": 315,
-  "reachable": 309,
-  "needsReview": 6,
+  "reachable": 305,
+  "needsReview": 10,
   "results": [
     {
       "id": "newneek",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=06661993-8fa2-4135-92b6-077defbc062f"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=5d5e9e25-8fb4-4b86-b80e-977aff711ab3"
     },
     {
       "id": "nomadicmatt",
@@ -294,7 +294,8 @@
       "id": "joseilbo",
       "url": "https://joseilbo.com/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200,
+      "finalUrl": "https://www.joseilbo.com/index.php"
     },
     {
       "id": "ikpnews",
@@ -609,8 +610,7 @@
     {
       "id": "ind-semi-kr-etnews",
       "url": "https://www.etnews.com/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "ind-semi-tw-taipeitimes",
@@ -1513,8 +1513,7 @@
     {
       "id": "cat-law-kr-law",
       "url": "https://www.law.go.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-law-kr-assembly",
@@ -1761,9 +1760,7 @@
     {
       "id": "cat-parent-kr-childcare",
       "url": "https://www.childcare.go.kr/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.childcare.go.kr/?menuno=1"
+      "status": "needs-review"
     },
     {
       "id": "cat-edu-kr-moe",
@@ -1848,8 +1845,7 @@
     {
       "id": "cat-semi-kr-kisi",
       "url": "https://www.etnews.com/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-robot-ieee",
