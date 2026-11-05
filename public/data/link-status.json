@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-11-04T09:24:48.611Z",
+  "checkedAt": "2026-11-05T09:35:43.274Z",
   "count": 315,
-  "reachable": 308,
-  "needsReview": 7,
+  "reachable": 309,
+  "needsReview": 6,
   "results": [
     {
       "id": "newneek",
@@ -117,7 +117,7 @@
       "id": "yozm-it",
       "url": "https://yozm.wishket.com/magazine/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 405
     },
     {
       "id": "disquiet",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=ac8947fc-5e43-482b-84e7-6d697a940868"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=e052ba99-c129-45e1-a578-0182a12e529e"
     },
     {
       "id": "nomadicmatt",
@@ -428,7 +428,7 @@
       "id": "library-of-congress",
       "url": "https://www.loc.gov/rss/",
       "status": "reachable",
-      "httpStatus": 200,
+      "httpStatus": 429,
       "finalUrl": "https://www.loc.gov/subscribe/"
     },
     {
@@ -477,7 +477,8 @@
       "id": "esa-rss",
       "url": "https://www.esa.int/Services/RSS_Feeds",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 200,
+      "finalUrl": "https://www.esa.int/articles/about-us/directorates/resources-and-services/rss-feeds"
     },
     {
       "id": "eurostat-rss",
@@ -634,9 +635,7 @@
     {
       "id": "ind-semi-nl-asml-news",
       "url": "https://www.asml.com/en/news",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://investor.asml.com/news"
+      "status": "needs-review"
     },
     {
       "id": "ind-auto-de-spiegel-auto",
@@ -930,7 +929,8 @@
     {
       "id": "ind-ag-br-embrapa",
       "url": "https://www.embrapa.br/en",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "ind-ag-nl-wageningen",
@@ -1051,7 +1051,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200
     },
     {
       "id": "edu-eu-fun",
@@ -1371,7 +1371,7 @@
       "id": "cat-news-eu-europarl",
       "url": "https://www.europarl.europa.eu/news/en",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 202
     },
     {
       "id": "cat-news-un",
@@ -1490,7 +1490,8 @@
       "id": "cat-env-unep",
       "url": "https://www.unep.org/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200,
+      "finalUrl": "https://www.unep.org/en"
     },
     {
       "id": "cat-env-ipcc",
@@ -1868,7 +1869,8 @@
     {
       "id": "cat-biz-kr-kita",
       "url": "https://www.kita.net/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-biz-kr-mss",
