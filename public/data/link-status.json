@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-11-05T09:35:43.274Z",
+  "checkedAt": "2026-11-06T09:31:13.340Z",
   "count": 315,
-  "reachable": 309,
-  "needsReview": 6,
+  "reachable": 308,
+  "needsReview": 7,
   "results": [
     {
       "id": "newneek",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=e052ba99-c129-45e1-a578-0182a12e529e"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=c23df22c-cf1f-4396-b005-61177e3681a8"
     },
     {
       "id": "nomadicmatt",
@@ -287,8 +287,7 @@
     {
       "id": "hrinsight",
       "url": "https://www.hrinsight.co.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "joseilbo",
