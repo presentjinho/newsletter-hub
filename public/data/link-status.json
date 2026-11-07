@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-11-06T09:31:13.340Z",
+  "checkedAt": "2026-11-07T08:53:49.811Z",
   "count": 315,
-  "reachable": 308,
-  "needsReview": 7,
+  "reachable": 309,
+  "needsReview": 6,
   "results": [
     {
       "id": "newneek",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=c23df22c-cf1f-4396-b005-61177e3681a8"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=ec114e20-5a3f-4036-b720-1976455376d3"
     },
     {
       "id": "nomadicmatt",
@@ -287,7 +287,8 @@
     {
       "id": "hrinsight",
       "url": "https://www.hrinsight.co.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "joseilbo",
@@ -1050,7 +1051,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "edu-eu-fun",
