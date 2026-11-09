@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-11-08T09:06:53.282Z",
+  "checkedAt": "2026-11-09T09:55:24.327Z",
   "count": 315,
-  "reachable": 306,
-  "needsReview": 9,
+  "reachable": 309,
+  "needsReview": 6,
   "results": [
     {
       "id": "newneek",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=75c6f4f3-a50a-413a-8328-c8ba7315d60f"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=88ac9789-1f58-45cd-b248-6d4561764c8f"
     },
     {
       "id": "nomadicmatt",
@@ -294,8 +294,7 @@
       "id": "joseilbo",
       "url": "https://joseilbo.com/",
       "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.joseilbo.com/index.php"
+      "httpStatus": 403
     },
     {
       "id": "ikpnews",
@@ -611,7 +610,8 @@
     {
       "id": "ind-semi-kr-etnews",
       "url": "https://www.etnews.com/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "ind-semi-tw-taipeitimes",
@@ -783,7 +783,7 @@
       "id": "ind-fash-uk-drapers",
       "url": "https://www.drapersonline.com/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200
     },
     {
       "id": "ind-fash-jp-wwdj",
@@ -1050,7 +1050,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "edu-eu-fun",
@@ -1263,7 +1263,8 @@
     {
       "id": "art-cn-dpm",
       "url": "https://www.dpm.org.cn/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "art-kr-mmca",
@@ -1526,7 +1527,7 @@
       "id": "cat-law-eu-eurlex",
       "url": "https://eur-lex.europa.eu/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 202
     },
     {
       "id": "cat-law-us-congress",
@@ -1848,7 +1849,8 @@
     {
       "id": "cat-semi-kr-kisi",
       "url": "https://www.etnews.com/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-robot-ieee",
