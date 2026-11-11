@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-11-10T09:59:05.393Z",
+  "checkedAt": "2026-11-11T09:33:28.337Z",
   "count": 315,
-  "reachable": 308,
-  "needsReview": 7,
+  "reachable": 307,
+  "needsReview": 8,
   "results": [
     {
       "id": "newneek",
@@ -109,9 +109,7 @@
     {
       "id": "folin",
       "url": "https://folin.co",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://folin.co/"
+      "status": "needs-review"
     },
     {
       "id": "yozm-it",
@@ -240,7 +238,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=76c955dc-cb65-45c5-b533-73802621ebab"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=f9a00af4-c548-47eb-9db7-875b3c00c82e"
     },
     {
       "id": "nomadicmatt",
@@ -784,7 +782,7 @@
       "id": "ind-fash-uk-drapers",
       "url": "https://www.drapersonline.com/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200
     },
     {
       "id": "ind-fash-jp-wwdj",
@@ -1063,8 +1061,7 @@
     {
       "id": "edu-eu-academy",
       "url": "https://academy.europa.eu/",
-      "status": "reachable",
-      "httpStatus": 202
+      "status": "needs-review"
     },
     {
       "id": "edu-eu-iversity",
@@ -1264,7 +1261,8 @@
     {
       "id": "art-cn-dpm",
       "url": "https://www.dpm.org.cn/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "art-kr-mmca",
