@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-12T09:56:29.784Z",
+  "checkedAt": "2026-11-13T09:39:43.244Z",
   "count": 315,
   "reachable": 308,
   "needsReview": 7,
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=977120e5-d51f-41e2-b66b-5174adda1730"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=270f2c4b-db74-4d07-ae78-92e187d0fa47"
     },
     {
       "id": "nomadicmatt",
@@ -715,7 +715,7 @@
       "id": "ind-ene-sa-argaam",
       "url": "https://www.argaam.com/en",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 202
     },
     {
       "id": "ind-ene-de-bundesnetz",
@@ -808,8 +808,9 @@
     {
       "id": "ind-pharma-de-pei",
       "url": "https://www.pei.de/EN/home/home-node.html",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review",
+      "httpStatus": 400,
+      "finalUrl": "https://www.pei.de/error_path/400.html?al_req_id=avbacPHZ6YJaozzY-iFeWQAABXI"
     },
     {
       "id": "ind-pharma-uk-mhra",
@@ -1264,7 +1265,8 @@
     {
       "id": "art-cn-dpm",
       "url": "https://www.dpm.org.cn/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "art-kr-mmca",
