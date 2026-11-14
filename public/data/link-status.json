@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-11-13T09:39:43.244Z",
+  "checkedAt": "2026-11-14T09:04:08.116Z",
   "count": 315,
-  "reachable": 308,
-  "needsReview": 7,
+  "reachable": 309,
+  "needsReview": 6,
   "results": [
     {
       "id": "newneek",
@@ -117,7 +117,7 @@
       "id": "yozm-it",
       "url": "https://yozm.wishket.com/magazine/",
       "status": "reachable",
-      "httpStatus": 405
+      "httpStatus": 200
     },
     {
       "id": "disquiet",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=270f2c4b-db74-4d07-ae78-92e187d0fa47"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=c1ce7e83-02d4-4aab-a8b6-def52b66c665"
     },
     {
       "id": "nomadicmatt",
@@ -428,7 +428,7 @@
       "id": "library-of-congress",
       "url": "https://www.loc.gov/rss/",
       "status": "reachable",
-      "httpStatus": 429,
+      "httpStatus": 200,
       "finalUrl": "https://www.loc.gov/subscribe/"
     },
     {
@@ -635,7 +635,9 @@
     {
       "id": "ind-semi-nl-asml-news",
       "url": "https://www.asml.com/en/news",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://investor.asml.com/news"
     },
     {
       "id": "ind-auto-de-spiegel-auto",
@@ -715,7 +717,7 @@
       "id": "ind-ene-sa-argaam",
       "url": "https://www.argaam.com/en",
       "status": "reachable",
-      "httpStatus": 202
+      "httpStatus": 200
     },
     {
       "id": "ind-ene-de-bundesnetz",
@@ -808,9 +810,8 @@
     {
       "id": "ind-pharma-de-pei",
       "url": "https://www.pei.de/EN/home/home-node.html",
-      "status": "needs-review",
-      "httpStatus": 400,
-      "finalUrl": "https://www.pei.de/error_path/400.html?al_req_id=avbacPHZ6YJaozzY-iFeWQAABXI"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "ind-pharma-uk-mhra",
@@ -942,8 +943,7 @@
     {
       "id": "ind-ag-in-icar",
       "url": "https://www.icar.org.in/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "ind-ag-fr-inrae",
@@ -1052,7 +1052,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "edu-eu-fun",
@@ -1065,7 +1065,8 @@
       "id": "edu-eu-academy",
       "url": "https://academy.europa.eu/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 202,
+      "finalUrl": "https://academy.europa.eu/maintenance-sorry.html"
     },
     {
       "id": "edu-eu-iversity",
@@ -1372,7 +1373,7 @@
       "id": "cat-news-eu-europarl",
       "url": "https://www.europarl.europa.eu/news/en",
       "status": "reachable",
-      "httpStatus": 202
+      "httpStatus": 200
     },
     {
       "id": "cat-news-un",
@@ -1491,8 +1492,7 @@
       "id": "cat-env-unep",
       "url": "https://www.unep.org/",
       "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.unep.org/en"
+      "httpStatus": 403
     },
     {
       "id": "cat-env-ipcc",
@@ -1517,7 +1517,8 @@
       "id": "cat-law-kr-law",
       "url": "https://www.law.go.kr/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 200,
+      "finalUrl": "https://www.law.go.kr/sorry/sorry.html"
     },
     {
       "id": "cat-law-kr-assembly",
@@ -1529,7 +1530,7 @@
       "id": "cat-law-eu-eurlex",
       "url": "https://eur-lex.europa.eu/",
       "status": "reachable",
-      "httpStatus": 202
+      "httpStatus": 403
     },
     {
       "id": "cat-law-us-congress",
