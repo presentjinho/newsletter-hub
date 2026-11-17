@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-11-16T09:53:36.966Z",
+  "checkedAt": "2026-11-17T10:50:33.102Z",
   "count": 315,
-  "reachable": 305,
-  "needsReview": 10,
+  "reachable": 307,
+  "needsReview": 8,
   "results": [
     {
       "id": "newneek",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=eae0e77f-34ea-4da0-bbbd-4d671ef8566b"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=2f39d205-d749-4fe8-8f49-ac4dc9348373"
     },
     {
       "id": "nomadicmatt",
@@ -287,7 +287,8 @@
     {
       "id": "hrinsight",
       "url": "https://www.hrinsight.co.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "joseilbo",
@@ -610,7 +611,8 @@
     {
       "id": "ind-semi-kr-etnews",
       "url": "https://www.etnews.com/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "ind-semi-tw-taipeitimes",
@@ -939,8 +941,7 @@
     {
       "id": "ind-ag-in-icar",
       "url": "https://www.icar.org.in/",
-      "status": "needs-review",
-      "httpStatus": 500
+      "status": "needs-review"
     },
     {
       "id": "ind-ag-fr-inrae",
@@ -1635,8 +1636,8 @@
     {
       "id": "cat-cul-gutenberg",
       "url": "https://www.gutenberg.org/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review",
+      "httpStatus": 503
     },
     {
       "id": "cat-cul-archive-texts",
@@ -1849,7 +1850,8 @@
     {
       "id": "cat-semi-kr-kisi",
       "url": "https://www.etnews.com/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-robot-ieee",
