@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-11-17T10:50:33.102Z",
+  "checkedAt": "2026-11-18T10:18:26.090Z",
   "count": 315,
-  "reachable": 307,
-  "needsReview": 8,
+  "reachable": 306,
+  "needsReview": 9,
   "results": [
     {
       "id": "newneek",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=2f39d205-d749-4fe8-8f49-ac4dc9348373"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=8a2aae5b-0b7d-4d4f-a285-c98a5938a36f"
     },
     {
       "id": "nomadicmatt",
@@ -287,8 +287,7 @@
     {
       "id": "hrinsight",
       "url": "https://www.hrinsight.co.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "joseilbo",
@@ -941,7 +940,8 @@
     {
       "id": "ind-ag-in-icar",
       "url": "https://www.icar.org.in/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "ind-ag-fr-inrae",
@@ -1624,8 +1624,7 @@
     {
       "id": "cat-cul-kr-nl",
       "url": "https://www.nl.go.kr/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "cat-cul-kr-kcisa",
