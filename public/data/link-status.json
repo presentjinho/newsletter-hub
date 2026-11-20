@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-11-19T10:29:24.037Z",
+  "checkedAt": "2026-11-20T10:08:27.926Z",
   "count": 315,
-  "reachable": 306,
-  "needsReview": 9,
+  "reachable": 307,
+  "needsReview": 8,
   "results": [
     {
       "id": "newneek",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=f67f298d-f3e1-4f8f-968a-1611871710ff"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=24c42fd3-abc0-4bbe-aa37-3f40dbc5bd2d"
     },
     {
       "id": "nomadicmatt",
@@ -715,7 +715,7 @@
       "id": "ind-ene-sa-argaam",
       "url": "https://www.argaam.com/en",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 202
     },
     {
       "id": "ind-ene-de-bundesnetz",
@@ -929,8 +929,7 @@
     {
       "id": "ind-ag-br-embrapa",
       "url": "https://www.embrapa.br/en",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "ind-ag-nl-wageningen",
@@ -1051,7 +1050,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "edu-eu-fun",
@@ -1265,7 +1264,8 @@
     {
       "id": "art-cn-dpm",
       "url": "https://www.dpm.org.cn/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "art-kr-mmca",
@@ -1684,7 +1684,9 @@
     {
       "id": "cat-spo-kr-koc",
       "url": "https://www.sports.or.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://www.sports.or.kr/sports/main/main.do"
     },
     {
       "id": "cat-spo-bbc-sport",
@@ -1905,7 +1907,8 @@
       "id": "cat-crypto-kr-fsc",
       "url": "https://www.fsc.go.kr/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200,
+      "finalUrl": "https://www.fsc.go.kr/index"
     },
     {
       "id": "cat-crypto-us-sec",
