@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-11-20T10:08:27.926Z",
+  "checkedAt": "2026-11-21T09:57:08.859Z",
   "count": 315,
-  "reachable": 307,
-  "needsReview": 8,
+  "reachable": 305,
+  "needsReview": 10,
   "results": [
     {
       "id": "newneek",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=24c42fd3-abc0-4bbe-aa37-3f40dbc5bd2d"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=b87c661d-7f25-48fc-acf6-6d671d981ef2"
     },
     {
       "id": "nomadicmatt",
@@ -276,7 +276,7 @@
       "id": "petapixel",
       "url": "https://petapixel.com/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200
     },
     {
       "id": "foodbank",
@@ -355,7 +355,7 @@
       "id": "tokenpost",
       "url": "https://www.tokenpost.kr/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "osen",
@@ -784,7 +784,7 @@
       "id": "ind-fash-uk-drapers",
       "url": "https://www.drapersonline.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "ind-fash-jp-wwdj",
@@ -1050,7 +1050,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200
     },
     {
       "id": "edu-eu-fun",
@@ -1129,9 +1129,7 @@
     {
       "id": "edu-global-oer",
       "url": "https://www.oercommons.org/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://oercommons.org/"
+      "status": "needs-review"
     },
     {
       "id": "art-jp-pixiv",
@@ -1264,8 +1262,7 @@
     {
       "id": "art-cn-dpm",
       "url": "https://www.dpm.org.cn/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "art-kr-mmca",
@@ -1528,7 +1525,7 @@
       "id": "cat-law-eu-eurlex",
       "url": "https://eur-lex.europa.eu/",
       "status": "reachable",
-      "httpStatus": 202
+      "httpStatus": 200
     },
     {
       "id": "cat-law-us-congress",
