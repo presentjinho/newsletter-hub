@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-11-21T09:57:08.859Z",
+  "checkedAt": "2026-11-22T09:54:25.265Z",
   "count": 315,
-  "reachable": 305,
-  "needsReview": 10,
+  "reachable": 306,
+  "needsReview": 9,
   "results": [
     {
       "id": "newneek",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=b87c661d-7f25-48fc-acf6-6d671d981ef2"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=4a7c4023-97c4-4db8-80c8-f84f99c25155"
     },
     {
       "id": "nomadicmatt",
@@ -452,8 +452,7 @@
     {
       "id": "usgs-news",
       "url": "https://www.usgs.gov/news/get-our-news/",
-      "status": "reachable",
-      "httpStatus": 403
+      "status": "needs-review"
     },
     {
       "id": "nist-rss",
@@ -784,7 +783,7 @@
       "id": "ind-fash-uk-drapers",
       "url": "https://www.drapersonline.com/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200
     },
     {
       "id": "ind-fash-jp-wwdj",
@@ -1050,7 +1049,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "edu-eu-fun",
@@ -1129,7 +1128,9 @@
     {
       "id": "edu-global-oer",
       "url": "https://www.oercommons.org/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://oercommons.org/"
     },
     {
       "id": "art-jp-pixiv",
@@ -1262,7 +1263,8 @@
     {
       "id": "art-cn-dpm",
       "url": "https://www.dpm.org.cn/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "art-kr-mmca",
@@ -1525,7 +1527,7 @@
       "id": "cat-law-eu-eurlex",
       "url": "https://eur-lex.europa.eu/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 202
     },
     {
       "id": "cat-law-us-congress",
