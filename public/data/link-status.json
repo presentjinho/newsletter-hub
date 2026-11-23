@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-11-22T09:54:25.265Z",
+  "checkedAt": "2026-11-23T10:54:34.310Z",
   "count": 315,
-  "reachable": 306,
-  "needsReview": 9,
+  "reachable": 303,
+  "needsReview": 12,
   "results": [
     {
       "id": "newneek",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=4a7c4023-97c4-4db8-80c8-f84f99c25155"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=2b5fd3bd-95af-4ed5-953e-176f1d3967c5"
     },
     {
       "id": "nomadicmatt",
@@ -294,8 +294,7 @@
       "id": "joseilbo",
       "url": "https://joseilbo.com/",
       "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.joseilbo.com/index.php"
+      "httpStatus": 403
     },
     {
       "id": "ikpnews",
@@ -452,7 +451,8 @@
     {
       "id": "usgs-news",
       "url": "https://www.usgs.gov/news/get-our-news/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 403
     },
     {
       "id": "nist-rss",
@@ -488,8 +488,7 @@
     {
       "id": "eea-rss",
       "url": "https://www.eea.europa.eu/en/newsroom/rss-feeds",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "ec-digital-newsletter",
@@ -939,8 +938,7 @@
     {
       "id": "ind-ag-in-icar",
       "url": "https://www.icar.org.in/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "ind-ag-fr-inrae",
@@ -1049,7 +1047,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200
     },
     {
       "id": "edu-eu-fun",
@@ -1063,7 +1061,7 @@
       "url": "https://academy.europa.eu/",
       "status": "reachable",
       "httpStatus": 202,
-      "finalUrl": "https://academy.europa.eu/maintenance-sorry.html"
+      "finalUrl": "https://academy.europa.eu/moodle-maintenance.html"
     },
     {
       "id": "edu-eu-iversity",
@@ -1263,8 +1261,7 @@
     {
       "id": "art-cn-dpm",
       "url": "https://www.dpm.org.cn/",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "art-kr-mmca",
@@ -1507,9 +1504,7 @@
     {
       "id": "cat-env-eu-eea",
       "url": "https://www.eea.europa.eu/",
-      "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.eea.europa.eu/en"
+      "status": "needs-review"
     },
     {
       "id": "cat-law-kr-law",
@@ -1635,8 +1630,7 @@
     {
       "id": "cat-cul-gutenberg",
       "url": "https://www.gutenberg.org/",
-      "status": "needs-review",
-      "httpStatus": 503
+      "status": "needs-review"
     },
     {
       "id": "cat-cul-archive-texts",
