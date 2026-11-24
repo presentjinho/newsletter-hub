@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-11-23T10:54:34.310Z",
+  "checkedAt": "2026-11-24T12:36:06.571Z",
   "count": 315,
-  "reachable": 303,
-  "needsReview": 12,
+  "reachable": 307,
+  "needsReview": 8,
   "results": [
     {
       "id": "newneek",
@@ -117,7 +117,7 @@
       "id": "yozm-it",
       "url": "https://yozm.wishket.com/magazine/",
       "status": "reachable",
-      "httpStatus": 405
+      "httpStatus": 200
     },
     {
       "id": "disquiet",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=2b5fd3bd-95af-4ed5-953e-176f1d3967c5"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=3c220406-e67c-4d73-a7b3-49918438c332"
     },
     {
       "id": "nomadicmatt",
@@ -294,7 +294,8 @@
       "id": "joseilbo",
       "url": "https://joseilbo.com/",
       "status": "reachable",
-      "httpStatus": 403
+      "httpStatus": 200,
+      "finalUrl": "https://www.joseilbo.com/index.php"
     },
     {
       "id": "ikpnews",
@@ -427,7 +428,7 @@
       "id": "library-of-congress",
       "url": "https://www.loc.gov/rss/",
       "status": "reachable",
-      "httpStatus": 429,
+      "httpStatus": 200,
       "finalUrl": "https://www.loc.gov/subscribe/"
     },
     {
@@ -488,7 +489,8 @@
     {
       "id": "eea-rss",
       "url": "https://www.eea.europa.eu/en/newsroom/rss-feeds",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "ec-digital-newsletter",
@@ -573,7 +575,7 @@
       "id": "world-bank-open-data",
       "url": "https://data.worldbank.org/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "quanta-magazine",
@@ -633,7 +635,9 @@
     {
       "id": "ind-semi-nl-asml-news",
       "url": "https://www.asml.com/en/news",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://investor.asml.com/news"
     },
     {
       "id": "ind-auto-de-spiegel-auto",
@@ -713,7 +717,7 @@
       "id": "ind-ene-sa-argaam",
       "url": "https://www.argaam.com/en",
       "status": "reachable",
-      "httpStatus": 202
+      "httpStatus": 200
     },
     {
       "id": "ind-ene-de-bundesnetz",
@@ -861,7 +865,7 @@
       "id": "ind-media-uk-guardian",
       "url": "https://www.theguardian.com/international",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "ind-media-de-dw",
@@ -938,7 +942,8 @@
     {
       "id": "ind-ag-in-icar",
       "url": "https://www.icar.org.in/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "ind-ag-fr-inrae",
@@ -1047,7 +1052,7 @@
       "id": "edu-eu-futurelearn",
       "url": "https://www.futurelearn.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "edu-eu-fun",
@@ -1367,7 +1372,7 @@
       "id": "cat-news-eu-europarl",
       "url": "https://www.europarl.europa.eu/news/en",
       "status": "reachable",
-      "httpStatus": 202
+      "httpStatus": 200
     },
     {
       "id": "cat-news-un",
@@ -1486,8 +1491,7 @@
       "id": "cat-env-unep",
       "url": "https://www.unep.org/",
       "status": "reachable",
-      "httpStatus": 200,
-      "finalUrl": "https://www.unep.org/en"
+      "httpStatus": 403
     },
     {
       "id": "cat-env-ipcc",
@@ -1504,7 +1508,9 @@
     {
       "id": "cat-env-eu-eea",
       "url": "https://www.eea.europa.eu/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://www.eea.europa.eu/en"
     },
     {
       "id": "cat-law-kr-law",
@@ -1630,7 +1636,8 @@
     {
       "id": "cat-cul-gutenberg",
       "url": "https://www.gutenberg.org/",
-      "status": "needs-review"
+      "status": "needs-review",
+      "httpStatus": 503
     },
     {
       "id": "cat-cul-archive-texts",
