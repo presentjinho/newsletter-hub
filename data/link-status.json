@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-11-25T11:26:49.395Z",
+  "checkedAt": "2026-11-26T11:01:58.610Z",
   "count": 315,
-  "reachable": 303,
-  "needsReview": 12,
+  "reachable": 307,
+  "needsReview": 8,
   "results": [
     {
       "id": "newneek",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=6dfaa482-6aab-415d-8296-27cd9879c5b4"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=dc08ae79-c37e-4825-8110-01fb5d5662a6"
     },
     {
       "id": "nomadicmatt",
@@ -611,7 +611,8 @@
     {
       "id": "ind-semi-kr-etnews",
       "url": "https://www.etnews.com/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "ind-semi-tw-taipeitimes",
@@ -928,7 +929,8 @@
     {
       "id": "ind-ag-br-embrapa",
       "url": "https://www.embrapa.br/en",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "ind-ag-nl-wageningen",
@@ -1634,7 +1636,8 @@
     {
       "id": "cat-cul-gutenberg",
       "url": "https://www.gutenberg.org/",
-      "status": "needs-review"
+      "status": "needs-review",
+      "httpStatus": 503
     },
     {
       "id": "cat-cul-archive-texts",
@@ -1797,7 +1800,9 @@
     {
       "id": "cat-home-kr-seoul",
       "url": "https://land.seoul.go.kr/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200,
+      "finalUrl": "https://land.seoul.go.kr/land/"
     },
     {
       "id": "cat-photo-kr-photodot",
@@ -1845,7 +1850,8 @@
     {
       "id": "cat-semi-kr-kisi",
       "url": "https://www.etnews.com/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "cat-robot-ieee",
