@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-11-26T11:01:58.610Z",
+  "checkedAt": "2026-11-27T10:59:24.083Z",
   "count": 315,
-  "reachable": 307,
-  "needsReview": 8,
+  "reachable": 306,
+  "needsReview": 9,
   "results": [
     {
       "id": "newneek",
@@ -240,7 +240,7 @@
       "url": "https://www.nature.com/",
       "status": "reachable",
       "httpStatus": 200,
-      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=dc08ae79-c37e-4825-8110-01fb5d5662a6"
+      "finalUrl": "https://idp.nature.com/transit?redirect_uri=https%3A%2F%2Fwww.nature.com%2Fnature&code=171c18b4-184d-440b-9342-e15ac67f1195"
     },
     {
       "id": "nomadicmatt",
@@ -276,7 +276,7 @@
       "id": "petapixel",
       "url": "https://petapixel.com/",
       "status": "reachable",
-      "httpStatus": 200
+      "httpStatus": 403
     },
     {
       "id": "foodbank",
@@ -808,8 +808,9 @@
     {
       "id": "ind-pharma-de-pei",
       "url": "https://www.pei.de/EN/home/home-node.html",
-      "status": "reachable",
-      "httpStatus": 403
+      "status": "needs-review",
+      "httpStatus": 400,
+      "finalUrl": "https://www.pei.de/error_path/400.html?al_req_id=awliBJSaKllWS8mQsi4FCgAACZs"
     },
     {
       "id": "ind-pharma-uk-mhra",
@@ -929,8 +930,7 @@
     {
       "id": "ind-ag-br-embrapa",
       "url": "https://www.embrapa.br/en",
-      "status": "reachable",
-      "httpStatus": 200
+      "status": "needs-review"
     },
     {
       "id": "ind-ag-nl-wageningen",
@@ -1265,7 +1265,8 @@
     {
       "id": "art-cn-dpm",
       "url": "https://www.dpm.org.cn/",
-      "status": "needs-review"
+      "status": "reachable",
+      "httpStatus": 200
     },
     {
       "id": "art-kr-mmca",
